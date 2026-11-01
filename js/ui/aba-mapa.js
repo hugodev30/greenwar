@@ -56,7 +56,7 @@ function tabMapa(el){
   const milOn = UI.mapMode !== "agitacao", wideFc = window.innerWidth > 900 && !big;
   if (FM){ if (!milOn){ UI.tpSel = null; UI.tpPend = null; } // guerra de 2022: fichas dos exércitos, destinos com chance e setas (js/ui/mapa-frentes.js)
     renderMap($("#mapMain"), G.control, G.lastMapChanges, true, { g: G, sel: uf, mode: UI.mapMode, military: milOn, fronts: true, arrows: [], onPick, onTpTarget: tpPickUF, onTropa: tpPickArmy,
-      tpSel: UI.tpSel, tpPend: UI.tpPend, overlay: milOn ? tpMapGoalHTML() + tpHudHTML() + tpFloatHTML() : "", zoom: true }); }
+      tpSel: UI.tpSel, tpPend: UI.tpPend, tpMark: tpMarkList(), overlay: milOn ? tpMapGoalHTML() + tpHudHTML() + tpFloatHTML() : "", zoom: true }); }
   else renderMap($("#mapMain"), G.control, G.lastMapChanges, true, { g: G, sel: uf, selArmy: sel, tgtMode: UI.ordMode || null, pend: milOn && sel ? pend : null, mode: UI.mapMode, military: milOn, onPick, onArmy: pickArmy, overlay: milOn && sel && pend && !wideFc ? forecastCardHTML(sel, pend) : "", zoom: true });
   if (milOn && sel && pend && wideFc) $(".sidepanel").insertAdjacentHTML("afterbegin", forecastCardHTML(sel, pend));
   if (!tabMapa._esc){ tabMapa._esc = e => { if (e.key !== "Escape" || UI.tab !== "mapa" || document.querySelector(".overlay, .modal, #ecoModal") || (typeof coachBusy === "function" && coachBusy())) return;

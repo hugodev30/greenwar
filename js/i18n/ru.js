@@ -2777,7 +2777,26 @@ const I18N_RU = {
   "Toque num estado seu durante a guerra para recrutar ali: exército novo ou reforço, com custo e manutenção à vista.": "Во время войны нажмите на свой штат, чтобы набрать там войска: новую армию или подкрепление, с ценой и содержанием.",
   "Decisões nacionais não gastam mais ações políticas.": "Национальные решения больше не тратят политические действия.",
   "Facções: cada cartão mostra o efeito em cada nível de lealdade, com o de agora destacado; as regras ficam no botão ?.": "Фракции: каждая карточка показывает эффект на каждом уровне лояльности, текущий выделен; правила — под кнопкой «?».",
-  "Mapa: siglas do Nordeste dentro dos estados, fichas junto à costa e Recife com rótulo curto.": "Карта: подписи штатов Северо-Востока внутри штатов, фишки армий у побережья и короткая подпись Ресифи."
+  "Mapa: siglas do Nordeste dentro dos estados, fichas junto à costa e Recife com rótulo curto.": "Карта: подписи штатов Северо-Востока внутри штатов, фишки армий у побережья и короткая подпись Ресифи.",
+  "Marque pelo menos 2 exércitos deste estado.": "Отметьте хотя бы 2 армии в этом штате.",
+  "Neste estado": "В этом штате",
+  "Unificar": "Объединить",
+  "Manter nome e general de:": "Оставить имя и генерала:",
+  "Marque 2 ou 3 exércitos e una todos num só: força somada, moral e experiência pela média.": "Отметьте 2 или 3 армии и объедините их в одну: сила складывается, боевой дух и опыт усредняются.",
+  "Atalho: Shift+clique ou toque longo numa ficha do mapa marca/desmarca.": "Быстро: Shift+клик или долгое нажатие на фишку на карте отмечает/снимает отметку.",
+  "Ver este exército": "Показать эту армию",
+  "Só dá para unificar exércitos do mesmo estado.": "Объединять можно только армии в одном штате.",
+  "Exércitos lado a lado, unificar e dividir": "Армии рядом, объединение и разделение",
+  "Vários exércitos no mesmo estado agora aparecem lado a lado no mapa, cada um com seu toque.": "Несколько армий в одном штате теперь стоят на карте рядом, и каждую можно выбрать касанием.",
+  "Unificar: marque 2 ou 3 exércitos do mesmo estado (caixas no cartão, Shift+clique ou toque longo na ficha) e junte todos num só.": "Объединение: отметьте 2 или 3 армии в одном штате (галочки в карточке, Shift+клик или долгое нажатие на фишку) и соедините их в одну.",
+  "Dividir em dois: só com força 50 ou mais; o novo exército ganha nome automático.": "Разделить надвое: только при силе 50 и больше; новая армия получает имя автоматически.",
+  "Os botões ficam à vista no cartão do exército, em 👥 Neste estado.": "Кнопки видны прямо в карточке армии, в разделе 👥 В этом штате.",
+  "Exércitos no mesmo estado ficam lado a lado no mapa e não se juntam sozinhos.": "Армии в одном штате стоят на карте рядом и сами не объединяются.",
+  "👥 Neste estado": "👥 В этом штате",
+  "marque 2 ou 3 exércitos e toque em Unificar (só do mesmo estado).": "отметьте 2 или 3 армии и нажмите «Объединить» (только в одном штате).",
+  "✂ Dividir em dois": "✂ Разделить надвое",
+  "precisa de força 50 ou mais.": "нужна сила 50 и больше.",
+  "✎ renomeia; máximo de 3 exércitos por estado.": "✎ переименовать; не больше 3 армий в штате."
  },
  "tpl": {
   "{0} de abril de {1}": "{0} апреля {1} г.",
@@ -3368,7 +3387,9 @@ const I18N_RU = {
   "Manutenção: cada +{0} de força custa ~{1} Recursos/mês. Caixa abaixo de {2} atrasa o soldo (moral cai; {3} meses seguidos = motim).": "Содержание: каждые +{0} силы стоят ~{1} ресурсов/мес. Казна ниже {2} задерживает жалованье (боевой дух падает; {3} мес. подряд = мятеж).",
   "Força {0}": "Сила {0}",
   "Moral {0}": "Боевой дух {0}",
-  "Seus exércitos neste estado: {0} de {1}": "Ваших армий в этом штате: {0} из {1}"
+  "Seus exércitos neste estado: {0} de {1}": "Ваших армий в этом штате: {0} из {1}",
+  "Este fica com {0} e nasce uma divisão nova com {1} no mesmo estado.": "У этой остаётся {0}, и в том же штате появляется новая дивизия с силой {1}.",
+  "Para dividir, a força precisa ser pelo menos {0} (agora: {1}).": "Чтобы разделить, нужна сила не меньше {0} (сейчас: {1})."
  },
  "fmt": {
   "__": "__",
@@ -3470,6 +3491,7 @@ const I18N_RU = {
   "reconhecimento obtido ({0} +{1}).": "признание получено ({0} +{1}).",
   "Foco cancelado: {0}. Recursos devolvidos.": "Фокус отменён: {0}. Ресурсы возвращены.",
   "ataca {0}": "атакует {0}",
-  "vai para {0}": "идёт в {0}"
+  "vai para {0}": "идёт в {0}",
+  "{0} exércitos unificados em {1} (força {2}).": "{0} армии объединены в {1} (сила {2})."
  }
 };

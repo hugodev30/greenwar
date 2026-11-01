@@ -3,6 +3,12 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.18", data: "2026-11-01", titulo: "Exércitos lado a lado, unificar e dividir", itens: [
+    "Vários exércitos no mesmo estado agora aparecem lado a lado no mapa, cada um com seu toque.",
+    "Unificar: marque 2 ou 3 exércitos do mesmo estado (caixas no cartão, Shift+clique ou toque longo na ficha) e junte todos num só.",
+    "Dividir em dois: só com força 50 ou mais; o novo exército ganha nome automático.",
+    "Os botões ficam à vista no cartão do exército, em 👥 Neste estado."
+  ] },
   { v: "1.17", data: "2026-10-31", titulo: "Ordens mais claras e recrutar no mapa", itens: [
     "O cartão de cada exército ficou compacto: ataques primeiro, com a chance; movimentos recolhidos; botão Defender como ordem padrão.",
     "A ofensiva especial explica ganho, risco, custo e espera, e diz por que está bloqueada.",

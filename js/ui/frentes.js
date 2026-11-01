@@ -172,13 +172,28 @@ function tpGenHTML(a){
   return `<div class="fgen tpgenrow">${P ? portraitImg(P, 30) : `<span class="tpgen0" aria-hidden="true">★</span>`}<div><b>${gen ? esc(frontGenName(G, gen)) : esc(tF("semGeneral"))}</b>${gen ? `<small><span>${esc(fFala("traco", gen.traco))}</span>: <span>${esc(fFala("tracoDesc", gen.traco))}</span></small>` : ""}</div>
     <select data-tpgen="${a.id}" aria-label="${esc(tF("trocarGeneral"))}" title="${esc(tF("trocarGeneral"))}"><option value="">${esc(tF("semGeneral"))}</option>${opts}</select></div>`;
 }
-// Outros exércitos seus no mesmo estado: trocar a seleção, juntar (escolha sua) e dividir este
-function tpSameStateHTML(a){
-  const here = tpAllAt(G, "player", a.uf), T = tpK(G), sp = tpSplitState(G, a), others = here.filter(x => x !== a);
-  return `<div class="tpsame"><small class="muted">${esc(gfmt(tF("noEstado"), here.length, T.porEstado || 3))}</small>
-    <div class="tpsbtns">${others.map(x => { const j = tpJoinState(G, a, x); return `<button class="chipbtn" data-tpsel="${x.id}">⇄ <span>${esc(tpName(G, x))}</span> (${Math.round(x.str)})</button><button class="chipbtn" data-tpjoin="${x.id}" ${j.ok ? "" : `disabled title="${esc(j.msg)}"`}>⊕ <span>${esc(tF("juntar"))}</span>: <span>${esc(tpName(G, x))}</span></button>`; }).join("")}
-    <button class="chipbtn" data-tpsplit="${a.id}" ${sp.ok ? "" : "disabled"}>✂ <span>${esc(tF("dividir"))}</span></button></div>
-    <small class="${sp.ok ? "muted" : "why"}">${sp.ok ? esc(tF("dividirAjuda")) : `<span aria-hidden="true">🔒</span> <span>${esc(sp.msg)}</span>`}</small></div>`;
+// Fase 18: "Neste estado" à vista no cartão: marcar 2–3 exércitos do mesmo estado e unificar; dividir este em dois (força ≥ 50)
+// UI.tpMark = { uf, ids }: os marcados (sem marcação, só o selecionado). Shift+clique / toque longo numa ficha também marca.
+function tpMarkList(){
+  const a = tpSelArmy(); if (!a || a.side !== "player") return [];
+  const M = UI.tpMark; if (!M || M.uf !== a.uf) return [a.id];
+  return M.ids.filter(id => { const x = tpById(G, id); return x && x.side === "player" && x.uf === a.uf; });
+}
+function tpToggleMark(id){
+  const a = tpSelArmy(), x = tpById(G, id); if (!a || !x || x.side !== "player" || x.uf !== a.uf) return false;
+  const L = tpMarkList(), i = L.indexOf(id); if (i >= 0) L.splice(i, 1); else L.push(id);
+  UI.tpMark = { uf: a.uf, ids: L }; return true;
+}
+function tpKeepOf(L){ const M = L.map(id => tpById(G, id)).filter(Boolean); if (UI.tpKeep && L.includes(UI.tpKeep)) return UI.tpKeep; return (M.sort((x, y) => y.str - x.str)[0] || {}).id; }
+function tpHereHTML(a){
+  const here = tpAllAt(G, "player", a.uf).slice().sort((x, y) => tpSeqN(x) - tpSeqN(y)), T = tpK(G), cap = T.porEstado || 3, sp = tpSplitState(G, a);
+  const L = tpMarkList(), keep = tpKeepOf(L), m = here.length > 1 ? tpMergeState(G, L, keep) : null;
+  const rows = here.length > 1 ? `<div class="tphere">${here.map(x => `<div class="tphrow${x === a ? " cur" : ""}"><label><input type="checkbox" data-tpmark="${x.id}"${L.includes(x.id) ? " checked" : ""} aria-label="${esc(tpName(G, x))}">${tpMiniChip(x)}<span class="tphn"><b>${esc(tpName(G, x))}</b><small><span>${esc(tF("forca"))}</span> ${Math.round(x.str)} · <span>${esc(tF("moral"))}</span> ${Math.round(x.morale ?? 60)}${x.order ? ` · ${x.order.type === "atacar" ? "⚔" : "➜"} ${nm(ufName(x.order.to))}` : ""}</small></span></label>${x === a ? "" : `<button class="linkbtn" data-tpsel="${x.id}" title="${esc(tF("verExercito"))}" aria-label="${esc(tF("verExercito"))}">⇄</button>`}</div>`).join("")}</div>
+    <div class="tpmerge"><button class="tpact merge" data-tpmerge ${m && m.ok ? "" : "disabled"}>🔗 <span>${esc(tF("unificar"))}</span> (${L.length})</button>${L.length > 1 ? `<label class="tpkeep"><span>${esc(tF("unirFica"))}</span> <select data-tpkeep aria-label="${esc(tF("unirFica"))}">${L.map(id => `<option value="${id}"${id === keep ? " selected" : ""}>${esc(tpName(G, tpById(G, id)))}</option>`).join("")}</select></label>` : ""}</div>
+    <small class="${m && !m.ok && L.length > 1 ? "why" : "muted"}">${m && !m.ok ? `<span aria-hidden="true">🔒</span> <span>${esc(m.msg)}</span>` : `<span>${esc(tF("unirAjuda"))}</span>`}</small>
+    <small class="muted tpmhint">${esc(tF("unirDica"))}</small>` : "";
+  return `<div class="tpsec here"><div class="tpsech">👥 <span>${esc(tF("nesteEstado"))}</span> <small>(${here.length}/${cap})</small></div>${rows}
+    <div class="tpsplitrow"><button class="tpact" data-tpsplit="${a.id}" ${sp.ok ? "" : "disabled"}>✂ <span>${esc(tF("dividir"))}</span></button><small class="${sp.ok ? "muted" : "why"}">${sp.ok ? `<span>${esc(gfmt(tF("dividirAjuda2"), Math.round(a.str) - Math.floor(a.str / 2), Math.floor(a.str / 2)))}</span>` : `<span aria-hidden="true">🔒</span> <span>${esc(sp.msg)}</span>`}</small></div></div>`;
 }
 // Recrutar direto num estado seu (fase 17): botão "novo exército" e "reforçar X" para cada exército seu ali, com custo e motivo do bloqueio
 function tpRecHereHTML(uf){
@@ -211,7 +226,6 @@ function tpCardHTML(a, wide){
   const mv = ts.filter(t => t.type !== "atacar"), o = a.order;
   const tb = t => `<button class="tptg ${t.type}${UI.tpPend === t.to || (o && o.to === t.to) ? " on" : ""}" data-tpto="${t.to}">${t.type === "atacar" ? (t.final ? "🏛" : "⚔") : "➜"} <b class="tpn2">${nm(ufName(t.to))}</b>${t.c != null ? `<em class="tpc ${tpChanceCls(t.c)}">${t.c}%</em>` : ""}${t.empty || t.stack ? `<span>${t.empty ? esc(tF("ocupar")) : ""}${t.stack ? esc(gfmt(tF("jaHa"), t.stack)) : ""}</span>` : ""}</button>`;
   const mvOpen = UI.tpMvOpen && UI.tpMvOpen.id === a.id ? UI.tpMvOpen.open : (!atk.length || (o && o.type !== "atacar") || (UI.tpPend && mv.some(t => t.to === UI.tpPend)));
-  const nHere = tpAllAt(G, "player", a.uf).length;
   return `<div class="tpcard" data-tpcard="${a.id}">
     ${tpStepsHTML()}
     <div class="tphead">${tpMiniChip(a)}<div><h4><b>${esc(tpName(G, a))}</b> <button class="linkbtn tpren" data-tpren="${a.id}" title="${esc(tF("renomear"))}" aria-label="${esc(tF("renomear"))}">✎</button></h4><small>📍 ${nm(ufName(a.uf))}${a.cut ? ` · ⛓ <span>${esc(fFala("cerco", "chip"))}</span>` : ""} · <span>${esc(tF("forca"))}</span> <b>${Math.round(a.str)}</b> · <span>${esc(tF("moral"))}</span> <b>${Math.round(a.morale)}</b> · ${tpXpHTML(a, true)}</small></div><button class="xbtn" data-tpdesel aria-label="${esc(tF("cancelar"))}">✕</button></div>
@@ -222,8 +236,8 @@ function tpCardHTML(a, wide){
     <div class="tpsec atk"><div class="tpsech">⚔ <span>${esc(tF("atacarTit"))}</span></div>${atk.length ? `<div class="tptgs atk">${atk.map(tb).join("")}</div>` : `<small class="muted">${esc(tF("semAlvo"))}</small>`}
       ${atk.length ? tpOffHTML(a) : ""}</div>
     ${mv.length ? `<details class="tpsec mv" data-tpdet="tpMvOpen" data-id="${a.id}"${mvOpen ? " open" : ""}><summary>➜ <span>${esc(gfmt(tF("moverTit"), mv.length))}</span></summary><div class="tptgs mvs">${mv.map(tb).join("")}</div></details>` : ""}
+    ${tpHereHTML(a)}
     ${tpGenHTML(a)}
-    <details class="tpsec more" data-tpdet="tpOrgOpen"${UI.tpOrgOpen ? " open" : ""}><summary>⚙ <span>${esc(tF("organizar"))}</span> <small>(${nHere}/${tpK(G).porEstado || 3})</small></summary>${tpSameStateHTML(a)}</details>
     ${tpRecHereHTML(a.uf)}
   </div>`;
 }
@@ -385,15 +399,17 @@ function playFrontResolution(ev, done){
 function showRecifeVictory(done){ if (G.ended) playEndingScene(G, done); else if (done) done(); }
 /* ---------- Seleção e ordens (mapa e painel) ---------- */
 // toque numa ficha: seleciona (ou tira a seleção); ficha inimiga = toque no estado dela
-function tpPickArmy(id){
+function tpPickArmy(id, multi){
   const a = tpById(G, id); if (!a) return;
   if (a.side !== "player") return tpPickUF(a.uf);
+  // Shift+clique / toque longo: marca ou desmarca para unificar (mesmo estado do selecionado)
+  if (multi){ const s0 = tpSelArmy(); if (s0 && s0.side === "player"){
+    if (s0.uf !== a.uf){ toast(frontFala(G, "tropas", "unirLonge")); return; } // outro estado: não marca, explica
+    if (tpToggleMark(id)){ AUDIO.sfx("click"); renderGame(); } return; } }
   if (G.simple && !UI.manual) UI.manual = true;
   UI.tpPend = null; UI.tpTat = null; UI.selUF = null; UI.tpRen = null;
-  // ficha de uma pilha: tocar de novo passa para o próximo exército do estado (depois do último, desmarca)
-  const here = tpAllAt(G, "player", a.uf), cur = here.findIndex(x => x.id === UI.tpSel);
-  if (cur >= 0 && here.length > 1){ UI.tpSel = cur + 1 < here.length ? here[cur + 1].id : null; if (UI.tpSel){ renderGame(); return; } }
-  else UI.tpSel = UI.tpSel === id ? null : id;
+  // fase 18: as fichas ficam lado a lado, então cada toque escolhe aquele exército (tocar de novo desmarca)
+  UI.tpSel = UI.tpSel === id ? null : id;
   if (UI.tpSel) tpZoomToArmy(a);
   renderGame(); tpToPanel();
 }
@@ -454,7 +470,10 @@ function bindFronts(el){
   el.querySelectorAll("[data-tpren]").forEach(b => b.onclick = () => { UI.tpRen = UI.tpRen === b.dataset.tpren ? null : b.dataset.tpren; renderGame(); setTimeout(() => { const i = $("#tpRenIn"); if (i) i.focus(); }, 30); });
   el.querySelectorAll("[data-tprenx]").forEach(b => b.onclick = () => { UI.tpRen = null; renderGame(); });
   el.querySelectorAll("[data-tprenf]").forEach(f => f.onsubmit = e => { e.preventDefault(); const r = tpRename(G, f.dataset.tprenf, $("#tpRenIn").value); UI.tpRen = null; afterAct(r); });
-  el.querySelectorAll("[data-tpsplit]").forEach(b => b.onclick = () => { const r = tpSplit(G, b.dataset.tpsplit); if (r.ok) AUDIO.sfx("order"); afterAct(r); });
+  el.querySelectorAll("[data-tpmark]").forEach(c => c.onchange = () => { tpToggleMark(c.dataset.tpmark); renderGame(); });
+  el.querySelectorAll("[data-tpkeep]").forEach(c => c.onchange = () => { UI.tpKeep = c.value; renderGame(); });
+  el.querySelectorAll("[data-tpmerge]").forEach(b => b.onclick = () => { const L = tpMarkList(), r = tpMerge(G, L, tpKeepOf(L)); if (r.ok){ AUDIO.sfx("order"); UI.tpSel = r.id; UI.tpMark = null; UI.tpKeep = null; } afterAct(r); });
+  el.querySelectorAll("[data-tpsplit]").forEach(b => b.onclick = () => { const r = tpSplit(G, b.dataset.tpsplit); if (r.ok){ AUDIO.sfx("order"); UI.tpMark = null; } afterAct(r); });
   el.querySelectorAll("[data-tpjoin]").forEach(b => b.onclick = () => { const a = tpSelArmy(); if (!a) return; const r = tpJoin(G, a.id, b.dataset.tpjoin); if (r.ok) AUDIO.sfx("order"); afterAct(r); });
   if ($("#autoSel")) $("#autoSel").onchange = e => { const r = setAutoOrders(G, e.target.value); if (e.target.value !== "off") frontAuto(G, e.target.value); afterAct(r); };
 }

@@ -146,3 +146,22 @@
   .tptgs.atk .tptg{justify-content:flex-start}.tptgs.atk .tptg em.tpc{margin-left:auto}
   details.tpsec > summary small{color:var(--muted);font-size:.72rem}
 .tprecbtns .chipbtn small{display:inline;margin-left:4px;opacity:.8}
+/* fase 18: neste estado (unificar / dividir) */
+.tpsec.here{border-left:3px solid #7be08f;padding-left:8px}
+.tphere{display:flex;flex-direction:column;gap:4px;margin:4px 0}
+.tphrow{display:flex;align-items:center;gap:6px;background:#1b1610;border:1px solid #3a2f22;border-radius:8px;padding:4px 6px}
+.tphrow.cur{border-color:#ffd166}
+.tphrow label{display:flex;align-items:center;gap:8px;flex:1;cursor:pointer;min-height:36px}
+.tphrow input{width:20px;height:20px;accent-color:#7be08f;flex:none}
+.tphrow .tpmini{flex:none}
+.tphn{display:flex;flex-direction:column;line-height:1.2}.tphn small{opacity:.8}
+.tphrow .linkbtn{font-size:18px;padding:4px 8px}
+.tpmerge{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0 2px}
+.tpkeep{display:flex;align-items:center;gap:6px;font-size:12px}.tpkeep select{max-width:180px}
+.tpsplitrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.tpsplitrow small{flex:1;min-width:160px}
+.tpmhint{display:block;margin-top:2px}
+.mapbox g.tchip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.tpact{background:#2a2218;border:1px solid #c9a24a;border-radius:8px;color:var(--ink);font:inherit;font-size:.85rem;font-weight:700;padding:7px 12px;min-height:38px;cursor:pointer}
+.tpact.merge{border-color:#7be08f;background:#18291a}
+.tpact:hover:not(:disabled){filter:brightness(1.2)}.tpact:disabled{opacity:.45;cursor:not-allowed}

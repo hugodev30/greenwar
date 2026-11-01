@@ -96,19 +96,34 @@ function tpJoinState(g, into, from){
   if (into.special || from.special) return { ok: false, msg: frontFala(g, "tropas", "juntarOfensiva") };
   return { ok: true };
 }
-function tpJoin(g, intoId, fromId){
-  const into = tpById(g, intoId), from = tpById(g, fromId), st = tpJoinState(g, into, from); if (!st.ok) return st;
-  const tot = into.str + from.str, gi = tpGen(g, into), gf = tpGen(g, from);
-  into.xp = Math.round(((into.xp || 0) * into.str + (from.xp || 0) * from.str) / Math.max(1, tot));
-  tpAddTo(into, from.str, from.morale); tpRemove(g, from);
-  if (gf && !gi) g.war.gens[gf.id] = into.id;
-  return { ok: true, msg: gfmt(frontFala(g, "tropas", "msgJuntou"), tpName(g, from), tpName(g, into)) };
+function tpJoin(g, intoId, fromId){ return tpMerge(g, [intoId, fromId], intoId); }
+// Unificar (fase 18): 2 ou 3 exércitos seus do mesmo estado viram um só. Força somada; moral e experiência pela média ponderada;
+// fica o nome, a ordem e o general de "keepId" (sem general, herda o do mais forte que tiver um)
+function tpMergeState(g, ids, keepId){
+  const F = k => frontFala(g, "tropas", k), L = [...new Set(ids || [])].map(id => tpById(g, id));
+  if (L.length < 2) return { ok: false, msg: F("unirPoucos") };
+  if (L.some(x => !x)) return { ok: false, msg: F("erroExercito") };
+  for (const x of L){ const st = tpEditState(g, x); if (!st.ok) return st; }
+  if (L.some(x => x.uf !== L[0].uf)) return { ok: false, msg: F("unirLonge") }; // só do mesmo estado (regra dura, também no núcleo)
+  if (L.some(x => x.special)) return { ok: false, msg: F("juntarOfensiva") };
+  if (keepId && !L.some(x => x.id === keepId)) return { ok: false, msg: F("erroExercito") };
+  return { ok: true, list: L };
+}
+function tpMerge(g, ids, keepId){
+  const st = tpMergeState(g, ids, keepId); if (!st.ok) return st;
+  const L = st.list, into = keepId ? tpById(g, keepId) : L.slice().sort((x, y) => y.str - x.str)[0], rest = L.filter(x => x !== into);
+  const tot = L.reduce((s, x) => s + x.str, 0);
+  into.xp = Math.round(L.reduce((s, x) => s + (x.xp || 0) * x.str, 0) / Math.max(1, tot));
+  let gi = tpGen(g, into); const gOther = rest.slice().sort((x, y) => y.str - x.str).map(x => tpGen(g, x)).find(Boolean);
+  for (const x of rest){ tpAddTo(into, x.str, x.morale); tpRemove(g, x); }
+  if (!gi && gOther){ g.war.gens[gOther.id] = into.id; gi = gOther; }
+  return { ok: true, id: into.id, msg: gfmt(frontFala(g, "tropas", "msgUniu"), L.length, tpName(g, into), Math.round(into.str)) };
 }
 // Dividir (escolha do jogador): metade da força vira uma Divisão nova no mesmo estado (precisa de vaga e de força mínima)
 function tpSplitState(g, a){
   const st = tpEditState(g, a); if (!st.ok) return st;
   const T = tpK(g), F = k => frontFala(g, "tropas", k);
-  if (a.str < (T.dividirMin || 20)) return { ok: false, msg: gfmt(F("dividirFraco"), T.dividirMin || 20) };
+  if (a.str < (T.dividirMin || 50)) return { ok: false, msg: gfmt(F("dividirFraco"), T.dividirMin || 50, Math.round(a.str)) };
   if (!tpRoom(g, "player", a.uf)) return { ok: false, msg: gfmt(F("lotado"), T.porEstado || 3) };
   if (tpArmies(g, "player").length >= T.max) return { ok: false, msg: gfmt(F("limite"), T.max) };
   if (a.special) return { ok: false, msg: F("juntarOfensiva") };

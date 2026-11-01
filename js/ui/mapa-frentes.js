@@ -18,6 +18,23 @@ function tpChipPos(uf){
   if (TP_CHIP_SIDE[uf]){ const d = TP_CHIP_SIDE[uf]; return [o[0] + d[0] * k / 1.15, o[1] + d[1]]; }
   return [s.lx, s.ly + 8 + 10 * k];
 }
+// fase 18: vários exércitos do mesmo lado num estado ficam lado a lado (nunca um em cima do outro).
+// 2 = uma fileira; 3 = dois em cima e um embaixo; nos estados pequenos do Nordeste, colunas intercaladas no mar.
+const TP_SLOT_W = 41, TP_SLOT_H = 23;
+function tpSlotOffsets(uf, n){
+  const k = TCHIP_K(), w = TP_SLOT_W * k, h = TP_SLOT_H * k;
+  if (TP_CHIP_SEA.includes(uf)){ const cw = 38 * k + 3; return Array.from({ length: n }, (_, j) => [2 * j * cw, 0]); }
+  if (n <= 1) return [[0, 0]];
+  if (n === 2) return [[-w / 2, 0], [w / 2, 0]];
+  return [[-w / 2, 0], [w / 2, 0], [0, h]].concat(Array.from({ length: n - 3 }, (_, j) => [(j % 2 ? 1 : -1) * w, h * (1 + (j >> 1))]));
+}
+const tpSeqN = a => +String(a.id).replace(/\D/g, "") || 0;
+function tpChipSlots(armies){
+  const by = {}, out = {}; for (const a of armies) (by[a.side + ":" + a.uf] ||= []).push(a);
+  for (const L of Object.values(by)){ L.sort((x, y) => tpSeqN(x) - tpSeqN(y)); const [x0, y0] = tpChipPos(L[0].uf), off = tpSlotOffsets(L[0].uf, L.length);
+    L.forEach((a, i) => { out[a.id] = [x0 + off[i][0], y0 + off[i][1]]; }); }
+  return out;
+}
 // ponto do estado (setas e estrelas): Recife e Porto Alegre ficam onde as cidades estão
 const TP_CITY = { PE: [566, 207], RS: [330, 546], DF: [384.3, 320.7] };
 function tpUfPt(uf){ const c = TP_CITY[uf]; if (c) return c; const s = MAP_DATA.states[uf]; return [s.lx, s.ly]; }
@@ -35,7 +52,7 @@ function frontMapLayers(g, control, w, opts){
   out.defs += hatch("fhP", C.p, 45, 2, 5, .85) + hatch("fhE", C.e, -45, 2, 5, .85);
   out.defs += `<marker id="frotaArr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#ffe08a"/></marker>`;
   // guerra acabou (ex.: Recife caiu neste mês): a animação ainda mostra os exércitos do começo do mês
-  const armyLayers = () => { const L = tpMapLayers(g, opts); out.over += L.targets + L.arrows; out.badges += L.chips; out.w = Math.max(w, Math.ceil(tpChipPos("PB")[0] + 22 * TCHIP_K() + 4)); };
+  const armyLayers = () => { const L = tpMapLayers(g, opts); out.over += L.targets + L.arrows; out.badges += L.chips; out.w = Math.max(w, Math.ceil(Math.max(tpChipPos("PB")[0], L.maxX || 0) + 22 * TCHIP_K() + 4)); };
   if (!ph.war || !W || !W.fronts.length){ if (W && opts.static && opts.tpArmies) armyLayers(); return out; }
   for (const f of W.fronts){
     const G0 = frontGeom(g, f); if (!G0) continue;
@@ -74,18 +91,17 @@ function tpChipLabel(g, a){
 }
 // Ficha OTAN: retângulo azul com X (seu) ou losango vermelho (inimigo), força em número grande e barra de moral embaixo.
 // Cercado: moldura tracejada vermelha e um cadeado.
-function tpChipSVG(g, a, o, cut, n){
+function tpChipSVG(g, a, o, cut, pos){
   if (!MAP_DATA.states[a.uf]) return "";
-  const [x, y] = tpChipPos(a.uf), k = TCHIP_K(), P = a.side === "player", gen = g.war && g.war.gens && P ? tpGen(g, a) : null, lbl = tpChipLabel(g, a);
+  const [x, y] = pos || tpChipPos(a.uf), k = TCHIP_K(), P = a.side === "player", gen = g.war && g.war.gens && P ? tpGen(g, a) : null, lbl = tpChipLabel(g, a);
   const mor = Math.max(0.05, Math.min(1, (a.morale ?? 60) / 100));
   const sym = P ? `<rect class="sym" x="-16" y="-5.5" width="10" height="8"/><path class="sym" d="M-16,-5.5L-6,2.5M-16,2.5L-6,-5.5"/>`
     : `<path class="sym" d="M-11,-7L-5,-1.5L-11,4L-17,-1.5z"/><path class="sym" d="M-14,-4.3L-8,1.2M-14,1.2L-8,-4.3"/>`;
-  const stk = n > 1 ? Array.from({ length: Math.min(2, n - 1) }, (_, i) => `<rect class="bg stk" x="${-19 + 3 * (i + 1)}" y="${-10 - 3 * (i + 1)}" width="38" height="20" rx="3"/>`).reverse().join("") : "";
-  const cls = `tchip ${P ? "p" : "e"}${n > 1 ? " multi" : ""}${o.sel === a.id ? " sel" : ""}${P && a.order ? " ord" : ""}${a.special ? " sp" : ""}${cut ? " cut" : ""}${o.dim && o.sel && o.sel !== a.id && P ? " dim" : ""}`;
+  const cls = `tchip ${P ? "p" : "e"}${o.sel === a.id ? " sel" : ""}${o.mark && o.mark.length > 1 && o.mark.includes(a.id) ? " mk" : ""}${P && a.order ? " ord" : ""}${a.special ? " sp" : ""}${cut ? " cut" : ""}${o.dim && o.sel && o.sel !== a.id && P && !(o.mark && o.mark.length > 1 && o.mark.includes(a.id)) ? " dim" : ""}`;
   return `<g class="${cls}" data-army="${a.id}" data-uf="${a.uf}" tabindex="0" role="button" aria-label="${esc(lbl)}" transform="translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${k})"><title>${esc(lbl)}</title>
-    ${o.sel === a.id ? `<rect class="ring" x="-22" y="-14" width="44" height="28" rx="6"/>` : ""}${cut ? `<rect class="cutr" x="-21.5" y="-12.5" width="43" height="25" rx="5"/>` : ""}${stk}<rect class="bg" x="-19" y="-10" width="38" height="20" rx="3"/>${sym}
+    ${o.sel === a.id ? `<rect class="ring" x="-22" y="-14" width="44" height="28" rx="6"/>` : ""}${cut ? `<rect class="cutr" x="-21.5" y="-12.5" width="43" height="25" rx="5"/>` : ""}<rect class="bg" x="-19" y="-10" width="38" height="20" rx="3"/>${sym}
     <text class="cn" x="6.5" y="0.5">${Math.round(a.str)}</text><rect class="mb0" x="-16" y="5.2" width="32" height="2.2" rx="1"/><rect class="mb" x="-16" y="5.2" width="${(32 * mor).toFixed(1)}" height="2.2" rx="1"/>
-    ${gen ? `<g class="gs" transform="translate(17,-9)"><circle r="4.6"/><text y="0.6">★</text></g>` : ""}${P && a.order ? `<path class="ordmk" d="M-19,-10L-12,-10L-19,-3z"/>` : ""}${a.special ? `<text class="spk" x="-21" y="-9">💥</text>` : ""}${cut ? `<text class="cutk" x="-20" y="12">⛓</text>` : ""}${n > 1 ? `<g class="nstk" transform="translate(19,8)"><circle r="5.4"/><text y="0.6">×${n}</text></g>` : ""}${a.xp >= 30 && P ? `<text class="xps" x="-1" y="-11.5">${a.xp >= 70 ? "★★" : "★"}</text>` : ""}</g>`;
+    ${gen ? `<g class="gs" transform="translate(17,-9)"><circle r="4.6"/><text y="0.6">★</text></g>` : ""}${P && a.order ? `<path class="ordmk" d="M-19,-10L-12,-10L-19,-3z"/>` : ""}${a.special ? `<text class="spk" x="-21" y="-9">💥</text>` : ""}${cut ? `<text class="cutk" x="-20" y="12">⛓</text>` : ""}${o.mark && o.mark.length > 1 && o.mark.includes(a.id) ? `<g class="mkc" transform="translate(-19,-10)"><circle r="5.6"/><text y="0.6">✓</text></g>` : ""}${a.xp >= 30 && P ? `<text class="xps" x="-1" y="-11.5">${a.xp >= 70 ? "★★" : "★"}</text>` : ""}</g>`;
 }
 // Pilhas de exércitos (mesmo lado, mesmo estado): qual aparece por cima — o selecionado, depois o sem ordem, depois o mais forte
 function tpStacks(armies, selId){
@@ -93,9 +109,9 @@ function tpStacks(armies, selId){
   return Object.values(by).map(L => { L = L.slice().sort((x, y) => (y.id === selId) - (x.id === selId) || (!!x.order - !!y.order) || y.str - x.str || (x.id < y.id ? -1 : 1)); return { top: L[0], list: L }; });
 }
 // Seta grossa: começa na ficha do exército e passa pelos estados do caminho (pts = UFs); a ponta para antes do centro do destino
-function tpArrowSVG(pts, cls, title){
+function tpArrowSVG(pts, cls, title, start){
   if (!pts || pts.length < 2 || pts.some(u => !MAP_DATA.states[u])) return "";
-  const P = [tpChipPos(pts[0])].concat(pts.slice(1).map(tpUfPt));
+  const P = [start || tpChipPos(pts[0])].concat(pts.slice(1).map(tpUfPt));
   const cut = (a, b, d) => { const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, t = Math.min(0.45, d / L); return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; };
   const s = cut(P[0], P[1], 12), n = P.length, e = cut(P[n - 1], P[n - 2], 7), pts2 = [s].concat(P.slice(1, -1), [e]);
   let d = `M${s[0].toFixed(1)},${s[1].toFixed(1)}`;
@@ -117,6 +133,7 @@ function tpArrowList(g){
 function tpMapLayers(g, opts){
   const out = { targets: "", arrows: "", chips: "" }; if (!g.war || !g.war.armies) return out;
   const armies = opts.tpArmies || tpArmies(g), sel = opts.tpSel ? tpById(g, opts.tpSel) : null, k = TCHIP_K();
+  const SL = tpChipSlots(armies); out.maxX = Math.max(0, ...Object.values(SL).map(p => p[0]));
   if (opts.tpHot) for (const uf of opts.tpHot){ const S = MAP_DATA.states[uf]; if (S) out.targets += `<path class="thot" d="${S.d}"/>`; }
   if (sel && sel.side === "player" && !opts.static){
     const S0 = MAP_DATA.states[sel.uf]; if (S0) out.targets += `<path class="tsrc" d="${S0.d}"/>`;
@@ -125,18 +142,19 @@ function tpMapLayers(g, opts){
       const od = atk ? tpChance(g, sel, t.to) : null, c = atk ? Math.round(od.chance * 100) : null, fl = atk && od.flank > 1.005 ? Math.round((od.flank - 1) * 100) : 0;
       const lbl = `${ufName(t.to)}: ${F(atk ? (t.empty ? "ocupar" : "atacar") : t.type)}${atk ? ` · ${F("chance")} ${c}%` : ""}${fl ? ` · ${F("flancoChip")} +${fl}%` : ""}`;
       out.targets += `<path class="uf ttg ${t.type}${pend ? " pend" : ""}${t.final ? " final" : ""}" data-uf="${t.to}" d="${S.d}"><title>${esc(lbl)}</title></path>`;
-      const busy = armies.some(a => a.uf === t.to && a !== sel), [cx, cy] = tpChipPos(t.to), x = cx, y = cy - (busy ? 21 * k : 0);
+      const busy = armies.some(a => a.uf === t.to && a !== sel), [cx, cy] = tpChipPos(t.to), x = cx, y = cy - (busy ? 22 * k : 0);
       out.chips += `<g class="tpct ${atk ? tpChanceCls(c) : "mv"}${pend ? " pend" : ""}${t.final ? " final" : ""}" data-uf="${t.to}" tabindex="0" role="button" aria-label="${esc(lbl)}" transform="translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${k})"><title>${esc(lbl)}</title>
         <rect x="${atk ? -15 : -9}" y="-7.5" width="${atk ? 30 : 18}" height="15" rx="7.5"/><text y="0.6">${atk ? c + "%" : t.stack ? "➜" + (t.stack + 1) : "➜"}</text>${fl ? `<g class="flk" transform="translate(0,-12)"><rect x="-15" y="-5" width="30" height="10" rx="5"/><text y="0.4">⚔ +${fl}%</text></g>` : ""}</g>`;
     }
-    if (opts.tpPend){ const t = tpTargets(g, sel).find(x => x.to === opts.tpPend); if (t) out.arrows += tpArrowSVG([sel.uf].concat(t.path), "pv"); }
+    if (opts.tpPend){ const t = tpTargets(g, sel).find(x => x.to === opts.tpPend); if (t) out.arrows += tpArrowSVG([sel.uf].concat(t.path), "pv", "", SL[sel.id]); }
   }
-  for (const A of (opts.tpArrows || tpArrowList(g))) if (!(sel && A.id === sel.id && opts.tpPend)) out.arrows += tpArrowSVG(A.pts, A.cls, A.title);
+  for (const A of (opts.tpArrows || tpArrowList(g))) if (!(sel && A.id === sel.id && opts.tpPend)) out.arrows += tpArrowSVG(A.pts, A.cls, A.title, SL[A.id]);
   // fichas: inimigas embaixo, as suas por cima; a selecionada por último
   const order = tpStacks(armies, sel && sel.id).sort((a, b) => (a.top.side === "player") - (b.top.side === "player") || ((sel && a.list.includes(sel)) - (sel && b.list.includes(sel))));
   const pct = out.chips, Lk = {}; out.chips = "";
   const cutOf = a => { if (opts.static) return !!a.cut; const key = a.side + a.fac; if (!(key in Lk)) Lk[key] = tpLinked(g, a.side, a.fac); return tpCut(g, a, Lk[key]); };
-  for (const S of order) out.chips += tpChipSVG(g, S.top, { sel: sel && sel.id, dim: !!sel }, cutOf(S.top), S.list.length);
+  const mark = sel && opts.tpMark ? opts.tpMark : null;
+  for (const S of order) for (const a of S.list.slice().sort((x, y) => (x === sel) - (y === sel))) out.chips += tpChipSVG(g, a, { sel: sel && sel.id, dim: !!sel, mark }, cutOf(a), SL[a.id]);
   out.chips += pct;
   return out;
 }

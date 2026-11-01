@@ -736,6 +736,63 @@ for (const sc of SCENARIOS) {
         t16 += fins.length + 2; }
       console.log(`Fase 16: ${t16} testes de exércitos distintos, soldo, plano do inimigo, migração v14→v15, cenas dos finais e Novidades`);
     }
+    // fase 18: unificar 2–3 exércitos (só do MESMO estado, regra no núcleo), dividir só com força ≥ dividirMin (50), fichas lado a lado
+    {
+      const RZ = new Function(JOGO.codigo + "; return { tpArmies, tpById, tpAllAt, tpMerge, tpMergeState, tpJoin, tpSplit, tpSplitState, tpNew, tpGen, frontCfg, frontFala, TP_UFS };")();
+      let t18 = 0; const rd = f => require("fs").readFileSync(require("path").join(JOGO.RAIZ, f), "utf8");
+      if (gwReg){
+        const base = () => { const g = JSON.parse(JSON.stringify(gwReg)); while (g.queue.length) g.queue.pop(); g.ended = null; g.used = g.used || {}; return g; };
+        const T = RZ.frontCfg(gwReg).tropas, cap = T.porEstado || 3, minD = T.dividirMin;
+        if (minD !== 50) err(`fase 18: dividirMin deveria ser 50 (está ${minD})`);
+        // unificar 3 do mesmo estado: força somada, moral ponderada, fica o escolhido
+        { const g = base(), a = RZ.tpArmies(g, "player")[0];
+          for (const x of RZ.tpAllAt(g, "player", a.uf)) if (x !== a) g.war.armies = g.war.armies.filter(y => y !== x);
+          while (RZ.tpAllAt(g, "player", a.uf).length < 3) RZ.tpNew(g, "player", null, a.uf, 15, 40, "div");
+          const L = RZ.tpAllAt(g, "player", a.uf), sum = L.reduce((s, x) => s + x.str, 0), keep = L[1].id, mn = Math.min(...L.map(x => x.morale)), mx = Math.max(...L.map(x => x.morale));
+          const r = RZ.tpMerge(g, L.map(x => x.id), keep), here = RZ.tpAllAt(g, "player", a.uf);
+          if (!r.ok || here.length !== 1 || here[0].id !== keep || here[0].str !== sum || here[0].morale < mn || here[0].morale > mx) err("fase 18: unificar 3 exércitos do mesmo estado falhou");
+          t18++; }
+        // exércitos de estados DIFERENTES: o núcleo recusa (com motivo) e nada muda
+        { const g = base(), P = RZ.tpArmies(g, "player"), a = P[0], b = P.find(x => x.uf !== a.uf);
+          if (!b) err("fase 18: partida de teste sem exércitos em estados diferentes");
+          else { const n0 = RZ.tpArmies(g).length, sa = a.str, sb = b.str, r = RZ.tpMerge(g, [a.id, b.id], a.id), r2 = RZ.tpJoin(g, a.id, b.id), st = RZ.tpMergeState(g, [a.id, b.id]);
+            const why = RZ.frontFala(g, "tropas", "unirLonge");
+            if (r.ok || r2.ok || st.ok || r.msg !== why || RZ.tpArmies(g).length !== n0 || a.str !== sa || b.str !== sb || !RZ.tpById(g, b.id)) err("fase 18: unificar exércitos de estados diferentes deveria ser recusado");
+            // misturando 2 do mesmo estado com 1 de outro: também recusa
+            const c = RZ.tpNew(g, "player", null, a.uf, 10, 60, "div"), r3 = RZ.tpMerge(g, [a.id, c.id, b.id]);
+            if (r3.ok || !RZ.tpById(g, c.id)) err("fase 18: unificar com um exército de outro estado na lista deveria ser recusado"); }
+          t18 += 2; }
+        // só exércitos seus, pelo menos 2
+        { const g = base(), a = RZ.tpArmies(g, "player")[0], e = RZ.tpArmies(g, "enemy")[0];
+          if (RZ.tpMerge(g, [a.id]).ok) err("fase 18: unificar 1 exército só deveria ser recusado");
+          if (e && RZ.tpMerge(g, [a.id, e.id]).ok) err("fase 18: unificar com exército inimigo deveria ser recusado");
+          t18 += 2; }
+        // dividir: 49 não, 50 sim (25/25); estado cheio não
+        { const g = base(), a = RZ.tpArmies(g, "player")[0];
+          for (const x of RZ.tpAllAt(g, "player", a.uf)) if (x !== a) g.war.armies = g.war.armies.filter(y => y !== x);
+          a.special = false; a.str = 49; const r0 = RZ.tpSplit(g, a.id);
+          if (r0.ok || !/49/.test(r0.msg || "")) err("fase 18: dividir com força 49 deveria ser recusado (com a força atual no motivo)");
+          a.str = 50; const r1 = RZ.tpSplit(g, a.id), b = r1.ok && RZ.tpById(g, r1.id);
+          if (!b || a.str !== 25 || b.str !== 25 || b.uf !== a.uf) err("fase 18: dividir com força 50 deveria dar 25 + 25 no mesmo estado");
+          while (RZ.tpAllAt(g, "player", a.uf).length < cap) RZ.tpNew(g, "player", null, a.uf, 10, 60, "div");
+          a.str = 80; if (RZ.tpSplit(g, a.id).ok) err("fase 18: dividir num estado cheio deveria ser recusado");
+          t18 += 3; }
+        // fichas: 2 ou 3 exércitos do mesmo lado num estado nunca se sobrepõem (desktop e celular) e ficam perto do estado
+        { const mf = rd("js/ui/mapa-frentes.js"), lp = rd("js/ui/mapa.js").match(/const LABEL_POS = [^\n]+/)[0];
+          const part = mf.slice(mf.indexOf("const TCHIP_K"), mf.indexOf("// ponto do estado (setas"));
+          for (const mob of [false, true]){
+            const LY = new Function(JOGO.dados + "\n" + lp + "\nconst MOBILE_MAP = () => " + mob + ", SET = {};\n" + part + "; return { tpChipSlots, TCHIP_K, tpChipPos, MAP_DATA };")();
+            const k = LY.TCHIP_K();
+            for (const uf of RZ.TP_UFS) for (const n of [2, 3]){
+              const A = Array.from({ length: n }, (_, i) => ({ id: "t" + (i + 1), side: "player", uf })), S = LY.tpChipSlots(A), c = LY.tpChipPos(uf);
+              for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++){ const p = S[A[i].id], q = S[A[j].id];
+                if (Math.abs(p[0] - q[0]) < 38 * k && Math.abs(p[1] - q[1]) < 20 * k) err(`fase 18: fichas sobrepostas em ${uf} (${n} exércitos, ${mob ? "celular" : "desktop"})`); }
+              if (A.some(a => Math.hypot(S[a.id][0] - c[0], S[a.id][1] - c[1]) > 4 * 41 * k + 1)) err(`fase 18: ficha longe demais de ${uf}`);
+              t18++; } } }
+        if (!/data-tpmerge/.test(rd("js/ui/frentes.js")) || !/data-tpsplit/.test(rd("js/ui/frentes.js")) || /tpOrgOpen/.test(rd("js/ui/frentes.js"))) err("fase 18: unificar/dividir deveriam estar à vista no cartão (fora de 'Organizar')");
+      }
+      console.log(`Fase 18: ${t18} testes de unificar (só no mesmo estado), dividir (força ≥ 50) e fichas lado a lado`);
+    }
     // conselheira: no máximo 2 dicas, com título, texto e ação; "Fazer isso" funciona e não quebra a partida
     for (let seed = 1; seed <= 12; seed++){
       const g = API.newCampaign(sc22, seed, { diff: seed % 2 ? "facil" : "normal" });

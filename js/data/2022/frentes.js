@@ -24,7 +24,7 @@ const FRENTES_2022 = {
   // semReduto = ignora a fortificação; semCavar = ignora o entrincheiramento; perdas = multiplica as baixas se o ataque falhar)
   // porEstado = máximo de exércitos do mesmo lado num estado (fase 16: eles não se fundem sozinhos); dividirMin = força mínima
   // para dividir um exército; xp = experiência ganha por batalha (vitória/derrota no ataque, defesa) e bônus máximo de poder
-  tropas: { inicio: 4, porExercito: 22, max: 10, porEstado: 3, dividirMin: 20, xp: { vitoria: 12, derrota: 6, defesa: 6, bonus: 0.15 }, passos: 2, guarnicao: 6, guarnicaoPeso: 1, guarnicaoCapital: 20, cavar: 1.2,
+  tropas: { inicio: 4, porExercito: 22, max: 10, porEstado: 3, dividirMin: 50, xp: { vitoria: 12, derrota: 6, defesa: 6, bonus: 0.15 }, passos: 2, guarnicao: 6, guarnicaoPeso: 1, guarnicaoCapital: 20, cavar: 1.2,
     expoente: 2.4, autoChance: 0.6, alvoChance: 0.45, novo: 20, flanco: 0.2,
     cerco: { poder: 0.75, perda: 0.2, moral: 15, rende: 10, moralRende: 15, meses: 3 },
     impeto: { passo: 0.07 },
@@ -264,11 +264,14 @@ const FRENTES_2022 = {
       cercoAlvo: "Defensor cercado: −25% de força.",
       msgMover: "{0}: vai para {1}.",
       msgJuntou: "{0} entrou em {1}: agora são um só exército.",
+      msgUniu: "{0} exércitos unificados em {1} (força {2}).",
       msgDividiu: "{0} se dividiu: nasce a {1}.",
       msgRenomeou: "Novo nome: {0}.",
       juntarLonge: "Só dá para juntar exércitos que estão no mesmo estado.",
+      unirLonge: "Só dá para unificar exércitos do mesmo estado.",
       juntarOfensiva: "Não dá durante uma ofensiva especial.",
-      dividirFraco: "Força mínima para dividir: {0}.",
+      dividirFraco: "Para dividir, a força precisa ser pelo menos {0} (agora: {1}).",
+      unirPoucos: "Marque pelo menos 2 exércitos deste estado.",
       lotado: "Esse estado já tem {0} exércitos seus (o máximo).",
       semReforco: "Não há exército seu nesse estado para reforçar.",
       // fase 16: HUD de movimento e painel de exércitos
@@ -310,6 +313,13 @@ const FRENTES_2022 = {
       trocarGeneral: "Trocar general",
       recAqui: "Recrutar aqui",
       reforcar: "Reforçar",
+      nesteEstado: "Neste estado",
+      unificar: "Unificar",
+      unirFica: "Manter nome e general de:",
+      unirAjuda: "Marque 2 ou 3 exércitos e una todos num só: força somada, moral e experiência pela média.",
+      unirDica: "Atalho: Shift+clique ou toque longo numa ficha do mapa marca/desmarca.",
+      verExercito: "Ver este exército",
+      dividirAjuda2: "Este fica com {0} e nasce uma divisão nova com {1} no mesmo estado.",
       recrutaIsolado: "Estado isolado da sua capital: recrute num estado ligado a ela.",
       recNovo: "Novo exército",
       recInfo: "{0} de {1} exércitos seus neste estado · {2} de {3} recrutamentos restantes no mês",

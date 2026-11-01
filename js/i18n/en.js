@@ -2783,7 +2783,26 @@ const I18N_EN = {
   "Toque num estado seu durante a guerra para recrutar ali: exército novo ou reforço, com custo e manutenção à vista.": "Tap one of your states during the war to recruit there: a new army or reinforcements, with cost and upkeep shown.",
   "Decisões nacionais não gastam mais ações políticas.": "National decisions no longer spend political actions.",
   "Facções: cada cartão mostra o efeito em cada nível de lealdade, com o de agora destacado; as regras ficam no botão ?.": "Factions: each card shows the effect at every loyalty level, with the current one highlighted; the rules are behind the ? button.",
-  "Mapa: siglas do Nordeste dentro dos estados, fichas junto à costa e Recife com rótulo curto.": "Map: Northeast state labels inside the states, army chips by the coast and a short Recife label."
+  "Mapa: siglas do Nordeste dentro dos estados, fichas junto à costa e Recife com rótulo curto.": "Map: Northeast state labels inside the states, army chips by the coast and a short Recife label.",
+  "Marque pelo menos 2 exércitos deste estado.": "Check at least 2 armies in this state.",
+  "Neste estado": "In this state",
+  "Unificar": "Merge",
+  "Manter nome e general de:": "Keep name and general of:",
+  "Marque 2 ou 3 exércitos e una todos num só: força somada, moral e experiência pela média.": "Check 2 or 3 armies and merge them into one: strength adds up, morale and experience are averaged.",
+  "Atalho: Shift+clique ou toque longo numa ficha do mapa marca/desmarca.": "Shortcut: Shift+click or long-press a chip on the map to check/uncheck it.",
+  "Ver este exército": "View this army",
+  "Só dá para unificar exércitos do mesmo estado.": "Only armies in the same state can be merged.",
+  "Exércitos lado a lado, unificar e dividir": "Armies side by side, merge and split",
+  "Vários exércitos no mesmo estado agora aparecem lado a lado no mapa, cada um com seu toque.": "Several armies in the same state now appear side by side on the map, each one tappable.",
+  "Unificar: marque 2 ou 3 exércitos do mesmo estado (caixas no cartão, Shift+clique ou toque longo na ficha) e junte todos num só.": "Merge: check 2 or 3 armies in the same state (boxes on the card, Shift+click or long-press the chip) and combine them into one.",
+  "Dividir em dois: só com força 50 ou mais; o novo exército ganha nome automático.": "Split in two: only with strength 50 or more; the new army gets an automatic name.",
+  "Os botões ficam à vista no cartão do exército, em 👥 Neste estado.": "The buttons are right on the army card, under 👥 In this state.",
+  "Exércitos no mesmo estado ficam lado a lado no mapa e não se juntam sozinhos.": "Armies in the same state stand side by side on the map and never merge on their own.",
+  "👥 Neste estado": "👥 In this state",
+  "marque 2 ou 3 exércitos e toque em Unificar (só do mesmo estado).": "check 2 or 3 armies and tap Merge (same state only).",
+  "✂ Dividir em dois": "✂ Split in two",
+  "precisa de força 50 ou mais.": "needs strength 50 or more.",
+  "✎ renomeia; máximo de 3 exércitos por estado.": "✎ renames; at most 3 armies per state."
  },
  "tpl": {
   "{0} de outubro de {1}": "October {0}, {1}",
@@ -3376,7 +3395,9 @@ const I18N_EN = {
   "Manutenção: cada +{0} de força custa ~{1} Recursos/mês. Caixa abaixo de {2} atrasa o soldo (moral cai; {3} meses seguidos = motim).": "Upkeep: each +{0} strength costs ~{1} Resources/mo. Treasury below {2} delays pay (morale drops; {3} months in a row = mutiny).",
   "Força {0}": "Strength {0}",
   "Moral {0}": "Morale {0}",
-  "Seus exércitos neste estado: {0} de {1}": "Your armies in this state: {0} of {1}"
+  "Seus exércitos neste estado: {0} de {1}": "Your armies in this state: {0} of {1}",
+  "Este fica com {0} e nasce uma divisão nova com {1} no mesmo estado.": "This one keeps {0} and a new division with {1} is formed in the same state.",
+  "Para dividir, a força precisa ser pelo menos {0} (agora: {1}).": "To split, strength must be at least {0} (now: {1})."
  },
  "fmt": {
   "__": "__",
@@ -3478,6 +3499,7 @@ const I18N_EN = {
   "reconhecimento obtido ({0} +{1}).": "recognition obtained ({0} +{1}).",
   "Foco cancelado: {0}. Recursos devolvidos.": "Focus cancelled: {0}. Resources refunded.",
   "ataca {0}": "attacks {0}",
-  "vai para {0}": "moves to {0}"
+  "vai para {0}": "moves to {0}",
+  "{0} exércitos unificados em {1} (força {2}).": "{0} armies merged into {1} (strength {2})."
  }
 };

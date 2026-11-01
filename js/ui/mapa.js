@@ -88,11 +88,19 @@ function renderMap(el, control, changed, withNotes, opts){
   svg.addEventListener("mouseleave", () => tip.style.display = "none");
   if (opts && opts.onPick) svg.addEventListener("click", e => {
     // guerra de 2022: ficha de exército → onTropa; estado destacado (ou etiqueta de chance) → onTpTarget
-    const tc = e.target.closest("g.tchip"); if (tc && opts.onTropa){ tip.style.display = "none"; opts.onTropa(tc.dataset.army); return; }
+    const tc = e.target.closest("g.tchip"); if (tc && opts.onTropa){ tip.style.display = "none"; if (el._tpLong){ el._tpLong = false; return; } opts.onTropa(tc.dataset.army, e.shiftKey || e.ctrlKey || e.metaKey); return; }
     const tr = e.target.closest("g.tpct, path.ttg"); if (tr && opts.onTpTarget){ tip.style.display = "none"; opts.onTpTarget(tr.dataset.uf); return; }
     const c = e.target.closest("g.cnt"); if (c && opts.onArmy){ tip.style.display = "none"; opts.onArmy(c.dataset.uf, c.dataset.side); return; }
     const p = e.target.closest("path.uf"); if (p) opts.onPick(p.dataset.uf); });
   else svg.addEventListener("click", show);
+  // fase 18: toque longo numa ficha = marcar/desmarcar para unificar (como Shift+clique)
+  if (opts && opts.onTropa){ let lp = null;
+    const stop = () => { if (lp){ clearTimeout(lp.t); lp = null; } };
+    svg.addEventListener("pointerdown", e => { const tc = e.target.closest("g.tchip"); stop(); el._tpLong = false; if (!tc) return;
+      lp = { x: e.clientX, y: e.clientY, t: setTimeout(() => { lp = null; el._tpLong = true; if (navigator.vibrate) try { navigator.vibrate(20); } catch (_){} opts.onTropa(tc.dataset.army, true); }, 550) }; });
+    svg.addEventListener("pointermove", e => { if (lp && Math.hypot(e.clientX - lp.x, e.clientY - lp.y) > 10) stop(); });
+    svg.addEventListener("pointerup", stop); svg.addEventListener("pointercancel", stop);
+    svg.addEventListener("contextmenu", e => { if (e.target.closest("g.tchip")) e.preventDefault(); }); }
   if (opts && opts.zoom) mapZoomAttach(el, opts); // zoom e arraste (js/ui/mapa-zoom.js), só no mapa principal
 }
 

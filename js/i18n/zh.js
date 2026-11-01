@@ -2777,7 +2777,26 @@ const I18N_ZH = {
   "Toque num estado seu durante a guerra para recrutar ali: exército novo ou reforço, com custo e manutenção à vista.": "战争期间点击你的州即可在那里征兵：新军队或增援，并显示费用和维持费。",
   "Decisões nacionais não gastam mais ações políticas.": "国家决策不再消耗政治行动点。",
   "Facções: cada cartão mostra o efeito em cada nível de lealdade, com o de agora destacado; as regras ficam no botão ?.": "派系：每张卡片显示各忠诚度等级的效果，并高亮当前等级；规则放在“?”按钮里。",
-  "Mapa: siglas do Nordeste dentro dos estados, fichas junto à costa e Recife com rótulo curto.": "地图：东北各州缩写显示在州内，军队标记紧贴海岸，累西腓使用简短标签。"
+  "Mapa: siglas do Nordeste dentro dos estados, fichas junto à costa e Recife com rótulo curto.": "地图：东北各州缩写显示在州内，军队标记紧贴海岸，累西腓使用简短标签。",
+  "Marque pelo menos 2 exércitos deste estado.": "请至少勾选本州的 2 支军队。",
+  "Neste estado": "本州",
+  "Unificar": "合并",
+  "Manter nome e general de:": "保留名称和将军：",
+  "Marque 2 ou 3 exércitos e una todos num só: força somada, moral e experiência pela média.": "勾选 2 或 3 支军队合并为一支：兵力相加，士气和经验取平均。",
+  "Atalho: Shift+clique ou toque longo numa ficha do mapa marca/desmarca.": "快捷方式：在地图上按住 Shift 点击或长按棋子即可勾选/取消。",
+  "Ver este exército": "查看这支军队",
+  "Só dá para unificar exércitos do mesmo estado.": "只能合并同一州的军队。",
+  "Exércitos lado a lado, unificar e dividir": "军队并排、合并与拆分",
+  "Vários exércitos no mesmo estado agora aparecem lado a lado no mapa, cada um com seu toque.": "同一州的多支军队现在在地图上并排显示，每支都可单独点选。",
+  "Unificar: marque 2 ou 3 exércitos do mesmo estado (caixas no cartão, Shift+clique ou toque longo na ficha) e junte todos num só.": "合并：勾选同一州的 2 或 3 支军队（卡片上的复选框、Shift+点击或长按棋子），合为一支。",
+  "Dividir em dois: só com força 50 ou mais; o novo exército ganha nome automático.": "一分为二：兵力需达到 50 或以上；新军队自动命名。",
+  "Os botões ficam à vista no cartão do exército, em 👥 Neste estado.": "这些按钮就在军队卡片的“👥 本州”中。",
+  "Exércitos no mesmo estado ficam lado a lado no mapa e não se juntam sozinhos.": "同一州的军队在地图上并排显示，不会自动合并。",
+  "👥 Neste estado": "👥 本州",
+  "marque 2 ou 3 exércitos e toque em Unificar (só do mesmo estado).": "勾选 2 或 3 支军队并点击“合并”（仅限同一州）。",
+  "✂ Dividir em dois": "✂ 一分为二",
+  "precisa de força 50 ou mais.": "需要兵力 50 或以上。",
+  "✎ renomeia; máximo de 3 exércitos por estado.": "✎ 重命名；每州最多 3 支军队。"
  },
  "tpl": {
   "{0} de abril de {1}": "{1}年4月{0}日",
@@ -3368,7 +3387,9 @@ const I18N_ZH = {
   "Manutenção: cada +{0} de força custa ~{1} Recursos/mês. Caixa abaixo de {2} atrasa o soldo (moral cai; {3} meses seguidos = motim).": "维持费：每 +{0} 兵力约花费 {1} 资源/月。资金低于 {2} 会拖欠军饷（士气下降；连续 {3} 个月 = 兵变）。",
   "Força {0}": "兵力 {0}",
   "Moral {0}": "士气 {0}",
-  "Seus exércitos neste estado: {0} de {1}": "你在此州的军队：{0}/{1}"
+  "Seus exércitos neste estado: {0} de {1}": "你在此州的军队：{0}/{1}",
+  "Este fica com {0} e nasce uma divisão nova com {1} no mesmo estado.": "本军保留 {0}，并在同一州组建一支 {1} 兵力的新师。",
+  "Para dividir, a força precisa ser pelo menos {0} (agora: {1}).": "兵力至少为 {0} 才能拆分（当前：{1}）。"
  },
  "fmt": {
   "__": "__",
@@ -3470,6 +3491,7 @@ const I18N_ZH = {
   "reconhecimento obtido ({0} +{1}).": "获得承认（{0} +{1}）。",
   "Foco cancelado: {0}. Recursos devolvidos.": "国策已取消：{0}。资源已退还。",
   "ataca {0}": "进攻{0}",
-  "vai para {0}": "前往{0}"
+  "vai para {0}": "前往{0}",
+  "{0} exércitos unificados em {1} (força {2}).": "{0} 支军队合并为{1}（兵力 {2}）。"
  }
 };
