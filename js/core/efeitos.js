@@ -84,14 +84,32 @@ function fxParts(g, fx){
 function fxSummary(g, fx){ return fxParts(g, fx).map(p => p.t).join(" · "); }
 
 /* ---------- Mapa ---------- */
+// Estados seus que um evento da história não pode tirar no meio da guerra: { uf: "batalha" | "exercito" }
+function frontHeldUFs(g){
+  if (typeof frontMode !== "function" || !frontMode(g) || !g.war || !(g.war.armies || []).length || !phaseOf(g).war) return null;
+  const out = {}, ev = g.mil && g.mil.month === g.month ? g.mil : null;
+  for (const a of g.war.armies) if (a.side === "player" && sideOf(g, g.control[a.uf], phaseOf(g)) === "player") out[a.uf] = "exercito";
+  if (ev) for (const f of ev.flips || []) if (f.side === "player" && sideOf(g, g.control[f.uf], phaseOf(g)) === "player") out[f.uf] = "batalha";
+  return out;
+}
 function mapChange(g, spec){
-  if (!spec) return;
-  const before = Object.assign({}, g.control);
+  if (!spec) return [];
+  const before = Object.assign({}, g.control), kept = [];
   if (spec.resolve) for (const uf in g.control) if (spec.resolve[g.control[uf]]) g.control[uf] = spec.resolve[g.control[uf]];
-  if (spec.map) Object.assign(g.control, spec.map);
+  if (spec.map){
+    // v1.18.2: na guerra por frentes, um evento da história não tira em silêncio um estado que é seu na marra
+    // (tomado em batalha neste mês ou com exército seu lá dentro). O estado fica com você e o mês registra o porquê.
+    const keep = g.ended ? null : frontHeldUFs(g);
+    for (const uf in spec.map){
+      if (keep && keep[uf] && sideOf(g, spec.map[uf], phaseOf(g)) !== "player"){ kept.push({ uf, why: keep[uf] }); continue; }
+      g.control[uf] = spec.map[uf];
+    }
+    if (kept.length && g.mil && g.mil.month === g.month) g.mil.kept = (g.mil.kept || []).concat(kept);
+  }
   noteChanges(g, before);
   // "split" (2022): estado rachado — não muda de dono (não existe "em disputa"), mas a agitação dispara
   if (spec.split) for (const uf in spec.split) if (g.uf[uf]) g.uf[uf].unrest = Math.max(g.uf[uf].unrest, 70);
+  return kept;
 }
 function noteChanges(g, before){
   for (const uf in g.control) if (g.control[uf] !== before[uf]){

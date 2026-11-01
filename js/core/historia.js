@@ -4,7 +4,8 @@ function enterStory(g, id, rep){
   const sc = scOf(g), S = sc.story, n = S.nodes[id];
   g.story = { node: id, due: g.month, pending: false };
   if (!g.visited.includes(id)) g.visited.push(id);
-  if (n.onEnter) mapChange(g, n.onEnter);
+  const kept = n.onEnter ? mapChange(g, n.onEnter) : [];
+  if (rep) for (const k of kept) rep.push({ t: gfmt(k.why === "batalha" ? "{0} continua seu: você o tomou em batalha neste mês, e o evento não o tira de você." : "{0} continua seu: o seu exército está lá e segura o estado.", ufName(k.uf)), k: "good" });
   const C = sc.campaign;
   if (C.enterFx && C.enterFx[id]) applyFx(g, C.enterFx[id]);
   if (C.focus) focusStoryGrant(g, id, rep);

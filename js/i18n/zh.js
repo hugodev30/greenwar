@@ -2819,7 +2819,11 @@ const I18N_ZH = {
   "Oportunidades concluídas aparecem como concluídas, com a data em que podem voltar.": "已完成的机会显示为已完成，并注明可再次出现的日期。",
   "● Oportunidade: última quinzena para começar": "● 机会：最后半个月可以开始",
   "● Oportunidade: último mês para começar": "● 机会：最后一个月可以开始",
-  "● Oportunidade: último turno para começar": "● 机会：最后一回合可以开始"
+  "● Oportunidade: último turno para começar": "● 机会：最后一回合可以开始",
+  "Conquistas que ficam": "攻下的州不再丢失",
+  "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.": "修复：在战斗中攻下的州不会再因同月的剧情事件而悄悄归还敌方。",
+  "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.": "战争期间，剧情事件不会夺走有你军队驻守的州；报告会说明你的部队守住了该州。",
+  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "战报按月末的归属统计：被攻下又被夺回的州会如实显示，不会同时显示为攻下和失去。"
  },
  "tpl": {
   "{0} de abril de {1}": "{1}年4月{0}日",
@@ -3531,6 +3535,11 @@ const I18N_ZH = {
   "Foco cancelado: {0}. Recursos devolvidos.": "国策已取消：{0}。资源已退还。",
   "ataca {0}": "进攻{0}",
   "vai para {0}": "前往{0}",
-  "{0} exércitos unificados em {1} (força {2}).": "{0} 支军队合并为{1}（兵力 {2}）。"
+  "{0} exércitos unificados em {1} (força {2}).": "{0} 支军队合并为{1}（兵力 {2}）。",
+  "Tomados e retomados pelo inimigo no mesmo mês: {0}.": "同月内攻下又被敌方夺回：{0}。",
+  "Perdidos e recuperados por você no mesmo mês: {0}.": "同月内失去又被你夺回：{0}。",
+  "Seguros pelas suas tropas, apesar dos eventos: {0}.": "尽管发生事件，仍由你的部队守住：{0}。",
+  "{0} continua seu: você o tomou em batalha neste mês, e o evento não o tira de você.": "{0}仍归你所有：你本月在战斗中攻下了它，该事件不会把它夺走。",
+  "{0} continua seu: o seu exército está lá e segura o estado.": "{0}仍归你所有：你的军队驻守在那里，守住了该州。"
  }
 };

@@ -2819,7 +2819,11 @@ const I18N_RU = {
   "Oportunidades concluídas aparecem como concluídas, com a data em que podem voltar.": "Выполненные возможности отображаются как выполненные, с датой, когда они могут вернуться.",
   "● Oportunidade: última quinzena para começar": "● Возможность: последние полмесяца, чтобы начать",
   "● Oportunidade: último mês para começar": "● Возможность: последний месяц, чтобы начать",
-  "● Oportunidade: último turno para começar": "● Возможность: последний ход, чтобы начать"
+  "● Oportunidade: último turno para começar": "● Возможность: последний ход, чтобы начать",
+  "Conquistas que ficam": "Захваченное остаётся вашим",
+  "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.": "Исправлено: штат, взятый в бою, больше не возвращается молча врагу из-за сюжетного события в том же месяце.",
+  "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.": "Во время войны сюжетные события не отнимают штаты, где стоит ваша армия; отчёт сообщает, когда ваши войска удержали штат.",
+  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "Отчёт о сражениях учитывает владельца на конец месяца: взятый и отбитый штат так и отображается, а не как одновременно захваченный и потерянный."
  },
  "tpl": {
   "{0} de abril de {1}": "{0} апреля {1} г.",
@@ -3531,6 +3535,11 @@ const I18N_RU = {
   "Foco cancelado: {0}. Recursos devolvidos.": "Фокус отменён: {0}. Ресурсы возвращены.",
   "ataca {0}": "атакует {0}",
   "vai para {0}": "идёт в {0}",
-  "{0} exércitos unificados em {1} (força {2}).": "{0} армии объединены в {1} (сила {2})."
+  "{0} exércitos unificados em {1} (força {2}).": "{0} армии объединены в {1} (сила {2}).",
+  "Tomados e retomados pelo inimigo no mesmo mês: {0}.": "Взяты и отбиты врагом в том же месяце: {0}.",
+  "Perdidos e recuperados por você no mesmo mês: {0}.": "Потеряны и возвращены вами в том же месяце: {0}.",
+  "Seguros pelas suas tropas, apesar dos eventos: {0}.": "Удержаны вашими войсками, несмотря на события: {0}.",
+  "{0} continua seu: você o tomou em batalha neste mês, e o evento não o tira de você.": "{0} остаётся вашим: вы взяли его в бою в этом месяце, и событие его не отнимает.",
+  "{0} continua seu: o seu exército está lá e segura o estado.": "{0} остаётся вашим: там стоит ваша армия и удерживает штат."
  }
 };

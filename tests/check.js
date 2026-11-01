@@ -838,6 +838,83 @@ for (const sc of SCENARIOS) {
       if (/some no fim do mês/.test(require("fs").readFileSync(require("path").join(JOGO.RAIZ, "js/core/conselheiro.js"), "utf8"))) err("fase 18.1: dica da Marta ainda diz 'some no fim do mês'");
       console.log(`Fase 18.1: ${t181} testes de oportunidade começada no último turno (quinzenas e meses) que sempre termina`);
     }
+    // Fase 18.2 (v1.18.2): estado tomado em batalha não volta em silêncio (bug: "ocupei o Amazonas e o relatório diz que ganhei e perdi")
+    // Causa: o nó "racha_militar" (onEnter map AM/AP → resistência) entrava no MESMO turno da batalha e sobrescrevia g.control; tpFix tirava o exército.
+    {
+      const W = new Function(JOGO.codigo + "; return { newCampaign, endTurn, choose, queueChoices, advisorTips, advisorDo, coupStoryTip, coupState, frontMode, frontAuto, tpSide, tpArmies, phaseOf, sideOf, mapChange, frontFlipSummary, enterStory, frontHeldUFs, scOf };")();
+      let t182 = 0; const ok = (c, m) => { t182++; if (!c) err("Fase 18.2: " + m); };
+      const step = g => { let gd = 0;
+        while (g.queue.length && !g.ended && gd++ < 20){ const tip = W.coupStoryTip(g, W.coupState(g)); if (tip) W.advisorDo(g, tip); else { const ch = W.queueChoices(g); W.choose(g, Math.max(0, ch.findIndex(c => c.ok))); } }
+        if (g.ended) return;
+        for (let k = 0; k < 10; k++){ const tp = W.advisorTips(g, { tab: "mapa" }).find(x => x.act.k !== "tab" && x.act.k !== "end"); if (!tp || W.advisorDo(g, tp).ok === false) break; }
+        if (W.frontMode(g) && g.war && g.war.fronts.length) W.frontAuto(g, "auto");
+        W.endTurn(g); };
+      // 1) varredura: toda conquista do jogador num mês continua dele e com o exército dentro (a guerra não acabou no mesmo turno)
+      let caps = 0, bad = 0, warG = null, rachaHit = 0;
+      for (let seed = 1; seed <= 90; seed++){
+        const g = W.newCampaign(sc22, seed, { diff: ["normal", "facil", "dificil"][seed % 3] });
+        for (let t = 0; t < 70 && !g.ended; t++){
+          const hadRacha = g.visited.includes("racha_militar");
+          step(g); const ev = g.mil;
+          if (!ev || ev.month !== g.month || g.ended || !W.tpArmies(g).length) continue;
+          if (!warG && ev.war) warG = seed;
+          if (!hadRacha && g.visited.includes("racha_militar") && ev.flips.some(f => f.side === "player")) rachaHit++;
+          for (const b of ev.battles) if (b.took && b.side === "player"){ caps++;
+            const mine = W.tpSide(g, b.uf) === "player", army = W.tpArmies(g, "player").some(a => a.uf === b.uf);
+            const FS = W.frontFlipSummary(g, ev);
+            if (!mine || !army || !FS.won.includes(b.uf) || FS.lost.includes(b.uf)){ bad++; if (bad < 4) err(`Fase 18.2: seed ${seed} mês ${g.month}: ${b.uf} tomado mas dono=${W.tpSide(g, b.uf)} exército=${army}`); }
+          }
+        }
+      }
+      ok(caps > 100, `poucas conquistas na varredura (${caps})`); ok(bad === 0, `${bad} conquistas revertidas/sem exército`);
+      // 2) cenário do bug (seed 57, abril/2023): AM tomado no mês em que entra o "racha_militar" fica com o jogador e o t8 dentro
+      { const g = W.newCampaign(sc22, 57, { diff: "normal" }); let hit = null;
+        for (let t = 0; t < 70 && !g.ended && !hit; t++){ const had = g.visited.includes("racha_militar"); step(g);
+          if (!had && g.visited.includes("racha_militar")) hit = g; }
+        ok(!!hit, "seed 57 não chegou ao racha_militar"); if (hit){ const ev = hit.mil, am = ev.battles.find(b => b.uf === "AM" && b.took && b.side === "player");
+          ok(!!am, "seed 57: o cenário do bug (AM tomado no mês do racha) não se reproduziu"); if (am){ ok(W.tpSide(hit, "AM") === "player", "AM voltou para o inimigo no mês do racha");
+            ok(W.tpArmies(hit, "player").some(a => a.uf === "AM" && a.id === am.into), "o exército que tomou AM não está lá");
+            ok((ev.kept || []).some(k => k.uf === "AM" && k.why === "batalha"), "g.mil.kept não registra AM");
+            ok((hit.report || []).some(r => /Amazonas continua seu/.test(r.t)), "relatório não explica que AM continua seu");
+            ok(W.frontFlipSummary(hit, ev).won.includes("AM"), "resumo não lista AM como tomado"); } } }
+      // 3) unidade: mapChange respeita conquista do mês e exército presente, mas não finais nem estados vazios
+      { const g = W.newCampaign(sc22, warG || 1, { diff: ["normal", "facil", "dificil"][(warG || 1) % 3] });
+        for (let t = 0; t < 70 && !g.ended && !(W.phaseOf(g).war && W.tpArmies(g, "player").length && g.mil && g.mil.war); t++) step(g);
+        ok(!!(W.phaseOf(g).war && W.tpArmies(g, "player").length), "não chegou na guerra para o teste unitário");
+        const ph = W.phaseOf(g), mineUF = Object.keys(g.control).filter(u => W.tpSide(g, u) === "player");
+        const enemyFac = Object.values(g.control).find(f => W.sideOf(g, f, ph) === "enemy");
+        const withArmy = mineUF.find(u => W.tpArmies(g, "player").some(a => a.uf === u));
+        const empty = mineUF.find(u => !W.tpArmies(g).some(a => a.uf === u) && u !== withArmy && u !== "DF");
+        const conq = mineUF.find(u => u !== withArmy && u !== empty && u !== "DF" && !W.tpArmies(g).some(a => a.uf === u));
+        g.mil.month = g.month; g.mil.flips = [{ uf: conq, side: "player", to: g.control[conq] }]; g.mil.kept = [];
+        const c0 = Object.assign({}, g.control);
+        const kept = W.mapChange(g, { map: { [withArmy]: enemyFac, [conq]: enemyFac, [empty]: enemyFac } });
+        ok(g.control[withArmy] === c0[withArmy] && g.control[conq] === c0[conq], "evento tirou estado com exército/conquistado no mês");
+        ok(g.control[empty] === enemyFac, "evento deixou de mudar um estado vazio (deveria mudar)");
+        ok(kept.length === 2 && kept.some(k => k.uf === conq && k.why === "batalha") && kept.some(k => k.uf === withArmy && k.why === "exercito"), "mapChange não devolveu os estados seguros");
+        const rep = []; const node = Object.keys(W.scOf(g).story.nodes).find(id => (W.scOf(g).story.nodes[id].onEnter || {}).map && !W.scOf(g).story.nodes[id].ending);
+        const N = W.scOf(g).story.nodes[node], sv = N.onEnter; N.onEnter = { map: { [withArmy]: enemyFac } };
+        try { W.enterStory(g, node, rep); } finally { N.onEnter = sv; }
+        ok(rep.some(r => /continua seu: o seu exército está lá/.test(r.t) && r.k === "good"), "enterStory não avisa que as tropas seguraram o estado");
+        g.ended = { node: "x" }; W.mapChange(g, { map: { [withArmy]: enemyFac } }); ok(g.control[withArmy] === enemyFac, "final da campanha deveria aplicar o mapa"); }
+      // 4) resumo do relatório: tomado e retomado / perdido e recuperado / seguro
+      { const g = W.newCampaign(sc22, 2); const ph = W.phaseOf(g);
+        const P = Object.keys(g.control).find(u => W.sideOf(g, g.control[u], ph) === "player"), E = Object.keys(g.control).find(u => W.sideOf(g, g.control[u], ph) !== "player");
+        let F = W.frontFlipSummary(g, { flips: [{ uf: E, side: "player" }, { uf: E, side: "enemy" }, { uf: P, side: "enemy" }, { uf: P, side: "player" }], kept: [{ uf: P, why: "exercito" }] });
+        ok(F.retaken.includes(E) && !F.won.includes(E) && !F.lost.includes(E), "tomado e retomado não aparece como tal");
+        ok(F.recovered.includes(P) && !F.lost.includes(P), "perdido e recuperado não aparece como tal");
+        ok(F.kept.includes(P), "estado seguro pelas tropas não listado");
+        F = W.frontFlipSummary(g, { flips: [{ uf: P, side: "player" }, { uf: E, side: "enemy" }] });
+        ok(F.won.includes(P) && F.lost.includes(E), "resumo simples errado"); }
+      // 5) textos novos traduzidos e UI usa o resumo pelo dono final
+      const rd2 = f => require("fs").readFileSync(require("path").join(JOGO.RAIZ, f), "utf8");
+      const ui = rd2("js/ui/frentes.js"); ok(/frontFlipSummary\(G, ev\)/.test(ui) && /listaRetomado/.test(ui), "relatório animado não usa o resumo pelo dono final");
+      for (const L of ["en", "zh", "ru"]){ const d = rd2(`js/i18n/${L}.js`);
+        for (const k of ["Tomados e retomados pelo inimigo no mesmo mês: {0}.", "Perdidos e recuperados por você no mesmo mês: {0}.", "Seguros pelas suas tropas, apesar dos eventos: {0}.", "{0} continua seu: você o tomou em batalha neste mês, e o evento não o tira de você.", "{0} continua seu: o seu exército está lá e segura o estado.", "Conquistas que ficam"])
+          ok(d.includes(JSON.stringify(k) + ":"), `${L}: falta tradução de "${k}"`); }
+      ok(/v: "1\.18\.2"/.test(rd2("js/data/novidades.js")), "Novidades sem v1.18.2");
+      console.log(`Fase 18.2: ${t182} testes (${caps} conquistas na varredura, 0 revertidas${rachaHit ? `, ${rachaHit} no mês do racha` : ""})`);
+    }
     // conselheira: no máximo 2 dicas, com título, texto e ação; "Fazer isso" funciona e não quebra a partida
     for (let seed = 1; seed <= 12; seed++){
       const g = API.newCampaign(sc22, seed, { diff: seed % 2 ? "facil" : "normal" });

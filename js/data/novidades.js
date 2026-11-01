@@ -3,6 +3,11 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.18.2", data: "2026-11-01", titulo: "Conquistas que ficam", itens: [
+    "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.",
+    "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.",
+    "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo."
+  ] },
   { v: "1.18.1", data: "2026-11-01", titulo: "Oportunidades sempre terminam", itens: [
     "Correção: uma oportunidade começada agora sempre termina, mesmo que o prazo dela acabe enquanto está em andamento.",
     "O prazo de uma oportunidade só limita quando dá para começá-la, contado em quinzenas ou meses conforme o turno.",

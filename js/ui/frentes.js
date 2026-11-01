@@ -387,8 +387,11 @@ function playFrontResolution(ev, done){
   if (gave.length) later(() => { const dead = new Set(gave.map(s => s.id)); armies = armies.filter(a => !dead.has(a.id)); draw();
     say(gave.map(s => `⛓ <span>${esc(gfmt(fFala("cerco", s.side === "player" ? "rendeuSeu" : "rendeuInimigo"), tpName(G, s), ufName(s.uf)))}</span>`).join("<br>"), gave.some(s => s.side === "player") ? "bad" : "good"); }, t), t += 1400;
   const end = () => { hot = []; box.innerHTML = mapSVG(G.control, [], { g: G, military: true, fronts: true, armies: [], arrows: [], static: true, tpArrows: [] });
-    const mine = (ev.flips || []).filter(m => m.side === "player").map(m => ufName(m.uf)), lost = (ev.flips || []).filter(m => m.side !== "player").map(m => ufName(m.uf));
-    say([mine.length ? `<b class="good">${esc(gfmt(fFala("mapa", "listaGanhou"), mine.join(", ")))}</b>` : "", lost.length ? `<b class="bad">${esc(gfmt(fFala("mapa", "listaPerdeu"), lost.join(", ")))}</b>` : "",
+    // v1.18.2: as listas contam o dono no fim do mês — tomado e retomado no mesmo mês aparece como tal, nunca como "tomado" e "perdido" ao mesmo tempo
+    const R = frontFlipSummary(G, ev), names = l => l.map(ufName).join(", ");
+    say([R.won.length ? `<b class="good">${esc(gfmt(fFala("mapa", "listaGanhou"), names(R.won)))}</b>` : "", R.lost.length ? `<b class="bad">${esc(gfmt(fFala("mapa", "listaPerdeu"), names(R.lost)))}</b>` : "",
+      R.retaken.length ? `<b class="bad">${esc(gfmt(fFala("mapa", "listaRetomado"), names(R.retaken)))}</b>` : "", R.recovered.length ? `<b class="good">${esc(gfmt(fFala("mapa", "listaRecuperado"), names(R.recovered)))}</b>` : "",
+      R.kept.length ? `<b class="good">${esc(gfmt(fFala("mapa", "listaSeguro"), names(R.kept)))}</b>` : "",
       ev.mom !== ev.mom0 && ev.mom ? `<small>⚡ ${esc(fFala("impeto", ev.mom > 0 ? "m" + ev.mom : "n" + (-ev.mom)))}</small>` : ""].filter(Boolean).join(" ")); 
     o.querySelector("[data-done]").style.display = ""; o.querySelector("[data-skip]").style.display = "none"; };
   later(end, t);

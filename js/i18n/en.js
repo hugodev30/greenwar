@@ -2825,7 +2825,11 @@ const I18N_EN = {
   "Oportunidades concluídas aparecem como concluídas, com a data em que podem voltar.": "Completed opportunities show as completed, with the date they can return.",
   "● Oportunidade: última quinzena para começar": "● Opportunity: last fortnight to start",
   "● Oportunidade: último mês para começar": "● Opportunity: last month to start",
-  "● Oportunidade: último turno para começar": "● Opportunity: last turn to start"
+  "● Oportunidade: último turno para começar": "● Opportunity: last turn to start",
+  "Conquistas que ficam": "Conquests that stick",
+  "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.": "Fix: a state taken in battle no longer silently goes back to the enemy because of a story event in the same month.",
+  "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.": "During the war, story events don't take away states where you have an army; the report says when your troops held the state.",
+  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "The battle report counts the owner at the end of the month: a state taken and retaken shows as such, never as won and lost at the same time."
  },
  "tpl": {
   "{0} de outubro de {1}": "October {0}, {1}",
@@ -3539,6 +3543,11 @@ const I18N_EN = {
   "Foco cancelado: {0}. Recursos devolvidos.": "Focus cancelled: {0}. Resources refunded.",
   "ataca {0}": "attacks {0}",
   "vai para {0}": "moves to {0}",
-  "{0} exércitos unificados em {1} (força {2}).": "{0} armies merged into {1} (strength {2})."
+  "{0} exércitos unificados em {1} (força {2}).": "{0} armies merged into {1} (strength {2}).",
+  "Tomados e retomados pelo inimigo no mesmo mês: {0}.": "Taken and retaken by the enemy in the same month: {0}.",
+  "Perdidos e recuperados por você no mesmo mês: {0}.": "Lost and recovered by you in the same month: {0}.",
+  "Seguros pelas suas tropas, apesar dos eventos: {0}.": "Held by your troops despite events: {0}.",
+  "{0} continua seu: você o tomou em batalha neste mês, e o evento não o tira de você.": "{0} stays yours: you took it in battle this month, and the event does not take it from you.",
+  "{0} continua seu: o seu exército está lá e segura o estado.": "{0} stays yours: your army is there and holds the state."
  }
 };

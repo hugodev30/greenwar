@@ -244,6 +244,16 @@ function frontSoldo(g, R){
 // Cansaço da guerra: depois de WAR_WEARY_FROM meses de combate, as batalhas ficam mais sangrentas e o apoio cai devagar.
 const WAR_WEARY_FROM = 12;
 function frontWeary(g){ const m = (g.war && g.war.months) || 0; return Math.min(1.5, Math.max(0, (m - WAR_WEARY_FROM) / 18)); }
+// Resumo das viradas do mês pelo dono FINAL de cada estado (v1.18.2): tomado/perdido de verdade,
+// tomado e retomado pelo inimigo, perdido e recuperado, e os que um evento quis tirar mas as tropas seguraram.
+function frontFlipSummary(g, ev){
+  const out = { won: [], lost: [], retaken: [], recovered: [], kept: [] }, seen = new Set();
+  for (const f of (ev && ev.flips) || []){ if (seen.has(f.uf)) continue; seen.add(f.uf);
+    const fl = ev.flips.filter(x => x.uf === f.uf), firstP = fl[0].side === "player", endP = tpSide(g, f.uf) === "player";
+    if (firstP) out[endP ? "won" : "retaken"].push(f.uf); else out[endP ? "recovered" : "lost"].push(f.uf); }
+  for (const k of (ev && ev.kept) || []) if (!out.kept.includes(k.uf) && !out.won.includes(k.uf)) out.kept.push(k.uf);
+  return out;
+}
 function frontWarMonth(g, R){
   const K = frontCfg(g), T = tpK(g), C = scOf(g).campaign, KK = C.keys, ph = phaseOf(g), W = g.war;
   syncFronts(g);
@@ -277,8 +287,11 @@ function frontWarMonth(g, R){
   const held = ev.battles.filter(b => !b.win && b.side === "enemy"), fail = ev.battles.filter(b => !b.win && b.side === "player");
   if (ev.battles.length) R(gfmt(frontFala(g, "tropas", "resumoMes"), ev.battles.length, won.length, lost.length), won.length > lost.length ? "good" : lost.length > won.length ? "bad" : "info");
   for (const b of ev.battles) if (b.origins >= 2 || b.final || (b.uf === b.cap)) R(frontFala(g, "drama", b.drama), (b.side === "player") === b.win ? "good" : "bad");
-  if (won.length) R(gfmt(frontFala(g, "mapa", "listaGanhou"), won.map(b => ufName(b.uf)).join(", ")), "good");
-  if (lost.length) R(gfmt(frontFala(g, "mapa", "listaPerdeu"), lost.map(b => ufName(b.uf)).join(", ")), "bad");
+  const FS = frontFlipSummary(g, ev), nms = l => l.map(ufName).join(", ");
+  if (FS.won.length) R(gfmt(frontFala(g, "mapa", "listaGanhou"), nms(FS.won)), "good");
+  if (FS.lost.length) R(gfmt(frontFala(g, "mapa", "listaPerdeu"), nms(FS.lost)), "bad");
+  if (FS.retaken.length) R(gfmt(frontFala(g, "mapa", "listaRetomado"), nms(FS.retaken)), "bad");
+  if (FS.recovered.length) R(gfmt(frontFala(g, "mapa", "listaRecuperado"), nms(FS.recovered)), "good");
   if (held.length) R(gfmt(frontFala(g, "tropas", "logSegurou"), held.map(b => ufName(b.uf)).join(", ")), "good");
   if (fail.length) R(gfmt(frontFala(g, "tropas", "logFalhou"), fail.map(b => ufName(b.uf)).join(", ")), "bad");
   for (const b of ev.battles) for (const x of b.lost) R(gfmt(frontFala(g, "tropas", x.side === "player" ? "logDestruido" : "logDestruiuInimigo"), tpName(g, x)), x.side === "player" ? "bad" : "good");

@@ -104,6 +104,9 @@ const FRENTES_2022 = {
     mapa: {
       listaGanhou: "Estados tomados: {0}.",
       listaPerdeu: "Estados perdidos: {0}.",
+      listaRetomado: "Tomados e retomados pelo inimigo no mesmo mês: {0}.",
+      listaRecuperado: "Perdidos e recuperados por você no mesmo mês: {0}.",
+      listaSeguro: "Seguros pelas suas tropas, apesar dos eventos: {0}.",
       revolta: "Revolta! {0} passou para o inimigo.",
       acc: "Estados que mudaram de lado no último mês: {0}.",
       accNada: "Nenhum estado mudou de lado no último mês.",
