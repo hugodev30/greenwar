@@ -793,6 +793,51 @@ for (const sc of SCENARIOS) {
       }
       console.log(`Fase 18: ${t18} testes de unificar (só no mesmo estado), dividir (força ≥ 50) e fichas lado a lado`);
     }
+    // Fase 18.1 (v1.18.1): oportunidade começada SEMPRE termina, mesmo que a janela feche (a janela só limita COMEÇAR)
+    {
+      const OX = new Function(JOGO.codigo + "; return { newCampaign, endTurn, startFocus, focusStatus, focusDef, focusOpenOpp, focusInit, focusCheck, oppTurnsLeft, halfOn, paceFor, parseYM, advisorTips };")();
+      let t181 = 0;
+      const mk = (mode, seed) => {
+        const g = OX.newCampaign(sc22, seed); g.queue.length = 0;
+        if (mode === "q1"){ OX.endTurn(g); g.queue.length = 0; } // 1ª quinzena de novembro
+        if (mode === "m1"){ g.halfDone = true; g.half = 0; }
+        if (mode === "m3"){ g.halfDone = true; g.half = 0; g.month = OX.parseYM("2023-06"); g.story.pending = false; }
+        g.queue.length = 0; return g;
+      };
+      for (const mode of ["q2", "q1", "m1", "m3"]) for (const id of ["o_janela", "o_popularidade", "o_caixa"]) for (const months of [1, 2]){
+        const g = mk(mode, 3 + t181 % 7), f = OX.focusInit(g), F = OX.focusDef(g, id), save = F.months;
+        if (mode === "q2" && !(OX.halfOn(g) && g.half === 1)){ err(`fase 18.1: ${mode} não está na 2ª quinzena`); continue; }
+        if (mode === "q1" && !(OX.halfOn(g) && g.half === 0)){ err(`fase 18.1: ${mode} não está na 1ª quinzena`); continue; }
+        if (mode === "m3" && OX.paceFor(g) !== 3){ err("fase 18.1: turno de 3 meses esperado"); continue; }
+        F.months = months; f.active = null; f.opps = {}; f.cool = {}; g.money = 50;
+        OX.focusOpenOpp(g, F, null); f.opps[id] = g.month; // último mês da janela
+        const left = OX.oppTurnsLeft(g, g.month), want = mode === "q1" ? 2 : 1;
+        if (left !== want) err(`fase 18.1: ${mode} ${id}: turnos restantes ${left}, esperado ${want}`);
+        // começa no ÚLTIMO turno válido (na 1ª quinzena, passa antes para a 2ª)
+        if (mode === "q1"){ OX.endTurn(g); g.queue.length = 0; if (OX.oppTurnsLeft(g, f.opps[id]) !== 1) err("fase 18.1: 2ª quinzena deveria ser o último turno"); }
+        if (OX.focusStatus(g, F).state !== "available"){ err(`fase 18.1: ${mode} ${id} deveria estar disponível no último turno`); F.months = save; continue; }
+        const r = OX.startFocus(g, id); if (!r.ok){ err(`fase 18.1: não começou ${id} (${r.msg})`); F.months = save; continue; }
+        const rep0 = f.rep[id] || 0; let lost = false;
+        for (let k = 0; k < months; k++){
+          if (k > 0 && f.active === id && f.opps[id] !== undefined && g.month <= f.opps[id]) err(`fase 18.1: ${mode} ${id}: janela deveria ter fechado`);
+          g.queue.length = 0; OX.endTurn(g);
+          if ((g.report || []).some(x => /Oportunidade perdida|Foco interrompido/.test(x.t) && x.t.includes(F.name))) lost = true;
+        }
+        if (lost || (f.rep[id] || 0) !== rep0 + 1 || f.active === id) err(`fase 18.1: ${mode} ${id} (${months} turno(s)) começada no último turno não terminou`);
+        if (OX.focusStatus(g, F).state !== "done") err(`fase 18.1: ${id} concluída deveria aparecer como concluída (não como "passada")`);
+        F.months = save; t181++;
+      }
+      // janela fechada sem ter começado: não dá para começar, e a expiração some no fim do turno
+      { const g = mk("m1", 5), f = OX.focusInit(g), F = OX.focusDef(g, "o_janela"); f.active = null; f.opps = { o_janela: g.month - 1 };
+        if (OX.focusStatus(g, F).state !== "unavailable" || !OX.focusCheck(g, "o_janela")) err("fase 18.1: oportunidade vencida não pode começar");
+        OX.endTurn(g); if (f.opps.o_janela !== undefined) err("fase 18.1: oportunidade vencida deveria sumir"); t181++; }
+      // começada e a janela já fechou por qualquer motivo: ainda assim termina
+      { const g = mk("m1", 6), f = OX.focusInit(g), F = OX.focusDef(g, "o_janela"); f.active = null; f.opps = {}; f.cool = {}; g.money = 50;
+        OX.focusOpenOpp(g, F, null); OX.startFocus(g, "o_janela"); f.opps.o_janela = g.month - 2; const r0 = f.rep.o_janela || 0;
+        OX.endTurn(g); if ((f.rep.o_janela || 0) !== r0 + 1) err("fase 18.1: começada com a janela já fechada deveria terminar"); t181++; }
+      if (/some no fim do mês/.test(require("fs").readFileSync(require("path").join(JOGO.RAIZ, "js/core/conselheiro.js"), "utf8"))) err("fase 18.1: dica da Marta ainda diz 'some no fim do mês'");
+      console.log(`Fase 18.1: ${t181} testes de oportunidade começada no último turno (quinzenas e meses) que sempre termina`);
+    }
     // conselheira: no máximo 2 dicas, com título, texto e ação; "Fazer isso" funciona e não quebra a partida
     for (let seed = 1; seed <= 12; seed++){
       const g = API.newCampaign(sc22, seed, { diff: seed % 2 ? "facil" : "normal" });

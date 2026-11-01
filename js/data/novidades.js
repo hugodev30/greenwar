@@ -3,6 +3,11 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.18.1", data: "2026-11-01", titulo: "Oportunidades sempre terminam", itens: [
+    "Correção: uma oportunidade começada agora sempre termina, mesmo que o prazo dela acabe enquanto está em andamento.",
+    "O prazo de uma oportunidade só limita quando dá para começá-la, contado em quinzenas ou meses conforme o turno.",
+    "Oportunidades concluídas aparecem como concluídas, com a data em que podem voltar."
+  ] },
   { v: "1.18", data: "2026-11-01", titulo: "Exércitos lado a lado, unificar e dividir", itens: [
     "Vários exércitos no mesmo estado agora aparecem lado a lado no mapa, cada um com seu toque.",
     "Unificar: marque 2 ou 3 exércitos do mesmo estado (caixas no cartão, Shift+clique ou toque longo na ficha) e junte todos num só.",

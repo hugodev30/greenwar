@@ -32,12 +32,37 @@ function focusStatus(g, F){
     const until = (f.opps || {})[F.id];
     if (until === undefined){
       const cd = (f.cool || {})[F.id];
+      // repetível concluída há pouco: mostra como concluída (não como "passada"), com a volta
+      const n = (f.rep || {})[F.id] || 0, last = (f.hist || []).filter(h => h.id === F.id && !h.story).pop();
+      if (cd > g.month && last && last.m === cd - (O.cooldown || 6)) return { state: "done", why: `Concluída${n > 1 ? ` (${n}×)` : ""} — pode voltar a partir de ${monthLabel(cd)}` };
       return { state: "unavailable", why: cd > g.month ? `Oportunidade passada — pode voltar a partir de ${monthLabel(cd)}` : "Oportunidade: aparece quando " + O.text };
     }
-    const left = until - g.month + 1;
-    return { state: "available", why: `Oportunidade: expira em ${left} ${left === 1 ? "mês" : "meses"}`, left };
+    // a janela só limita COMEÇAR: depois de começada, a oportunidade sempre termina (ver focusTick/focusEndTick)
+    if (g.month > until) return { state: "unavailable", why: "Oportunidade encerrada" };
+    const left = oppTurnsLeft(g, until);
+    return { state: "available", why: `Oportunidade: ${oppLeftText(g, left)} — depois de começada, sempre termina`, left };
   }
   return { state: "available", why: "Disponível" };
+}
+// Turnos que ainda restam para COMEÇAR uma oportunidade aberta até o mês "until" (inclusive).
+// Quinzenas: 2 por mês (na 2ª quinzena resta 1 no mês atual). Mês a mês: turnos de paceFor(g) meses.
+function oppTurnsLeft(g, until){
+  const m = until - g.month;
+  if (m < 0) return 0;
+  if (halfOn(g)) return 2 * m + (g.half ? 1 : 2);
+  let p = paceFor(g); if (g.story && g.story.pending) p = Math.min(p, Math.max(1, g.story.due - g.month)); // o turno encurta antes de um evento da história
+  return Math.max(1, Math.ceil((m + 1) / Math.max(1, p)));
+}
+// "última quinzena para começar" / "dá para começar por mais 3 quinzenas" (mês, meses ou turnos quando o turno vale vários meses)
+function oppLeftText(g, left){
+  const q = halfOn(g), p = q ? 1 : paceFor(g);
+  if (left <= 1) return q ? "última quinzena para começar" : p > 1 ? "último turno para começar" : "último mês para começar";
+  return `dá para começar por mais ${left} ${q ? "quinzenas" : p > 1 ? "turnos" : "meses"}`;
+}
+function oppLeftShort(g, left){
+  const q = halfOn(g), p = q ? 1 : paceFor(g);
+  if (left <= 1) return q ? "última quinzena" : p > 1 ? "último turno" : "último mês";
+  return `mais ${left} ${q ? "quinzenas" : p > 1 ? "turnos" : "meses"}`;
 }
 function focusCheck(g, id){
   const T = focusTree(g), F = focusDef(g, id);
@@ -113,7 +138,7 @@ function focusTick(g, months, R){
   const F = focusDef(g, f.active);
   const st = focusStatus(g, Object.assign({}, F, { id: "__probe", probe: true }));
   const phaseGone = st.state === "unavailable" && F.avail && !cond(g, { phase: F.avail.phase, notPhase: F.avail.notPhase, anyControl: F.avail.anyControl });
-  if (st.state === "locked" || st.state === "excluded" || phaseGone){ R(`Foco interrompido: ${F.name} — ${st.why}.`, "bad"); f.active = null; f.prog = 0; return; }
+  if (!F.oport && (st.state === "locked" || st.state === "excluded" || phaseGone)){ R(`Foco interrompido: ${F.name} — ${st.why}.`, "bad"); f.active = null; f.prog = 0; return; }
   f.prog += months;
   if (f.prog >= F.months) completeFocus(g, F, R);
   else R(`Foco em andamento: ${F.name} (${f.prog}/${F.months} ${turnUnit(g, F.months)}).`);
