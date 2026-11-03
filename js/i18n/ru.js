@@ -4,6 +4,7 @@
 const I18N_RU = {
  "exact": {
   "Chefe do novo governo militar (papel genérico)": "Глава нового военного правительства (обобщённая роль)",
+  "Não foi possível salvar o progresso neste navegador. Ele pode ser perdido se você fechar ou recarregar a página. Verifique o espaço disponível e as permissões de armazenamento.": "Не удалось сохранить прогресс в этом браузере. Он может быть потерян, если закрыть или перезагрузить страницу. Проверьте свободное место и разрешения браузера на хранение данных.",
   "Reduto bolsonarista": "Оплот болсонаристов",
   "O Silêncio": "Молчание",
   "Os dias passam sem que você reconheça ou conteste o resultado. Seus ministros, por conta própria, começam a cooperar com a equipe do presidente eleito. Diante de quartéis em várias cidades, apoiadores montam acampamentos e pedem que as Forças Armadas intervenham.": "Дни идут, а вы не признаёте и не оспариваете результат. Ваши министры по собственной инициативе начинают сотрудничать с командой избранного президента. У казарм в нескольких городах сторонники разбивают лагеря и призывают Вооружённые силы вмешаться.",

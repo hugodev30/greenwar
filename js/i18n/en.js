@@ -10,6 +10,7 @@ const I18N_EN = {
   "Configurações": "Settings",
   "👤 Entrar": "👤 Sign in",
   "Campanha por turnos mensais: diplomacia, facções, exércitos no mapa e finais diferentes.": "Monthly turn-based campaign: diplomacy, factions, armies on the map and multiple endings.",
+  "Não foi possível salvar o progresso neste navegador. Ele pode ser perdido se você fechar ou recarregar a página. Verifique o espaço disponível e as permissões de armazenamento.": "Could not save your progress in this browser. It may be lost if you close or reload the page. Check available storage space and browser storage permissions.",
   "História alternativa": "Alternate history",
   "A Faixa Presidencial": "The Presidential Sash",
   "Você joga como:": "You play as:",

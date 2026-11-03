@@ -1,6 +1,29 @@
 // js/ui/saves.js — Interface: salvar/carregar no navegador (localStorage), finais vistos e ponte com a nuvem (cloud()).
 /* ---------- Saves (versão 2, com migração de saves antigos) ---------- */
-function save(){ if (!G) return; G.savedAt = Date.now(); try{ localStorage.setItem(SCEN.saveKey, JSON.stringify(G)); }catch(e){} }
+let saveWarningActive = false;
+const SAVE_WARNING = "Não foi possível salvar o progresso neste navegador. Ele pode ser perdido se você fechar ou recarregar a página. Verifique o espaço disponível e as permissões de armazenamento.";
+function updateSaveWarning(){
+  const el = document.getElementById("saveWarning");
+  if (!el) return;
+  el.hidden = !saveWarningActive;
+  el.textContent = saveWarningActive ? trText(SAVE_WARNING) : "";
+}
+function save(){
+  if (!G) return false;
+  G.savedAt = Date.now();
+  try{
+    localStorage.setItem(SCEN.saveKey, JSON.stringify(G));
+    if (saveWarningActive){ saveWarningActive = false; updateSaveWarning(); }
+    return true;
+  }catch(e){
+    if (!saveWarningActive){
+      saveWarningActive = true;
+      console.error("salvamento local:", e);
+      updateSaveWarning();
+    }
+    return false;
+  }
+}
 // Ponte opcional para a camada de nuvem (cloud.js). Sem login, offline ou aberto como arquivo local, não faz nada.
 function cloud(fn, ...args){ try{ if (window.GWCloud && typeof window.GWCloud[fn] === "function") window.GWCloud[fn](...args); }catch(e){ console.warn("nuvem:", e); } }
 function loadInfo(sc){

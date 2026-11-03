@@ -5,6 +5,7 @@ const fs = require("fs");
 const JOGO = require("./carregar.js");
 const src = JOGO.dados;
 const SCENARIOS = new Function(src + "; return SCENARIOS;")();
+require("./saves.js");
 const msrc = "";   // o mapa (MAP_DATA) já faz parte de JOGO.dados
 const MAP_DATA = new Function(src + "; return MAP_DATA;")();
 const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
