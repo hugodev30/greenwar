@@ -9,8 +9,9 @@ Jogo de estratégia e história interativa sobre o Brasil, inspirado em Hearts o
 |---|---|---|---|
 | 2022 | **A Faixa Presidencial** | ✅ jogável | Depois da eleição de 2022: aceitar o resultado, contestar ou tentar uma ruptura. Tem a **árvore de decisões nacionais** (58 focos, 9 deles oportunidades que aparecem e expiram). |
 | 1964 | **Os Anos Decisivos** | 🔒 em breve | A crise política de 1964 e suas alternativas. Os dados continuam no código, mas o cenário aparece no menu como "Em breve" e não pode ser aberto. |
+| 2002 | **Brasil 2002** | 🔒 planejado | Um cenário futuro, atualmente apenas anunciado no menu. Ainda não tem história ou campanha jogável. |
 
-O foco atual é o cenário de **2022**. (O antigo cenário fictício de 1924, "Aurora do Sul", foi removido; continua no histórico do git.)
+O foco atual é o cenário de **2022**. Os cenários de 1964 e 2002 não podem ser jogados no momento. (O antigo cenário fictício de 1924, "Aurora do Sul", foi removido; continua no histórico do git.)
 
 ## Sistemas
 - **Turnos:** um turno por mês (em 2022, a partir de março de 2023, cada turno vale 3 meses), com Pontos de Ação.
