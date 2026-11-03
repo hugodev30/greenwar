@@ -4,6 +4,7 @@
 const I18N_ZH = {
  "exact": {
   "Chefe do novo governo militar (papel genérico)": "新军政府首脑（通用角色）",
+  "Não foi possível salvar o progresso neste navegador. Ele pode ser perdido se você fechar ou recarregar a página. Verifique o espaço disponível e as permissões de armazenamento.": "无法在此浏览器中保存进度。如果关闭或重新加载页面，进度可能会丢失。请检查可用空间和浏览器存储权限。",
   "Reduto bolsonarista": "博索纳罗派据点",
   "O Silêncio": "沉默",
   "Os dias passam sem que você reconheça ou conteste o resultado. Seus ministros, por conta própria, começam a cooperar com a equipe do presidente eleito. Diante de quartéis em várias cidades, apoiadores montam acampamentos e pedem que as Forças Armadas intervenham.": "日子一天天过去，你既不承认结果，也不提出异议。你的部长们自作主张，开始与当选总统的团队合作。在多座城市的军营外，支持者搭起营地，呼吁武装部队出手干预。",
