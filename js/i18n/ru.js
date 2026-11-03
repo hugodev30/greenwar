@@ -2824,7 +2824,10 @@ const I18N_RU = {
   "Conquistas que ficam": "Захваченное остаётся вашим",
   "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.": "Исправлено: штат, взятый в бою, больше не возвращается молча врагу из-за сюжетного события в том же месяце.",
   "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.": "Во время войны сюжетные события не отнимают штаты, где стоит ваша армия; отчёт сообщает, когда ваши войска удержали штат.",
-  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "Отчёт о сражениях учитывает владельца на конец месяца: взятый и отбитый штат так и отображается, а не как одновременно захваченный и потерянный."
+  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "Отчёт о сражениях учитывает владельца на конец месяца: взятый и отбитый штат так и отображается, а не как одновременно захваченный и потерянный.",
+  "Aviso quando o jogo não consegue salvar": "Предупреждение, когда игра не может сохраниться",
+  "Se o navegador recusar a gravação (sem espaço ou sem permissão), um aviso fixo no topo avisa que o progresso pode ser perdido; ele some sozinho quando o salvamento volta a funcionar.": "Если браузер не даёт сохранить (нет места или разрешения), вверху появляется постоянное предупреждение о том, что прогресс может быть потерян; оно исчезает само, когда сохранение снова работает.",
+  "Novo teste no navegador confere o menu, o 1964 bloqueado e o início de uma campanha; a documentação de cenários e saves foi atualizada.": "Новый тест в браузере проверяет меню, заблокированный сценарий 1964 года и начало кампании; документация по сценариям и сохранениям обновлена."
  },
  "tpl": {
   "{0} de abril de {1}": "{0} апреля {1} г.",

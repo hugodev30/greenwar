@@ -3,7 +3,7 @@
 Documentação de design e arquitetura do projeto. **Leia até o fim antes de alterar história, árvore ou saves.**
 
 ## 1. O que é
-"Greenwar / Crônicas da Separação": jogo de estratégia narrativa sobre o Brasil, em **português**, inspirado em Hearts of Iron (HoI4). Hoje só o cenário de **2022** é jogável; 1964 está bloqueado e 2002 é apenas um marcador de cenário futuro no menu. O jogador toma decisões na história e administra uma campanha mês a mês, com um mapa dos 27 estados mostrando quem controla cada um.
+"Greenwar / Crônicas da Separação": jogo de estratégia narrativa sobre o Brasil, em **português**, inspirado em Hearts of Iron (HoI4). Hoje só o cenário de **2022** é jogável (o de 1964 aparece bloqueado no menu). O jogador toma decisões na história e administra uma campanha mês a mês, com um mapa dos 27 estados mostrando quem controla cada um.
 
 É um site estático em HTML + CSS + JS puro, **sem dependências e sem build**: o `index.html` carrega arquivos de `css/` e `js/` (veja a seção 4). Funciona offline e salva no `localStorage`.
 
@@ -12,9 +12,8 @@ Documentação de design e arquitetura do projeto. **Leia até o fim antes de al
 |---|---|---|---|---|
 | `brasil1964` | 1964 | Os Anos Decisivos — **BLOQUEADO** (`locked: true`) | A crise de 1964 e suas alternativas | governo, crise, guerra civil |
 | `brasil2022` | 2022 | A Faixa Presidencial | Bolsonaro depois de perder a eleição: aceitar, contestar ou tentar uma ruptura | `governo` (out–dez/2022), `oposicao` (após a posse), `regime` (após um golpe bem-sucedido, com guerra civil) |
-| `brasil2002` | 2002 | Brasil 2002 — **PLANEJADO** (`soon: true`) | Marcador no menu; história e campanha ainda não foram implementadas | — |
 
-**O foco atual do desenvolvimento é o cenário de 2022, o único jogável.** O marcador de 2002 é apenas informativo e não pode ser iniciado.
+**O foco atual do desenvolvimento é o cenário de 2022, o único jogável.**
 
 - **1924 ("Aurora do Sul", id `itavera`) foi removido** (dados, história, campanha, ganchos exclusivos do motor como `C.home`/`homeBonus`, `enemyQuality`, `low/highShare`, `army.enemyStart`). Está no histórico do git (antes do commit que o removeu). Saves antigos dele (`aurora_do_sul_*`) ficam intocados no localStorage e são simplesmente ignorados; linhas da nuvem com `scenario_id = 'itavera'` também são ignoradas (nada é apagado no banco).
 - **1964 está bloqueado:** a entrada em `SCENARIOS` tem `locked: true`. `playable(sc)` (fora do CORE) exige `!soon && !locked && story && campaign`; `setScenario` recusa ids não jogáveis (devolve `false`), o menu mostra o card cinza "🔒 Em breve" sem clique nem "Continuar" e sem ler o save local, e `GWGame.scenarios()` só lista os jogáveis (então a nuvem não baixa, envia nem conta 1964). Não há parâmetros de URL, e `jogo_br_ultimo_cenario` não é reaberto sozinho. **Para liberar 1964 basta tirar `locked: true`** (e rodar `node sim.js 300 brasil1964` para rebalancear).

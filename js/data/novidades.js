@@ -3,6 +3,10 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.18.3", data: "2026-11-03", titulo: "Aviso quando o jogo não consegue salvar", itens: [
+    "Se o navegador recusar a gravação (sem espaço ou sem permissão), um aviso fixo no topo avisa que o progresso pode ser perdido; ele some sozinho quando o salvamento volta a funcionar.",
+    "Novo teste no navegador confere o menu, o 1964 bloqueado e o início de uma campanha; a documentação de cenários e saves foi atualizada."
+  ] },
   { v: "1.18.2", data: "2026-11-01", titulo: "Conquistas que ficam", itens: [
     "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.",
     "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.",

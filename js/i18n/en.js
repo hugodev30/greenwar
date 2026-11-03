@@ -2830,7 +2830,10 @@ const I18N_EN = {
   "Conquistas que ficam": "Conquests that stick",
   "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.": "Fix: a state taken in battle no longer silently goes back to the enemy because of a story event in the same month.",
   "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.": "During the war, story events don't take away states where you have an army; the report says when your troops held the state.",
-  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "The battle report counts the owner at the end of the month: a state taken and retaken shows as such, never as won and lost at the same time."
+  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "The battle report counts the owner at the end of the month: a state taken and retaken shows as such, never as won and lost at the same time.",
+  "Aviso quando o jogo não consegue salvar": "Warning when the game can't save",
+  "Se o navegador recusar a gravação (sem espaço ou sem permissão), um aviso fixo no topo avisa que o progresso pode ser perdido; ele some sozinho quando o salvamento volta a funcionar.": "If the browser refuses to save (no space or no permission), a fixed warning at the top says your progress may be lost; it disappears on its own once saving works again.",
+  "Novo teste no navegador confere o menu, o 1964 bloqueado e o início de uma campanha; a documentação de cenários e saves foi atualizada.": "A new browser test checks the menu, the locked 1964 scenario and starting a campaign; the scenario and save documentation was updated."
  },
  "tpl": {
   "{0} de outubro de {1}": "October {0}, {1}",

@@ -38,7 +38,7 @@ async function main(){
   let browser;
   try{
     browser = await chromium.launch({
-      executablePath: process.env.CHROME || undefined,
+      executablePath: process.env.CHROME || (fs.existsSync("/usr/bin/google-chrome") ? "/usr/bin/google-chrome" : undefined),
       args: process.platform === "win32" ? [] : ["--no-sandbox"]
     });
     const context = await browser.newContext({ viewport: { width: 1366, height: 900 } });
@@ -55,8 +55,8 @@ async function main(){
 
     const futureCards = page.locator(".scen.soon");
     assert.ok(await futureCards.count() > 0, "menu should show at least one unavailable scenario");
-    const card2002 = futureCards.filter({ hasText: "2002" });
-    assert.strictEqual(await card2002.count(), 1, "menu should show the 2002 scenario as coming soon");
+    const card1964 = futureCards.filter({ hasText: "1964" });
+    assert.strictEqual(await card1964.count(), 1, "menu should show the 1964 scenario as locked");
     const blockedState = await futureCards.evaluateAll(cards => cards.map(card => ({
       disabled: card.getAttribute("aria-disabled"),
       role: card.getAttribute("role"),
@@ -66,8 +66,8 @@ async function main(){
     assert.ok(blockedState.every(card => card.disabled === "true" && card.role !== "button" && card.tabIndex === null && !card.hasScenarioId),
       "coming-soon scenarios should not be interactive");
 
-    await card2002.click();
-    assert.strictEqual(await page.locator("#btnNew").count(), 0, "clicking the 2002 card must not open a playable scenario");
+    await card1964.click();
+    assert.strictEqual(await page.locator("#btnNew").count(), 0, "clicking the 1964 card must not open a playable scenario");
     assert.deepStrictEqual(await page.evaluate(() => window.GWGame.current()), { scenario: null, inGame: false },
       "clicking a coming-soon card must leave the game at the scenario menu");
 
@@ -83,7 +83,7 @@ async function main(){
     assert.ok(savedGame && savedGame.scen === "brasil2022", "starting the campaign should create its local save");
     assert.deepStrictEqual(pageErrors, [], "the browser flow should not raise JavaScript errors");
     await context.close();
-    console.log("navegacao-tela: menu, cenário 2002 bloqueado e início da campanha 2022 OK");
+    console.log("navegacao-tela: menu, cenário 1964 bloqueado e início da campanha 2022 OK");
   }finally{
     if (browser) await browser.close();
     await new Promise((resolve, reject) => server.close(err => err ? reject(err) : resolve()));

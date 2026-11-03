@@ -9,9 +9,8 @@ Jogo de estratégia e história interativa sobre o Brasil, inspirado em Hearts o
 |---|---|---|---|
 | 2022 | **A Faixa Presidencial** | ✅ jogável | Depois da eleição de 2022: aceitar o resultado, contestar ou tentar uma ruptura. Tem a **árvore de decisões nacionais** (58 focos, 9 deles oportunidades que aparecem e expiram). |
 | 1964 | **Os Anos Decisivos** | 🔒 em breve | A crise política de 1964 e suas alternativas. Os dados continuam no código, mas o cenário aparece no menu como "Em breve" e não pode ser aberto. |
-| 2002 | **Brasil 2002** | 🔒 planejado | Um cenário futuro, atualmente apenas anunciado no menu. Ainda não tem história ou campanha jogável. |
 
-O foco atual é o cenário de **2022**. Os cenários de 1964 e 2002 não podem ser jogados no momento. (O antigo cenário fictício de 1924, "Aurora do Sul", foi removido; continua no histórico do git.)
+O foco atual é o cenário de **2022**. O cenário de 1964 não pode ser jogado no momento. (O antigo cenário fictício de 1924, "Aurora do Sul", foi removido; continua no histórico do git.)
 
 ## Sistemas
 - **Turnos:** um turno por mês (em 2022, a partir de março de 2023, cada turno vale 3 meses), com Pontos de Ação.
@@ -167,7 +166,6 @@ Para testar localmente com contas, sirva a pasta por HTTP (`python3 -m http.serv
 ## Validação e simulação (Node.js 18 ou mais novo)
 ```bash
 node tests/check.js          # valida história, mapa, campanha e árvore de decisões, e roda a simulação (150 partidas por IA)
-node tests/navegacao-tela.js # teste opcional de navegador: menu, cenário 2002 bloqueado e início de campanha
 node tests/check.js 300      # igual, com 300 partidas por IA
 node tests/sim.js 300        # só a simulação de campanhas, com distribuição de finais por IA
 node tests/sim.js 300 brasil2022   # só um cenário
@@ -176,6 +174,7 @@ node tests/sim.js 300 brasil2022 --dif=facil      # dificuldade Fácil (também:
 node tests/sim.js 300 brasil2022 --conselheira    # acrescenta as IAs "iniciante" e "conselheira" (que só segue as dicas)
 node tests/sim.js 300 brasil2022 --golpe [--dif=dificil]  # acrescenta a IA "golpista_conselheira" e a linha "golpe:" (sucesso do golpe)
 node tests/sim.js 300 --notas                     # mostra a distribuição da nota final e das conquistas por IA (automático com --dif)
+node tests/navegacao-tela.js                      # teste opcional de navegador: menu, cenário 1964 bloqueado e início de campanha
 ```
 Com `--dif` o sim imprime também a linha **resultado** (vitória / intermediário / derrota, pelo campo `outcome` dos finais) e, no Fácil, roda a IA **iniciante** (aleatória que lê os avisos de derrota do modo simples). O `tests/check.js` roda esses modos com 80 partidas e falha se o Fácil não vencer bem mais que o Difícil.
 A simulação imprime uma linha **economia** por IA (AP médio, Recursos médio, pico, turnos com 60+, saldo final, ações de facção, conversões) e falha se os Recursos passarem do teto.

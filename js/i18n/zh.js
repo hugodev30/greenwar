@@ -2824,7 +2824,10 @@ const I18N_ZH = {
   "Conquistas que ficam": "攻下的州不再丢失",
   "Correção: um estado tomado em batalha não volta mais em silêncio para o inimigo por causa de um evento da história no mesmo mês.": "修复：在战斗中攻下的州不会再因同月的剧情事件而悄悄归还敌方。",
   "Na guerra, eventos da história não tiram de você estados onde há um exército seu; o relatório diz quando suas tropas seguraram o estado.": "战争期间，剧情事件不会夺走有你军队驻守的州；报告会说明你的部队守住了该州。",
-  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "战报按月末的归属统计：被攻下又被夺回的州会如实显示，不会同时显示为攻下和失去。"
+  "O relatório de batalhas conta o dono no fim do mês: um estado tomado e retomado aparece como tal, nunca como ganho e perdido ao mesmo tempo.": "战报按月末的归属统计：被攻下又被夺回的州会如实显示，不会同时显示为攻下和失去。",
+  "Aviso quando o jogo não consegue salvar": "游戏无法保存时发出提示",
+  "Se o navegador recusar a gravação (sem espaço ou sem permissão), um aviso fixo no topo avisa que o progresso pode ser perdido; ele some sozinho quando o salvamento volta a funcionar.": "如果浏览器拒绝保存（空间不足或没有权限），顶部会显示固定提示，说明进度可能丢失；保存恢复正常后提示会自动消失。",
+  "Novo teste no navegador confere o menu, o 1964 bloqueado e o início de uma campanha; a documentação de cenários e saves foi atualizada.": "新的浏览器测试会检查菜单、锁定的1964剧本和战役开始；剧本与存档文档已更新。"
  },
  "tpl": {
   "{0} de abril de {1}": "{1}年4月{0}日",
