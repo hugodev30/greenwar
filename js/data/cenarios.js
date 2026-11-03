@@ -38,6 +38,11 @@ const SCENARIOS = [
       disclaimer: "Ficção de história alternativa, no estilo de mods de jogos de estratégia. Tudo o que acontece a partir da primeira escolha é inventado: não retrata fatos, não é previsão e não representa endosso a nenhuma pessoa, partido ou ação. Personagens reais aparecem apenas em papéis públicos, sem falas atribuídas. Golpe de Estado é crime contra a democracia — no jogo, ele tem as consequências que tem."
     },
     story: STORY_2022, campaign: CAMPAIGN_2022, retratos: RETRATOS_2022, golpe: GOLPE_2022, frentes: FRENTES_2022
+  },
+  {
+    id: "brasil2002", year: "2002", soon: true,
+    title: "Brasil 2002", tag: "História alternativa",
+    description: "Um novo cenário ambientado no Brasil de 2002 está nos planos. Um dia será jogável; por enquanto, é apenas uma promessa."
   }
   // Para um novo ano: { id, year, date, title, tag, character, description, saveKey, endingsKey, intro, story, campaign }
   // ou um marcador { id: "em_breve", soon: true, year: "????", title: "Em breve", tag: "Próximo cenário", description: "..." }
