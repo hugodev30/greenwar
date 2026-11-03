@@ -166,6 +166,7 @@ Para testar localmente com contas, sirva a pasta por HTTP (`python3 -m http.serv
 ## Validação e simulação (Node.js 18 ou mais novo)
 ```bash
 node tests/check.js          # valida história, mapa, campanha e árvore de decisões, e roda a simulação (150 partidas por IA)
+node tests/navegacao-tela.js # teste opcional de navegador: menu, cenário 2002 bloqueado e início de campanha
 node tests/check.js 300      # igual, com 300 partidas por IA
 node tests/sim.js 300        # só a simulação de campanhas, com distribuição de finais por IA
 node tests/sim.js 300 brasil2022   # só um cenário
@@ -178,7 +179,7 @@ node tests/sim.js 300 --notas                     # mostra a distribuição da n
 Com `--dif` o sim imprime também a linha **resultado** (vitória / intermediário / derrota, pelo campo `outcome` dos finais) e, no Fácil, roda a IA **iniciante** (aleatória que lê os avisos de derrota do modo simples). O `tests/check.js` roda esses modos com 80 partidas e falha se o Fácil não vencer bem mais que o Difícil.
 A simulação imprime uma linha **economia** por IA (AP médio, Recursos médio, pico, turnos com 60+, saldo final, ações de facção, conversões) e falha se os Recursos passarem do teto.
 O `tests/check.js` também valida os dados do 1964 (bloqueado) e roda um teste curto de integridade dele (40 partidas por IA), para o cenário não quebrar enquanto o motor muda. Esse teste não entra no balanceamento.
-`tests/check.js` termina com código 1 se houver qualquer problema. **Rode depois de qualquer mudança na história, nos eventos ou na árvore.**
+`tests/check.js` termina com código 1 se houver qualquer problema. **Rode depois de qualquer mudança na história, nos eventos ou na árvore.** Os testes `tests/navegacao-tela.js` e `tests/traducao-tela.js` são opcionais e precisam de `playwright` (ou `playwright-core`) e de um Chromium; se o pacote não estiver instalado, serão pulados.
 
 `tools/build-map.js` gera a geometria simplificada dos estados (`tools/brazil-map.json`, copiada para `js/data/mapa-brasil.js`) a partir de um GeoJSON do IBGE. O GeoJSON tem 3,3 MB e não está no repositório. Para regerar o mapa, baixe `brazil-states.geojson` do projeto codeforamerica/click_that_hood, salve como `tools/brazil-states.geojson.json` e rode `node tools/build-map.js`.
 
@@ -215,7 +216,7 @@ js/
   audio/                audio.js (trilha e efeitos gerados no navegador)
   nuvem/                cloud.js e config.js (contas e saves na nuvem, opcional)
 tests/                  check.js (validação), sim.js (simulação), carregar.js (carrega o jogo no Node),
-                        textos-diplomacia.js (textos da aba Diplomacia p/ o check), traducao-tela.js (varredura opcional no navegador)
+                        textos-diplomacia.js (textos da aba Diplomacia p/ o check), navegacao-tela.js e traducao-tela.js (testes opcionais no navegador)
 assets/retratos/        rostos dos personagens fictícios (webp)
 supabase/  tools/       SQL do banco · gerador do mapa
 ```
