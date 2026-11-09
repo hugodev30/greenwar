@@ -41,7 +41,11 @@ function halfTurn(g){
   if (!g.queue.length){
     const ci = (g.chains || []).findIndex(c => c.due <= g.month && findEvent(g, c.id) && cond(g, findEvent(g, c.id).if));
     if (ci >= 0){ const c = g.chains.splice(ci, 1)[0]; g.queue.push({ type: "event", id: c.id }); g.eventSeen[c.id] = g.month; }
-    else if (rnd(g) < (C.eventChance ?? 0.45) * (Q.evento ?? 0.5)){ const ev = pickRandomEvent(g); if (ev){ g.queue.push({ type: "event", id: ev.id }); g.eventSeen[ev.id] = g.month; } }
+    else {
+      const forced = pickForcedQuinzena(g);
+      if (forced){ g.queue.push({ type: "event", id: forced.id }); g.eventSeen[forced.id] = g.month; }
+      else if (rnd(g) < (C.eventChance ?? 0.45) * (Q.evento ?? 0.5)){ const ev = pickRandomEvent(g); if (ev){ g.queue.push({ type: "event", id: ev.id }); g.eventSeen[ev.id] = g.month; } }
+    }
   }
   if (C.focus) focusEndTick(g, R);
   const capInfo = applyMoneyCap(g); if (capInfo) R(`Teto de ${C.money.short}: ${capInfo} acima de ${C.money.cap} foram perdidos (caixa parado não rende).`, "bad");

@@ -240,6 +240,34 @@ const EVENTOS_2022 = [
     ev("u_centrao", "O Centrão faz as contas", "Líderes partidários perguntam o que ganham assinando o pedido de auditoria no Congresso.", [
       { text: "Prometer cargos e verbas.", fx: { money: -6, urna: { prog: 6 }, fac: { centrao: 8 } } },
       { text: "Recusar o balcão de negócios.", fx: { urna: { cred: 3 }, s: { base: -3 } } } ], { if: { urna: { on: true } }, once: true, weight: 3 }),
+    // ======== Quinzenas da abertura (v1.19): um evento garantido por quinzena que ainda não tinha (once + if.half) ====
+    // Já garantidos pela história: 2ª out (início), 1ª nov (caminho da transição) e 1ª jan (crise/julgamento).
+    // Efeitos leves de propósito: a abertura ganha cor sem mudar o equilíbrio das IAs.
+    ev("q_lives", "Lives de meia-noite", ["Influenciadores ligados à sua base marcam lives simultâneas à meia-noite pedindo um sinal.", "A imprensa já montou o plantão; os comandantes pedem discrição."], [
+      { text: "Entrar numa live e pedir calma.", fx: { s: { apoio: 1, internacional: 1 }, fac: { militares: -1 } } },
+      { text: "Mandar um recado curto pedindo que desliguem as câmeras.", fx: { s: { base: 1 }, fac: { evangelicos: 1 } } },
+      { text: "Ignorar e dormir cedo.", fx: { s: { apoio: -1 } } } ], { if: { from: "2022-11", until: "2022-11", half: 1 }, once: true, weight: 10 }),
+    ev("q_natal", "Lista de Natal no Planalto", ["Chega uma lista de pedidos: indultos, cargos e um pronunciamento de fim de ano.", "A assessoria pergunta o que vai para a TV."], [
+      { text: "Pronunciamento só de confraternização, sem política.", fx: { s: { apoio: 1, base: -1 } } },
+      { text: "Falar em paz e citar a transição com respeito.", fx: { s: { internacional: 2, apoio: -1 }, fac: { stf: 2 } } },
+      { text: "Usar o horário para atacar o resultado das urnas.", fx: { s: { apoio: 2, internacional: -2 }, fac: { stf: -3 } } } ], { if: { from: "2022-12", until: "2022-12", half: 0 }, once: true, weight: 10 }),
+    ev("q_reveillon", "Réveillon sob tensão", ["Assessores discutem se você passa a virada em Brasília, no litoral ou em rede nacional.", "A base quer um gesto; o Itamaraty quer silêncio."], [
+      { text: "Ficar em Brasília e gravar uma mensagem curta.", fx: { s: { base: 1, apoio: -1 } } },
+      { text: "Ir ao litoral com a família e sumir das redes.", fx: { s: { internacional: 1 } } },
+      { text: "Fazer um pronunciamento inflamado à meia-noite.", fx: { s: { apoio: 2, internacional: -2 }, unrestAll: 1 } } ], { if: { from: "2022-12", until: "2022-12", half: 1 }, once: true, weight: 10 }),
+    ev("q_posse_fotos", "Fotos da posse circulam", ["Imagens da posse nova dominam as redes. Aliados pedem que você comente; adversários provocam.", "Uma frase errada vira manchete."], [
+      { text: "Desejar sucesso às instituições, sem elogiar ninguém.", fx: { s: { internacional: 1, apoio: -1 }, fac: { stf: 1 } } },
+      { text: "Ficar em silêncio absoluto.", fx: {} },
+      { text: "Criticar o tom da cerimônia em rede social.", fx: { s: { apoio: 1, internacional: -2 }, fac: { stf: -2 } } } ], { if: { from: "2023-01", until: "2023-01", half: 1 }, once: true, weight: 10 }),
+    ev("q_volta_aulas", "Volta às aulas e às ruas", ["O ano letivo recomeça e grupos marcam atos em frente a escolas e universidades.", "Prefeitos pedem que Brasília não esquente o clima."], [
+      { text: "Visitar uma escola e falar em rotina e paz.", fx: { money: -1, s: { apoio: 1 } } },
+      { text: "Pedir que apoiadores evitem os portões das escolas.", fx: { s: { internacional: 1 }, fac: { movimentos: 2 } } },
+      { text: "Incentivar presença pacífica nas ruas.", fx: { s: { apoio: 1 }, unrestAll: 2, fac: { stf: -1 } } } ], { if: { from: "2023-02", until: "2023-02", half: 0 }, once: true, weight: 10 }),
+    ev("q_carnaval", "Carnaval político", ["Blocos anunciam fantasias e refrões com o seu nome — a favor e contra.", "Governadores querem saber se haverá discurso."], [
+      { text: "Pedir respeito ao feriado e evitar política nos trios.", fx: { s: { apoio: -1 }, fac: { centrao: 1 } } },
+      { text: "Mandar uma fantasia simbólica e brincar junto.", fx: { money: -1, s: { apoio: 2 }, fac: { evangelicos: -1 } } },
+      { text: "Ignorar o Carnaval e trabalhar no Congresso.", fx: { s: { base: 1 } } } ], { if: { from: "2023-02", until: "2023-02", half: 1 }, once: true, weight: 10 }),
+
     ev("u_oea", "Missão da OEA divulga relatório", "Os observadores internacionais dizem que a eleição foi limpa, mas recomendam ampliar a auditoria pública das urnas.", [
       { text: "Contestar o relatório.", fx: { urna: { prog: 3, cred: -6 }, act: { onu: -10 } } },
       { text: "Abraçar as recomendações de auditoria.", fx: { urna: { prog: 4, cred: 6 }, s: { internacional: 3 } } } ], { if: { urna: { on: true } }, once: true, weight: 3 })

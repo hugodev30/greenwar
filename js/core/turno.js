@@ -147,7 +147,11 @@ function endTurn(g){
       // desdobramentos vencidos têm prioridade sobre o sorteio (um evento por turno, sem spam)
       const ci = (g.chains || []).findIndex(c => c.due <= g.month && findEvent(g, c.id) && cond(g, findEvent(g, c.id).if));
       if (ci >= 0){ const c = g.chains.splice(ci, 1)[0]; g.queue.push({ type: "event", id: c.id }); g.eventSeen[c.id] = g.month; }
-      else if (rnd(g) < 1 - Math.pow(1 - (C.eventChance ?? 0.45), Math.min(pace, C.eventPaceBoost ? 2 : 1))){ /* eventPaceBoost: turnos de 3 meses têm mais chance, ainda no máx. 1 sorteado */ const ev = pickRandomEvent(g); if (ev){ g.queue.push({ type: "event", id: ev.id }); g.eventSeen[ev.id] = g.month; } }
+      else {
+        const forced = halfOn(g) ? pickForcedQuinzena(g) : null;
+        if (forced){ g.queue.push({ type: "event", id: forced.id }); g.eventSeen[forced.id] = g.month; }
+        else if (rnd(g) < 1 - Math.pow(1 - (C.eventChance ?? 0.45), Math.min(pace, C.eventPaceBoost ? 2 : 1))){ /* eventPaceBoost: turnos de 3 meses têm mais chance, ainda no máx. 1 sorteado */ const ev = pickRandomEvent(g); if (ev){ g.queue.push({ type: "event", id: ev.id }); g.eventSeen[ev.id] = g.month; } }
+      }
     }
     g.chains = (g.chains || []).filter(c => g.month - c.due <= 6); // desdobramento que não coube em 6 meses se perde
   }

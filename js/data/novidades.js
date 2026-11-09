@@ -3,6 +3,10 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.19", data: "2026-11-09", titulo: "Evento em cada quinzena", itens: [
+    "Na abertura em quinzenas, cada turno agora traz um acontecimento: a história cobre alguns; os que faltavam ganharam eventos próprios.",
+    "Novos eventos da abertura: lives de meia-noite, lista de Natal, réveillon, fotos da posse, volta às aulas e Carnaval político."
+  ] },
   { v: "1.18.3", data: "2026-11-03", titulo: "Aviso quando o jogo não consegue salvar", itens: [
     "Se o navegador recusar a gravação (sem espaço ou sem permissão), um aviso fixo no topo avisa que o progresso pode ser perdido; ele some sozinho quando o salvamento volta a funcionar.",
     "Novo teste no navegador confere o menu, o 1964 bloqueado e o início de uma campanha; a documentação de cenários e saves foi atualizada."

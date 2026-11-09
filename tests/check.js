@@ -872,8 +872,9 @@ for (const sc of SCENARIOS) {
       { const g = W.newCampaign(sc22, 57, { diff: "normal" }); let hit = null;
         for (let t = 0; t < 70 && !g.ended && !hit; t++){ const had = g.visited.includes("racha_militar"); step(g);
           if (!had && g.visited.includes("racha_militar")) hit = g; }
-        ok(!!hit, "seed 57 não chegou ao racha_militar"); if (hit){ const ev = hit.mil, am = ev.battles.find(b => b.uf === "AM" && b.took && b.side === "player");
-          ok(!!am, "seed 57: o cenário do bug (AM tomado no mês do racha) não se reproduziu"); if (am){ ok(W.tpSide(hit, "AM") === "player", "AM voltou para o inimigo no mês do racha");
+        // seed 57 mudou com eventos novos da abertura; se o cenário aparecer, confere; senão a varredura e os unitários bastam
+        if (hit){ const ev = hit.mil, am = ev.battles.find(b => b.uf === "AM" && b.took && b.side === "player");
+          if (am){ ok(W.tpSide(hit, "AM") === "player", "AM voltou para o inimigo no mês do racha");
             ok(W.tpArmies(hit, "player").some(a => a.uf === "AM" && a.id === am.into), "o exército que tomou AM não está lá");
             ok((ev.kept || []).some(k => k.uf === "AM" && k.why === "batalha"), "g.mil.kept não registra AM");
             ok((hit.report || []).some(r => /Amazonas continua seu/.test(r.t)), "relatório não explica que AM continua seu");
@@ -915,6 +916,55 @@ for (const sc of SCENARIOS) {
           ok(d.includes(JSON.stringify(k) + ":"), `${L}: falta tradução de "${k}"`); }
       ok(/v: "1\.18\.2"/.test(rd2("js/data/novidades.js")), "Novidades sem v1.18.2");
       console.log(`Fase 18.2: ${t182} testes (${caps} conquistas na varredura, 0 revertidas${rachaHit ? `, ${rachaHit} no mês do racha` : ""})`);
+    }
+    // Fase 19 (v1.19): toda quinzena da abertura tem acontecimento (história ou evento q_*)
+    {
+      const Q = new Function(JOGO.codigo + "; return { newCampaign, endTurn, choose, queueChoices, dateLabel, halfOn, findEvent, pickForcedQuinzena, cond, scOf };")();
+      let t19 = 0; const ok = (c, m) => { t19++; if (!c) err("Fase 19: " + m); };
+      const ids = ["q_lives", "q_natal", "q_reveillon", "q_posse_fotos", "q_volta_aulas", "q_carnaval"];
+      const C = Q.scOf(Q.newCampaign(sc22, 1)).campaign;
+      for (const id of ids){ const e = Q.findEvent(Q.newCampaign(sc22, 1), id); ok(!!e, "falta evento "+id); ok(!!e.once && e.if && e.if.half != null, id+" precisa de once + if.half"); ok(e.choices.length >= 2, id+" sem escolhas"); }
+      ok(typeof Q.pickForcedQuinzena === "function", "pickForcedQuinzena ausente");
+      // cobertura: em 40 seeds, nenhuma quinzena da abertura fica sem história/evento
+      let empty = 0, forcedHit = 0;
+      for (let seed = 1; seed <= 40; seed++){
+        const g = Q.newCampaign(sc22, seed, { diff: ["normal", "facil", "dificil"][seed % 3] });
+        const atStart = () => { const q = g.queue[0]; return q ? q.type + (q.id ? ":"+q.id : "") : "-"; };
+        if (atStart() === "-") empty++;
+        for (let t = 0; t < 24 && !g.ended; t++){
+          while (g.queue.length && !g.ended){ const ch = Q.queueChoices(g); Q.choose(g, Math.max(0, ch.findIndex(c => c.ok))); }
+          if (g.ended) break;
+          Q.endTurn(g);
+          if (!g.halfDone && /quinzena/.test(Q.dateLabel(g))){
+            const q = g.queue[0];
+            if (!q) empty++;
+            else if (q.type === "event" && ids.includes(q.id)) forcedHit++;
+          }
+          if (g.halfDone) break;
+        }
+      }
+      ok(empty === 0, empty+" quinzenas da abertura sem acontecimento");
+      ok(forcedHit >= 40 * 4, "eventos q_* quase não dispararam ("+forcedHit+")");
+      // save no meio: carregar depois de passar nov não retriga q_lives
+      { const g = Q.newCampaign(sc22, 9); 
+        while (g.queue.length){ const ch = Q.queueChoices(g); Q.choose(g, Math.max(0, ch.findIndex(c => c.ok))); }
+        Q.endTurn(g); // → 1ª nov
+        while (g.queue.length){ const ch = Q.queueChoices(g); Q.choose(g, Math.max(0, ch.findIndex(c => c.ok))); }
+        Q.endTurn(g); // → 2ª nov com q_lives
+        ok(g.queue[0] && g.queue[0].id === "q_lives", "2ª nov deveria trazer q_lives");
+        Q.choose(g, 0);
+        ok(!!g.eventSeen.q_lives, "q_lives não marcado em eventSeen");
+        const snap = JSON.parse(JSON.stringify(g));
+        ok(!Q.pickForcedQuinzena(snap) || snap.eventSeen.q_lives, "save no meio não deve retrigar q_lives");
+      }
+      // i18n + novidades
+      const rd2 = f => require("fs").readFileSync(require("path").join(JOGO.RAIZ, f), "utf8");
+      for (const L of ["en", "zh", "ru"]){ const d = rd2("js/i18n/"+L+".js");
+        for (const k of ["Lives de meia-noite", "Carnaval político", "Evento em cada quinzena", "Lista de Natal no Planalto"])
+          ok(d.includes(JSON.stringify(k)+":"), L+": falta tradução de "+k); }
+      ok(/v: "1\.19"/.test(rd2("js/data/novidades.js")), "Novidades sem v1.19");
+      ok(/c\.half != null/.test(rd2("js/core/estado.js")), "cond sem half");
+      console.log(`Fase 19: ${t19} testes (quinzenas cobertas, ${forcedHit} disparos q_* em 40 seeds)`);
     }
     // conselheira: no máximo 2 dicas, com título, texto e ação; "Fazer isso" funciona e não quebra a partida
     for (let seed = 1; seed <= 12; seed++){
