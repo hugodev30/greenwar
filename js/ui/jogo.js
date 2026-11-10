@@ -17,13 +17,14 @@ function renderGame(){
     const v = G.stats[k], d = G.lastDelta[k] || 0;
     return `<div class="stat"><div class="lbl"><span>${esc(STORY.stats[k].label)}</span><span class="val">${Math.round(v)}${d ? `<span class="delta ${d>0?"up":"down"}">${sgn(Math.round(d))}</span>` : ""}</span></div><div class="bar"><i style="width:${v}%;background:${STORY.stats[k].color}"></i></div></div>`;
   }).join("");
-  const tabs = [["historia", `História${pend ? ` <b class="badge">${pend}</b>` : ""}`], ["mapa", "Mapa"], ["diplomacia", "Diplomacia"], ["faccoes", "Facções"], ["acoes", "Ações"]];
+  const nPed = pendingDemands(G);
+  const tabs = [["historia", `História${pend ? ` <b class="badge">${pend}</b>` : ""}`], ["mapa", "Mapa"], ["diplomacia", `Diplomacia${nPed ? ` <b class="badge" title="Pedidos pendentes">${nPed}</b>` : ""}`], ["faccoes", "Facções"], ["acoes", "Ações"]];
   if (C.focus){ focusInit(G); const idle = !G.focus.active && C.focus.nodes.some(F => focusStatus(G, F).state === "available");
     const nNew = UI.freshSeen === G.turn ? 0 : (G.focus.fresh || []).filter(id => { const F = focusDef(G, id); return F && focusStatus(G, F).state === "available"; }).length; // focos novos/oportunidades deste turno
     tabs.splice(1, 0, ["decisoes", `Decisões${nNew ? ` <b class="badge fnewb" title="Novos focos ou oportunidades">✨${nNew}</b>` : idle ? ` <b class="badge">!</b>` : ""}`]); }
   if (UI.tab === "decisoes" && !C.focus) UI.tab = "historia";
-  // interface simples (Fácil): Diplomacia e Facções ficam atrás do botão "Mais"
-  const extra = ["diplomacia", "faccoes"], hideExtra = G.simple && !UI.moreTabs && !extra.includes(UI.tab);
+  // interface simples (Fácil): só Facções ficam atrás do botão "Mais" (Diplomacia sempre visível na v1.20)
+  const extra = ["faccoes"], hideExtra = G.simple && !UI.moreTabs && !extra.includes(UI.tab);
   const shown = hideExtra ? tabs.filter(t => !extra.includes(t[0])) : tabs;
   const nextStory = G.story.pending ? Math.max(0, G.story.due - G.month) : null;
   $("#app").innerHTML = `
@@ -33,6 +34,7 @@ function renderGame(){
         <div class="ecocell" data-eco="ap" role="button" tabindex="0" title="De onde vêm suas ações (clique)"><span class="k">Ações <i class="ecoi">i</i></span><span class="ap">${apDots}</span><b>${G.ap}</b>${apSrcLine()}</div>
         <div class="ecocell" data-eco="money" role="button" tabindex="0" title="${esc(C.money.label)}: renda, teto e usos (clique)"><span class="k">${esc(C.money.label)} <i class="ecoi">i</i></span><b class="${G.money < 0 ? "neg" : G.money >= moneyCap(G) ? "capped" : ""}">${Math.round(G.money)}${Number.isFinite(moneyCap(G)) ? `<small class="cap">/${moneyCap(G)}</small>` : ""}</b><small>${sgn(inc.total)}/mês${paceFor(G) > 1 ? ` (×${paceFor(G)} por turno)` : ""}</small></div>
         <div title="${esc(C.forces.label)}" class="hudarmy" data-tab="mapa"><span class="k">${esc(C.forces.short)}</span><b>${totStr}</b><small>${ph.noArmies ? "sem comando" : frontMode(G) ? (G.war.fronts.length ? `<span>${tpArmies(G, "player").length} exérc. · ${tpArmies(G, "player").filter(a => a.order).length} com ordem</span>` : "na reserva") : `${myA.length} exérc. · ordens ${ordersUsed(G)}/${commandLimit(G)}`}</small></div>
+        <div class="hudpd" data-tab="diplomacia" title="Pontos de Diplomacia" role="button" tabindex="0"><span class="k">PD</span><b>${G.pd || 0}<small class="cap">/${pdCap(G)}</small></b><small>diplomacia</small></div>
       </div>
       <button class="primary endbtn" id="btnEnd" ${pend ? "disabled" : ""} title="${pend ? "Resolva os eventos pendentes na aba História" : "Avança o tempo e resolve economia, combates, facções e diplomacia"}">Encerrar ${halfOn(G) ? "quinzena" : paceFor(G) > 1 && !(G.story.pending && G.story.due - G.month < paceFor(G)) ? `${paceFor(G)} meses` : "mês"} ▸</button>
     </div>
@@ -40,6 +42,7 @@ function renderGame(){
     ${southBarHTML()}
     ${urnaBarHTML()}
     ${G.notice && G.notice.k === "mensal" ? `<div class="pendbar mensal">⏩ Fim das quinzenas: a partir de agora cada turno é um mês.</div>` : ""}
+    ${(() => { const iso = isolationStatus(G); return iso.warn ? `<div class="pendbar bad">⚠ Isolamento diplomático: ${iso.months}/${iso.need} meses. Busque reconhecimento ou acalme potências — Isolamento total encerra a campanha.</div>` : ""; })()}
     <nav class="tabs" role="tablist">${shown.map(([id, l]) => `<button class="tab${UI.tab===id?" on":""}" data-tab="${id}" role="tab" aria-selected="${UI.tab===id}" tabindex="${UI.tab===id ? 0 : -1}">${l}</button>`).join("")}${G.simple ? `<button class="tab more" data-more aria-expanded="${!hideExtra}">${hideExtra ? "Mais ▾" : "Menos ▴"}</button>` : ""}</nav>
     ${pend && UI.tab !== "historia" ? `<div class="pendbar">Há ${pend} evento(s) aguardando decisão. <button class="linkbtn" data-tab="historia">Ir para História</button></div>` : ""}
     ${advisorHTML()}

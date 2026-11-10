@@ -67,7 +67,7 @@ O `index.html` tem só a marcação e a lista de `<link>`/`<script>`. **Os scrip
 |---|---|
 | `css/` | Estilos por área. A ordem dos `<link>` preserva a cascata original; o mobile fica junto de cada área (`@media max-width:700/860px`) |
 | `js/data/` | **Só dados.** `ajudantes.js` (`act`, `ev`), `2022/` (`historia.js` = `STORY_2022`, `acoes.js` = `ACOES_2022`, `eventos.js` = `EVENTOS_2022`, `campanha.js` = `CAMPAIGN_2022`, `focos.js` = `CAMPAIGN_2022.focus`), `1964/` (bloqueado), `cenarios.js` (`SCENARIOS`), `estados.js` (`ADJ`, `TERRAIN`, `TERRAIN_TYPES`), `mapa-brasil.js` (`MAP_DATA`, gerado por `tools/build-map.js`) |
-| `js/core/` | **Lógica pura, sem DOM** (roda no Node): `base` (`SAVE_VERSION`, `rnd`, chaves de efeito), `estado` (`newCampaign`), `efeitos` (`cond`, `applyFx`), `historia`, `eventos`, `acoes`, `economia`, `faccoes`, `diplomacia` (`dealScore`), `focos`, `turno` (`endTurn`), `sul`, `ordens-automaticas`, `exercitos`, `combate`, `inimigo`, `ordens`, `saves` (`migrateSave` e afins) |
+| `js/core/` | **Lógica pura, sem DOM** (roda no Node): `base` (`SAVE_VERSION`, `rnd`, chaves de efeito), `estado` (`newCampaign`), `efeitos` (`cond`, `applyFx`), `historia`, `eventos`, `acoes`, `economia`, `faccoes`, `diplomacia` (PD, demandas/favores, isolamento; sem deal builder), `focos`, `turno` (`endTurn`), `sul`, `ordens-automaticas`, `exercitos`, `combate`, `inimigo`, `ordens`, `saves` (`migrateSave` e afins) |
 | `js/i18n/` | `traducao.js` (camada PT→EN que traduz o DOM) e `en.js` (`I18N_EN`, com `exact` e `tpl`) |
 | `js/audio/` | `audio.js` (trilha e efeitos sintetizados) |
 | `js/ui/` | Tela: `base` (`UI`, `esc`), `saves` (`save`, `loadInfo`, ponte `cloud()`), `menu`, `jogo` (HUD e abas), `aba-*.js` (uma por aba), `mapa`, `exercitos`, `batalha`, `resolucao`, `final`, `tutorial`, `grandes-eventos`, `ajuda`, `janelas`, `economia`, `configuracoes`, `acessibilidade`, `sul`, `iniciar` (liga tudo e expõe `window.GWGame`) |
@@ -95,7 +95,7 @@ O `index.html` tem só a marcação e a lista de `<link>`/`<script>`. **Os scrip
 - **Efeitos (`applyFx`):** `s` (atributos), `money`, `reserve` (+10 de força militar por ponto), `fac`, `infl`, `unrest`, `unrestAll`, `unrestUF`, `act`, `actAll`, `enemy`, `flag`, `map`, `ap`, `ceasefire`, `malus {v, months}`.
 
 ### Saves e localStorage
-- **Versão atual: `SAVE_VERSION = 15`** (`js/core/base.js`). As migrações v2→v15 ficam em `js/core/saves.js` e são executadas ao carregar saves em `js/ui/saves.js`. Cada versão histórica e seus campos estão documentados no comentário de `SAVE_VERSION`; entre as mudanças recentes estão exércitos estaduais distintos e a remoção da partida rápida. Saves v2–v14 são migrados em sequência; saves desconhecidos ou formatos antigos são arquivados em `<saveKey>_legacy`, e o jogador vê um aviso.
+- **Versão atual: `SAVE_VERSION = 16`** (`js/core/base.js`). As migrações v2→v16 ficam em `js/core/saves.js` e são executadas ao carregar saves em `js/ui/saves.js`. Cada versão histórica e seus campos estão documentados no comentário de `SAVE_VERSION`; entre as mudanças recentes estão exércitos estaduais distintos e a remoção da partida rápida. Saves v2–v14 são migrados em sequência; saves desconhecidos ou formatos antigos são arquivados em `<saveKey>_legacy`, e o jogador vê um aviso.
 - Saves v2 também convertem `reserve` e `u.force` em exércitos (10 de força por unidade), preservam a força inimiga como guarnições/milícias e marcam `milMigrated`. Saves v3/v4 recebem os registros de batalha, reserva de mobilização e encadeamentos que faltavam.
 - Saves de 2022 sem `g.focus` (anteriores à árvore) são **migrados** em `loadInfo`: `focusInit` aplica as concessões da história já vividas e marca `focusMigrated`, e aparece um aviso no menu.
 - **Se mudar o formato do save, aumente a versão ou escreva uma migração em `loadInfo`.**
@@ -369,3 +369,8 @@ Dados em `CAMPAIGN_2022.focus = { ap, cell, grants, branches, nodes }`. São 58 
    - SMTP próprio.
 4. ~~Separar o arquivo único~~ **feito** (out/2026, sem build: pastas `css/`, `js/data`, `js/core`, `js/ui`… e testes em `tests/`). Um bundler (Vite) ou TypeScript continua opcional para o futuro.
 5. Depois: ranking ou compartilhamento de finais, novos cenários, e talvez escolhas votadas por amigos.
+
+
+## Diplomacia (v1.20)
+
+A aba Diplomacia usa **Pontos de Diplomacia (PD)** (renda base por turno + bônus de Relações Internacionais; quinzenas recebem metade). Cada país mostra opinião, pedido ativo e o que pode oferecer; botões **Atender pedido**, **Pedir favor** e **Missão** (sem montar acordo livre). Há 13 atores (incl. Israel). Isolamento prolongado sem reconhecimento e sob sanções/hostilidade leva ao final **Isolamento total**.

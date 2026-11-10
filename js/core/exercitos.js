@@ -107,6 +107,8 @@ function milMods(g, side, uf, role, units){
     if (g.money < 0) add("supr", "Suprimentos: cofres vazios", -0.2);
     else if (!supplied(g, "player", uf)) add("supr", "Suprimentos: linhas cortadas", -0.15);
     const aid = armsAid(g); if (aid) add("armas", "Armas estrangeiras", aid);
+    if (majorActors(g).some(A => g.actors[A.id] && g.actors[A.id].recognized && (A.gives.armas || 0) > 0.4)) add("ancora_diplo", "Âncora diplomática", 0.11);
+    const wmal = g.warEnemyMalus || warEnemySupportMalus(g); if (wmal) add("isolamento", "Potências apoiam o inimigo", -wmal);
   } else {
     const foreign = foreignFoes(g), malus = malusNow(g);
     add("qual", "Qualidade das tropas", ((C.enemyPower ?? 1) - 1) * 0.3);

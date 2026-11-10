@@ -39,7 +39,9 @@ function coupReadiness(g){
   const steps = K.focos.slice(1), done = steps.filter(id => g.focus && g.focus.done.includes(id)).length;
   const facs = Object.keys(K.faccoes).filter(id => g.fac[id]).map(id => ({ id, name: (C.factions.find(f => f.id === id) || {}).name || id, now: Math.round(g.fac[id].loyalty), need: K.faccoes[id] }));
   const pMil = Math.min(1, F.proj / F.need), pFoc = done / steps.length, pFac = facs.reduce((s, f) => s + Math.min(1, f.now / f.need), 0) / Math.max(1, facs.length), pRes = Math.min(1, g.money / K.reserva);
-  const pct = Math.round(W.militar * pMil + W.focos * pFoc + W.faccoes * pFac + W.reserva * pRes);
+  // v1.20: âncora diplomática (potência que reconhece ou tem opinião alta e pode dar armas/crédito)
+  const anchor = (scOf(g).campaign.actors || []).some(A => A.major && g.actors[A.id] && (g.actors[A.id].recognized || g.actors[A.id].opinion >= 40) && ((A.gives && ((A.gives.armas || 0) > 0.4 || (A.gives.dinheiro || 0) > 0.5))));
+  const pct = Math.round(W.militar * pMil + W.focos * pFoc + W.faccoes * pFac + W.reserva * pRes) + (anchor ? 4 : 0);
   const troops = F.proj >= F.need ? "sim" : F.proj >= F.need - 5 ? "talvez" : "nao";
   const L = K.falas.req, reqs = [{ k: "militar", label: L.militar, now: F.proj, need: F.need, ok: F.proj >= F.need, gap: (F.need - F.proj) / F.need * 3 },
     { k: "focos", label: L.focos, now: done, need: steps.length, ok: done >= steps.length, gap: (steps.length - done) / steps.length }]

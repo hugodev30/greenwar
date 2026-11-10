@@ -70,7 +70,7 @@ function newCampaign(sc, seed, opts){
   const g = { v: SAVE_VERSION, scen: sc.id, diff, simple: !!D.simples, seed: (seed >>> 0) || ((Date.now() ^ 0x5bd1e995) >>> 0),
     month: parseYM(C.start), startMonth: parseYM(C.start), turn: 1,
     stats: {}, flags: [], visited: [], history: [], lastDelta: {}, control: {}, lastMapChanges: [],
-    money: C.money.initial, ap: C.ap,
+    money: C.money.initial, ap: C.ap, pd: 0, isoMonths: 0,
     uf: {}, actors: {}, fac: {}, debts: [], drains: [], queue: [], report: [], log: [], used: {}, dealtWith: {},
     eventSeen: {}, chains: [], ended: null, enemyMalus: 0, malusUntil: 0, ceasefire: 0, enemyBoost: 0, counter: null,
     story: { node: null, due: 0 }, stat: { deals: 0, actions: 0, battles: 0 }, south: null, urna: null, half: 0, halfDone: true, unpaid: 0, autoOrders: D.ordensAuto || "off" };
@@ -78,7 +78,9 @@ function newCampaign(sc, seed, opts){
   for (const uf in MAP_DATA.states) g.control[uf] = S.defaultFaction || "federal";
   Object.assign(g.control, S.initialMap || {});
   for (const uf in MAP_DATA.states) g.uf[uf] = { unrest: (C.unrest && C.unrest[uf] !== undefined) ? C.unrest[uf] : (C.unrestBase ?? 25), enemy: 0, progress: 0, sway: 0 };
-  for (const a of C.actors) g.actors[a.id] = { opinion: a.opinion, recognized: !!a.recognizes, dependence: 0, deals: 0, aligned: false, sanctioning: false, supportsEnemy: false };
+  for (const a of C.actors) g.actors[a.id] = { opinion: a.opinion, recognized: !!a.recognizes, dependence: 0, deals: 0, aligned: false, sanctioning: false, supportsEnemy: false, demand: null, demandAge: 0, favorUsed: {} };
+  grantPD(g, Math.max(2, pdIncome(g, false)), null); // PD inicial (pelo menos a renda mensal base)
+  refreshAllDemands(g);
   for (const f of C.factions) g.fac[f.id] = { loyalty: f.loyalty, influence: f.influence, lastCrisis: -99 };
   g.urna = urnaNew(g);
   if (C.quinzenas){ g.half = 1; g.halfDone = false; } // a campanha começa na 2ª quinzena de outubro (noite de 30/10)

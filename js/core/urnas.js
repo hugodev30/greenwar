@@ -27,6 +27,9 @@ function urnaTick(g, halves, R){
   const K = urnaCfg(g), U = g.urna, p0 = U.prog;
   urnaAdd(g, { prog: urnaPassive(g) * halves, esc: -K.esfria * halves });
   if (U.esc >= 60) urnaAdd(g, { cred: -2 * halves }); // ruas radicalizadas desgastam a imagem
+  // v1.20: reconhecimento de potências ajuda a credibilidade da contestação
+  { const maj = majorActors(g).filter(a => g.actors[a.id] && g.actors[a.id].recognized).length;
+    if (maj >= 2) urnaAdd(g, { cred: Math.min(2, maj - 1) * halves }); }
   // fase 16: perto da virada, a defesa do governo eleito reage no TSE: −1 por mês (Normal a partir de 85, Difícil a partir de 70; Fácil não reage)
   const lvl = typeof iaLevel === "function" ? iaLevel(g) : 0;
   if (lvl && U.prog >= (lvl >= 2 ? 70 : 85)){ U.reage = (U.reage || 0) + halves; if (U.reage >= 2){ const d = Math.floor(U.reage / 2); U.reage %= 2; urnaAdd(g, { prog: -d }); R(`A defesa do governo eleito reage no TSE: progresso −${d}.`, "bad"); } }

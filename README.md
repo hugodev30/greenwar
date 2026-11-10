@@ -268,7 +268,7 @@ Depois disso ela já pode aparecer nos efeitos (`fac: { policias: 5 }`). O check
 
 **Texto traduzido** em `js/i18n/en.js`: acrescente `"Texto em português": "English text",` dentro de `"exact"`. Para frases com números, use `"tpl"` com `{0}`, `{1}`: `"Faltam {0} meses": "{0} months left"`. Faça o mesmo em `js/i18n/zh.js` (chinês simplificado) e `js/i18n/ru.js` (russo), seguindo `GLOSSARIO.md` — o check falha se um texto do 2022 ficar sem tradução em algum idioma. No jogo, o que faltar no idioma escolhido cai no inglês e depois no português.
 
-**Mudou o formato do save?** Suba `SAVE_VERSION` em `js/core/base.js` e escreva a migração em `js/core/saves.js`, para os saves antigos (locais e da nuvem) continuarem abrindo.
+**Mudou o formato do save?** Suba `SAVE_VERSION` em `js/core/base.js` (v16: diplomacia PD) e escreva a migração em `js/core/saves.js`, para os saves antigos (locais e da nuvem) continuarem abrindo.
 
 **Guerra por frentes (2022)** em `js/data/2022/frentes.js`: os números dos exércitos (`tropas`: passos, guarnição, flanco, cerco, ímpeto, táticas de Recife), o recrutamento (`recruta`), os traços e os generais (só fictícios, com retrato já existente em `retratos.js`), as frentes (`tropas`, `porEstado`, `reforco`, `ataca`, `reduto`) e a ofensiva especial (do jogador e `inimiga`). Todos os textos ficam em `falas`; ao mudar um texto, ponha a tradução em `js/i18n/en.js` (o check falha se faltar). Depois rode `node tests/sim.js 300 brasil2022` e `--dif=facil` para ver as vitórias. O 1964 continua com exércitos (`js/core/ordens.js`).
 

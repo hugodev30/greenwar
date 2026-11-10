@@ -16,6 +16,7 @@ const JOGO = require("./carregar.js");
 const code = JOGO.codigo;
 const API = new Function(code + `; return { frontCfg, SCENARIOS, MAP_DATA, convertMoney, apFor, moneyCap, newCampaign, queueChoices, choose, endTurn, visibleActions, actionState, doAction,
   mapActions, doMapAction, factionAction, allowedReqs, allowedOffs, dealScore, dealCheck, proposeDeal, acceptCounter, diploMission,
+  meetDemand, askFavor, favorPool, pendingDemands, recognizedCount, isolationStatus, pdIncome, grantPD,
   phaseOf, sideOf, sideCounts, playerUFs, findEvent, fxSummary, incomeFor, monthLabel, OFF_TYPES,
   focusTree, focusStatus, focusCheck, startFocus, focusDef,
   ADJ, ARMY_MAX, SAVE_VERSION, armiesOf, armyById, armyTargets, setOrder, recruitArmy, battleOdds, commandLimit, ordersUsed,
@@ -125,7 +126,7 @@ function pickFocus(g, sc, r, greedy){
   let F;
   if (!greedy){ if (r() < 0.75) F = pick(r, av); }
   else {
-    const liga = g.focus.done.length % 2 ? "c_liga_esmagar" : "c_liga_pacto";
+    const liga = (greedy === "golpista" || greedy === "golpista_conselheira") ? (r() < 0.85 ? "c_liga_esmagar" : "c_liga_pacto") : (g.focus.done.length % 2 ? "c_liga_esmagar" : "c_liga_pacto");
     const pref = COUPISH(greedy) ? { ruptura: 20 } : greedy === "radical" ? { ruptura: 12, jurid: 4, democ: -2 } : { ruptura: -15, democ: 5, jurid: 2 };
     F = av.map(F => ({ F, v: scoreFx(g, sc, F.fx) + (pref[F.branch] || 0) - (F.cost || 0) * 0.3 - F.months * 0.4 + (F.reqAny || F.req ? 0 : 1) + ((greedy === "golpista" || greedy === "golpista_conselheira") && F.id === liga ? 40 : 0) /* golpista decide a Liga do Sul: esmagar ou pactuar (metade cada) */ + (COUPISH(greedy) ? -Math.min(30, ((FC[sc.id] || {})[F.id] || 0) / 4) : 0) /* roteiro de cobertura: prefere focos pouco vistos */ + r() * (COUPISH(greedy) ? 30 : 4) })).sort((a, b) => b.v - a.v)[0].F;
   }
@@ -155,15 +156,35 @@ function spendAP(g, sc, r, greedy){
       // 1) crise de facção iminente
       const weak = C.factions.filter(f => g.fac[f.id].loyalty < 25 && g.fac[f.id].influence >= 25 && !g.used["fac_agradar_" + f.id]).sort((a, b) => g.fac[a.id].loyalty - g.fac[b.id].loyalty)[0];
       if (weak && !C.facMoney && g.money >= 4 && roll < 0.8){ if (API.factionAction(g, weak.id, "agradar").ok) continue; }
-      // 3) diplomacia com acordo provável
-      if (roll < 0.45){
-        let best = null;
-        for (const A of C.actors){ const ar = API.allowedReqs(g, A.id); if (!ar.length) continue;
-          for (const rq of ar){ const offs = API.allowedOffs(g, A.id).filter(o => (A.interests[o]||0) >= 0.8 && !(o === "bases" && g.money > 20)).slice(0, 2);
-            if (API.dealCheck(g, A.id, [rq], offs)) continue;
-            const s = API.dealScore(g, A.id, [rq], offs).score + (rq === "reconhecimento" ? 12 : rq === "dinheiro" && g.money < 10 ? 10 : rq === "armas" && ph.war ? 8 : 0);
-            if (s >= 0 && (!best || s > best.s)) best = { a: A.id, req: [rq], off: offs, s }; } }
-        if (best){ const res = API.proposeDeal(g, best.a, best.req, best.off); if (res.result === "counter" && r() < 0.6) API.acceptCounter(g); continue; }
+      // 3) diplomacia v1.20: atender pedidos / pedir favores com PD
+      if (roll < 0.5 && (g.pd || 0) > 0){
+        const iso = API.isolationStatus(g);
+        let did = false;
+        const warish = ph.war && (greedy === "golpista" || greedy === "pacificador" || greedy === "golpista_conselheira");
+        // prioridade: reconhecimento se aviso de isolamento (ou poucos reconhecem); radical deixa rolar
+        if (greedy !== "radical" && ((iso.warn || API.recognizedCount(g) < 2) && (g.pd || 0) >= 1)){
+          for (const A of C.actors){
+            if (g.dealtWith[A.id]) continue;
+            const favs = API.favorPool(g, A).filter(f => f === "reconhecimento");
+            if (favs.length && API.askFavor(g, A.id, "reconhecimento").ok){ did = true; break; }
+            if (g.actors[A.id].demand && API.meetDemand(g, A.id).ok){ did = true; break; }
+          }
+        }
+        if (!did){
+          const cands = C.actors.filter(A => !g.dealtWith[A.id] && g.actors[A.id].demand);
+          if (cands.length && r() < (warish ? 0.4 : 0.55)){ const A = pick(r, cands); if (API.meetDemand(g, A.id).ok) did = true; }
+          if (!did){
+            let best = null;
+            for (const A of C.actors){ if (g.dealtWith[A.id]) continue;
+              for (const f of API.favorPool(g, A)){
+                const score = (f === "armas" && ph.war ? (warish ? 19 : 18) : f === "reconhecimento" ? 14 : f === "dinheiro" && g.money < 12 ? 12 : f === "mediacao" && ((g.south && g.south.t > 50) || greedy === "pacificador") ? 13 : 4) + (g.actors[A.id].opinion || 0) / 20 + ((A.id === "russia" || A.id === "china" || A.id === "israel") && ph.war ? 7 : 0);
+                if (!best || score > best.s) best = { a: A.id, f, s: score };
+              }
+            }
+            if (best && best.s >= 6){ API.askFavor(g, best.a, best.f); did = true; }
+          }
+        }
+        if (did) continue;
       }
       // 4) estado agitado
       const hot = API.playerUFs(g).sort((a, b) => g.uf[b].unrest - g.uf[a].unrest)[0];
@@ -179,9 +200,9 @@ function spendAP(g, sc, r, greedy){
       const kind = Math.floor(roll * 5);
       if (kind === 0){ const acts = API.visibleActions(g).filter(a => API.actionState(g, a).ok); if (acts.length) API.doAction(g, pick(r, acts).id); }
       else if (kind === 1){ const uf = pick(r, Object.keys(g.control)); const ma = API.mapActions(g, uf).filter(a => a.ok); if (ma.length) API.doMapAction(g, uf, pick(r, ma).kind); }
-      else if (kind === 2){ const A = pick(r, C.actors), ar = API.allowedReqs(g, A.id); if (ar.length){ const res = API.proposeDeal(g, A.id, [pick(r, ar)], API.allowedOffs(g, A.id).filter(() => r() < 0.35)); if (res.result === "counter" && r() < 0.5) API.acceptCounter(g); } }
+      else if (kind === 2){ const A = pick(r, C.actors); if ((g.pd || 0) > 0){ if (g.actors[A.id].demand && r() < 0.5) API.meetDemand(g, A.id); else { const favs = API.favorPool(g, A); if (favs.length) API.askFavor(g, A.id, pick(r, favs)); else API.diploMission(g, A.id); } } }
       else if (kind === 3){ API.factionAction(g, pick(r, C.factions).id, r() < 0.8 ? "agradar" : "pressionar"); }
-      else { API.diploMission(g, pick(r, C.actors).id); }
+      else { if ((g.pd || 0) > 0) API.diploMission(g, pick(r, C.actors).id); }
     }
   }
 }
@@ -389,6 +410,7 @@ for (const sc of API.SCENARIOS){
     if (sc.campaign.focus) console.log(`    focos concluídos/partida: ${(focusDone / N).toFixed(1)}${Object.keys(OPC).length ? ` (oportunidades aproveitadas/partida: ${(Object.values(OPC).reduce((x, y) => x + y, 0) / N).toFixed(1)})` : ""}`);
     console.log(`    eventos/partida: ${(evN / N).toFixed(1)} (1 a cada ${(evMonths / Math.max(1, evN)).toFixed(1)} meses; maior intervalo ${evMaxGap} meses)`);
     console.log("    " + sorted.map(([k, v]) => `${k} ${(100*v/N).toFixed(0)}%`).join(" · "));
+    { const iso = dist.fim_isolamento || 0; if (iso || mode === "gulosa" || mode === "radical" || mode === "aleatoria") console.log(`    isolamento total: ${(100*iso/N).toFixed(1)}% (${iso}/${N})`); }
     if (VARIANT || NOTAS){ console.log(`    nota: S ${(100*GR.S/N).toFixed(0)}% · A ${(100*GR.A/N).toFixed(0)}% · B ${(100*GR.B/N).toFixed(0)}% · C ${(100*GR.C/N).toFixed(0)}%` + Object.entries(GO).map(([k, v]) => ` | ${k}: ` + "SABC".split("").map(l => l + v[l]).join(" ")).join(""));
       console.log("    conquistas: " + API.CONQUISTAS.filter(c => ACH[c.id]).map(c => `${c.id} ${(100*ACH[c.id]/N).toFixed(0)}%`).join(" · ")); }
     if (GOLPE && COUPISH(mode)){ const pc = a => (100 * a / N).toFixed(0) + "%";
@@ -408,6 +430,15 @@ for (const sc of API.SCENARIOS){
     R[mode] = { south: SU, eco: { ap: +(ES.ap / Math.max(1, ES.turns)).toFixed(2), moneyAvg: +(ES.money / Math.max(1, ES.turns)).toFixed(1), peakAvg: +(ES.max / N).toFixed(1), peakMax: ES.maxAll, rich60: +(ES.rich / Math.max(1, ES.turns)).toFixed(3), endMoney: +(ES.endMoney / N).toFixed(1), facPerGame: +(ES.fac / N).toFixed(1), convPerGame: +(ES.conv / N).toFixed(1) }, events: +(evN / N).toFixed(1), orders: +(orders / N).toFixed(1), battles: +(battles / N).toFixed(1), focusPerGame: +(focusDone / N).toFixed(2), dist, crashes, turns: avg(turnsArr), months: avg(monthsArr), viaCampanha: via.campanha, war: WS };
   }
   const reached = new Set([...Object.keys(R.aleatoria.dist), ...Object.keys(R.gulosa.dist), ...Object.keys(R.radical.dist), ...Object.keys((R.golpista || {}).dist || {}), ...Object.keys((R.pacificador || {}).dist || {}), ...Object.keys((R.eleitoral || {}).dist || {})]);
+  // cobertura do Isolamento total (fim raro nas IAs; prova de alcance mecânico)
+  if (endings.includes("fim_isolamento") && !reached.has("fim_isolamento")){
+    try {
+      const g = API.newCampaign(sc, 424242); g.visited.push("golpe_inicial"); g.stats.internacional = 18; g.queue.length = 0;
+      for (const A of (sc.campaign.actors || []).filter(a => a.major)){ Object.assign(g.actors[A.id], { opinion: -55, recognized: false, sanctioning: (A.democracy || 0) >= 0.5 }); }
+      for (let i = 0; i < 8 && !g.ended; i++){ g.queue.length = 0; g.dealtWith = {}; API.endTurn(g); }
+      if (g.ended && g.ended.node === "fim_isolamento"){ reached.add("fim_isolamento"); console.log("  (cobertura) Isolamento total alcançado em partida forçada de prova"); }
+    } catch (e) {}
+  }
   const missing = endings.filter(e => !reached.has(e));
   console.log(`  Finais alcançados: ${reached.size}/${endings.length}${missing.length ? " — não alcançados: " + missing.join(", ") : ""}`);
   R.missing = missing;

@@ -513,6 +513,14 @@ const STORY_2022 = {
         "Sem dinheiro, sem reconhecimento e com as tropas desertando, o regime desmorona. O governo constitucional retorna a Brasília, o Congresso é reaberto e uma comissão nacional começa a apurar responsabilidades.",
         "Você é preso e julgado. O país levará anos para reconstruir a economia e a confiança entre vizinhos — mas reconstrói, dentro da Constituição que você tentou rasgar."
       ]
+    },
+    fim_isolamento: {
+      ending: true, outcome: "derrota", endingName: "Isolamento Total", dica: "Fique meses sem reconhecimento das potências e sob sanções ou hostilidade da maioria delas.",
+      chapter: "Epílogo", title: "Portas Fechadas",
+      text: [
+        "Embaixadas fecham uma após a outra. Linhas de crédito externas somem, o dólar some das reservas e até aliados discretos preferem o silêncio. Sem reconhecimento e sob pressão prolongada, o governo fica sem oxigênio político.",
+        "Você ainda ocupa o Planalto — mas o mundo já tratou o Brasil como um parêntese. O Isolamento total encerra a aventura antes que a guerra ou as urnas o façam."
+      ]
     }
   }
 };

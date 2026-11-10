@@ -67,3 +67,8 @@ Chinês usa pontuação de largura total (，。：（）“”) e —— para t
 | Rever cena (final animado) | Replay scene | 重看场景 | Пересмотреть сцену |
 | Novidades / Ver todas as novidades | What's new / See all updates | 更新内容 / 查看全部更新 | Что нового / Все обновления |
 | Sugestão da Marta | Marta's suggestion | 玛尔塔的建议 | Совет Марты |
+
+| Pontos de Diplomacia (PD) | Diplomacy Points (DP) | 外交点数 | Очки дипломатии |
+| Isolamento total | Total Isolation | 全面孤立 | Полная изоляция |
+| Atender pedido | Meet request | 满足请求 | Выполнить запрос |
+| Pedir favor | Ask favor | 请求帮助 | Просить услугу |

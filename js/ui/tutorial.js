@@ -67,8 +67,8 @@ function tutSteps(ctx){
       { sel: ".fac", t: "Cada facção", h: `<p>Cada cartão mostra o que a facção faz em cada nível de lealdade; a linha <b>destacada (▸)</b> é o efeito de agora. Embaixo de cada botão aparece o resultado (ou por que está bloqueado).</p><p><b>Perigo:</b> lealdade abaixo de 15 com influência 25 ou mais provoca uma <b>crise</b>.</p>` }
     ],
     diplomacia: [
-      { sel: ".actors", t: "Diplomacia", h: `<p>Governos e organismos, com a <b>opinião</b> que têm de você (−100 a +100). Escolha um para negociar.</p>` },
-      { sel: ".dealpanel", t: "Acordos", h: `<p>Marque o que você <b>pede</b> e o que <b>oferece</b>; a <b>previsão</b> mostra a chance antes de propor (1 AP). A <b>missão diplomática</b> melhora a opinião.</p><p>Acordos têm custo: dívidas, dependência e reação de rivais e facções.</p>` }
+      { sel: ".actors", t: "Diplomacia", h: `<p>Governos e organismos, com a <b>opinião</b> (−100 a +100). Escolha um para ver o pedido ativo e o que ele pode oferecer.</p>` },
+      { sel: ".dealpanel", t: "Pedidos e favores", h: `<p>Use <b>Pontos de Diplomacia (PD)</b> — não ações — para <b>Atender pedido</b>, <b>Pedir favor</b> ou enviar uma <b>missão</b>.</p><p>A faixa no topo mostra reconhecimentos, sanções, quem apoia o inimigo e seu PD. Isolamento prolongado pode encerrar a campanha.</p>` }
     ],
     acoes: [
       { sel: ".actgrid", t: "Ações", h: `<p>Ações do governo separadas por área, em abas (após o golpe, também Sul). Cada cartão mostra o custo em AP e ${esc(M)}, os efeitos (verde ajuda, vermelho atrapalha) e o risco. Cada ação pode ser usada uma vez por turno.</p><p>A ⭐ marca a sugestão da Marta. Ações apagadas mostram 🔒 o motivo.</p>` }

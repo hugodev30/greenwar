@@ -32,6 +32,9 @@ function halfTurn(g){
   const inc = incomeFor(g), gain = Math.round(inc.total / 2);
   g.money += gain;
   R(`Receita da quinzena: ${gain >= 0 ? "+" : ""}${gain} ${C.money.short}.`, gain >= 0 ? "good" : "bad");
+  grantPD(g, pdIncome(g, true), R);
+  refreshAllDemands(g);
+  if (isolationTick(g, R)){ g.report = rep; finishLog(g, rep); return true; }
   if (C.focus) focusTick(g, Q.foco ?? 1, R);
   urnaTick(g, 1, R);
   syncActorStats(g);

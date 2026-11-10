@@ -21,7 +21,14 @@ const RETRATOS_2022 = {
     emb_russia:      { img: "emb_russia",      nome: "Pavel Orlov",           cargo: "Embaixador da Rússia" },
     com_ue:          { img: "com_ue",          nome: "Ingrid Vos",            cargo: "Comissária da União Europeia" },
     chanc_argentina: { img: "chanc_argentina", nome: "Martín Ibarra",         cargo: "Chanceler da Argentina" },
-    chanc_vizinhos:  { img: "chanc_vizinhos",  nome: "Carmen Rojas",          cargo: "Enviada dos vizinhos sul-americanos" },
+    chanc_vizinhos:  { img: "chanc_vizinhos",  nome: "Carmen Rojas",          cargo: "Enviada regional" },
+    emb_venezuela:   { img: "emb_venezuela",   nome: "Carmen Rojas",          cargo: "Enviada da Venezuela" },
+    chanc_mercosul:  { img: "chanc_mercosul",  nome: "Luis Benítez",          cargo: "Enviado do Mercosul (PY/UY)" },
+    emb_israel:      { img: "emb_israel",      nome: "Noa Bergman",           cargo: "Embaixadora de Israel" },
+    emb_portugal:    { img: "emb_portugal",    nome: "Helena Duarte",         cargo: "Embaixadora de Portugal" },
+    emb_india:       { img: "emb_india",       nome: "Arjun Mehta",           cargo: "Embaixador da Índia" },
+    emb_golfo:       { img: "emb_golfo",       nome: "Faisal Al-Rashid",      cargo: "Enviado do Golfo" },
+    nuncio_vaticano: { img: "nuncio_vaticano", nome: "Mons. Paolo Ricci",     cargo: "Núncio apostólico" },
     enviado_onu:     { img: "enviado_onu",     nome: "Kwame Mensah",          cargo: "Enviado especial da ONU" },
     gen_valadares:   { img: "gen_valadares",   nome: "Gen. Augusto Valadares", cargo: "Comandante leal a você" },
     gen_pessanha:    { img: "gen_pessanha",    nome: "Gen. Ronaldo Pessanha", cargo: "Comandante leal a você" },
@@ -49,7 +56,7 @@ const RETRATOS_2022 = {
     mercenario: { silhueta: true, nome: "Representante da empresa",   cargo: "Empresa militar privada" }
   },
   faccoes: { militares: "gen_becker", centrao: "lider_centrao", agro: "lider_agro", evangelicos: "pastor", movimentos: "sindicalista", stf: "ministra_stf" },
-  atores: { eua: "emb_eua", china: "emb_china", russia: "emb_russia", ue: "com_ue", argentina: "chanc_argentina", vizinhos: "chanc_vizinhos", onu: "enviado_onu" },
+  atores: { eua: "emb_eua", china: "emb_china", russia: "emb_russia", ue: "com_ue", argentina: "chanc_argentina", venezuela: "emb_venezuela", mercosul: "chanc_mercosul", israel: "emb_israel", portugal: "emb_portugal", india: "emb_india", golfo: "emb_golfo", vaticano: "nuncio_vaticano", onu: "enviado_onu" },
   generais: {
     "Gen. Augusto Valadares": "gen_valadares", "Gen. Ronaldo Pessanha": "gen_pessanha", "Brig. Márcio Tavares": "brig_tavares",
     "Gen. Heloísa Barreto": "gen_barreto", "Gen. Joaquim Arruda": "gen_arruda", "Cel. Iara Nogueira": "cel_nogueira",
@@ -77,7 +84,7 @@ const RETRATOS_2022 = {
     n_contraespionagem: "gen_pessanha", n_governador_lado: "gov_nordeste", n_mercenarios: "mercenario", n_onu_votacao: "enviado_onu",
     n_tregua_igrejas: "pastor", n_voluntarios: "gen_valadares", n_hackers: "redes", n_drones: "brig_tavares",
     n_refugiados: "enviado_onu", n_trigo: "min_economia", n_vitoria: "gen_valadares", n_panico: "gen_pessanha",
-    n_liga_proposta: "cel_wendt", e_sul_cupula: "gov_sul", n_sancoes_eua: "emb_eua", f_vazamento_minuta: "jornalista",
+    n_liga_proposta: "cel_wendt", e_sul_cupula: "gov_sul", n_sancoes_eua: "emb_eua", t_eua_aviso: "emb_eua", t_eua_sancao: "emb_eua", t_israel_convite: "emb_israel", t_israel_critica: "emb_israel", t_china_credito: "emb_china", t_ue_amazonia: "com_ue", t_onu_mediacao: "enviado_onu", t_vaticano: "nuncio_vaticano", t_golfo_fundo: "emb_golfo", t_mercosul_cupula: "chanc_mercosul", f_vazamento_minuta: "jornalista",
     f_anistia_votacao: "lider_centrao", f_herdeiro: "herdeiro", f_seguranca: "delegado_pf", f_liga_exige: "gen_kessler"
   }
 };

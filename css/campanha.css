@@ -41,3 +41,10 @@
   .intro{margin:0 0 12px}
   .notice{background:#2a2414;border:1px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.82rem;text-align:left;margin:10px 0}
   .why{background:#0006;border-left:3px solid var(--gold);padding:6px 10px;font-size:.88rem;margin-bottom:12px}
+
+/* Diplomacia v1.20 */
+.dipstrip{display:flex;flex-wrap:wrap;gap:10px 16px;padding:8px 12px;margin-bottom:8px;background:#1a1512;border:1px solid var(--line);border-radius:8px;font-size:.82rem}
+.dipstrip span{color:var(--muted)}.dipstrip b{color:var(--gold);font-weight:600}.dipstrip .bad b,.dipstrip span.bad{color:#e07a66}
+.favorlist{margin-top:10px}.favorlist h4{margin:0 0 6px;font-size:.9rem}
+.favorlist .favbtn{margin:0 6px 6px 0}
+.hudpd{cursor:pointer}

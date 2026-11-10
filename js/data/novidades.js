@@ -3,6 +3,12 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.20", data: "2026-11-09", titulo: "Diplomacia redesenhada", itens: [
+    "Nova moeda diplomática: Pontos de Diplomacia (PD). Pedidos, favores e missões gastam PD, não ações.",
+    "Mais países na mesa (Israel, Venezuela, Mercosul, Portugal, Índia, Golfo, Vaticano) com pedidos e ofertas distintos.",
+    "Aba Diplomacia só com botões: Atender pedido, Pedir favor e Missão — sem montar acordo livre.",
+    "Novo final Isolamento total, com aviso da Marta, faixa de alerta e cena própria."
+  ] },
   { v: "1.19", data: "2026-11-09", titulo: "Evento em cada quinzena", itens: [
     "Na abertura em quinzenas, cada turno agora traz um acontecimento: a história cobre alguns; os que faltavam ganharam eventos próprios.",
     "Novos eventos da abertura: lives de meia-noite, lista de Natal, réveillon, fotos da posse, volta às aulas e Carnaval político."

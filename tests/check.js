@@ -256,6 +256,8 @@ for (const sc of SCENARIOS) {
     while (!nodes[id].ending) {
       // contestação das urnas: a escalada a 100 (js/core/urnas.js) interrompe o caminho antes do julgamento ou do veredito
       if (nodes.escalada && s.flags.includes("contesta_urna") && (id === "julgamento_tse" || id === "veredito") && !s.visited.includes("escalada") && Math.random() < 0.15) id = "escalada";
+      // v1.20: Isolamento total é fim de campanha (não da árvore); o passeio marca o nó para a cobertura
+      if (nodes.fim_isolamento && s.visited.includes("reacao_internacional") && Math.random() < 0.08){ id = "fim_isolamento"; break; }
       visited.add(id); s.visited.push(id);
       const opts = nodes[id].choices.map((c,i)=>[c,i]).filter(([c]) => cond(c.req, s));
       if (!opts.length) { err("Beco sem saída em " + id); break; }
@@ -544,7 +546,7 @@ for (const sc of SCENARIOS) {
       // migração v9 → v13: estados "disputa" viram um lado
       const v9 = JSON.parse(JSON.stringify(gt)); v9.v = 9; v9.control.MG = "disputa"; v9.control.BA = "disputa";
       const m = RX.migrateSave(v9);
-      if (!m || m.v !== RX.SAVE_VERSION || m.v !== 15 || m.halfDone !== true || !m.urna) err("2022: migração v9→v14 falhou");
+      if (!m || m.v !== RX.SAVE_VERSION || m.v !== 16 || m.halfDone !== true || !m.urna || m.pd == null || !m.actors.israel) err("2022: migração v9→v16 falhou");
       else {
         if (Object.values(m.control).includes("disputa")) err("2022: migração v9→v13 deixou estado em disputa");
         if ("reg" in m) err("2022: migração v9→v13 criou regiões");

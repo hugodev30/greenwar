@@ -32,6 +32,8 @@ function endTurn(g){
   const inc = incomeFor(g), gain = qz ? inc.total - Math.round(inc.total / 2) : inc.total * pace;
   g.money += gain;
   R(`Receita líquida: ${gain >= 0 ? "+" : ""}${gain} ${C.money.short} (base ${Math.round(inc.base)}, território +${Math.round(inc.terr)}, manutenção de tropas −${Math.round(inc.upkeep)}${inc.sanc ? `, sanções −${inc.sanc}` : ""}${inc.econ ? `, economia ${inc.econ > 0 ? "+" : ""}${Math.round(inc.econ)}` : ""}${inc.facBonus ? `, facções ${inc.facBonus > 0 ? "+" : ""}${inc.facBonus}` : ""}).`, gain >= 0 ? "good" : "bad");
+  if (qz) grantPD(g, pdIncome(g, true), R); else grantPD(g, pdIncome(g, false) * pace, R);
+  refreshAllDemands(g);
   for (const d of g.drains) if (d.until > from){ const m = Math.min(pace, d.until - from); g.money -= d.amount * m; }
   g.drains = g.drains.filter(d => d.until > g.month);
   for (const d of g.debts.filter(d => d.due <= g.month)){
@@ -115,7 +117,7 @@ function endTurn(g){
     if (g.turn % 3 === 0 && st.deals > 0) st.deals--;
     st.dependence = Math.max(0, st.dependence - 2);
     if (ph.war){
-      if (st.opinion >= 45 && (A.gives.armas || 0) > 0 && rnd(g) < 0.2){ const got = addPlayerStrength(g, STR_UNIT); if (got) R(`${A.name} enviou equipamento por conta própria (+${got} de força).`, "good"); }
+      if ((st.recognized || st.opinion >= 38) && (A.gives.armas || 0) > 0.35 && rnd(g) < 0.22){ const got = addPlayerStrength(g, STR_UNIT); if (got) R(`${A.name} enviou equipamento por conta própria (+${got} de força).`, "good"); }
       const was = st.supportsEnemy; st.supportsEnemy = st.opinion <= -45 && (A.gives.armas || 0) > 0;
       if (st.supportsEnemy && !was) R(`${A.name} passou a apoiar o lado inimigo.`, "bad");
     } else st.supportsEnemy = false;
@@ -125,6 +127,19 @@ function endTurn(g){
     if (!ph.war && st.opinion >= 60 && (A.gives.dinheiro || 0) > 0 && rnd(g) < 0.12){ g.money += 3; R(`Investimentos de ${A.name}: +3 ${C.money.short}.`, "good"); }
   }
   syncActorStats(g);
+  // 4b. Isolamento + malus de guerra por apoio inimigo + crítica de Israel
+  {
+    const isr = g.actors.israel, Aisr = actorDef(g, "israel");
+    if (isr && Aisr && Aisr.threaten && isr.opinion <= -40 && !isr._threatDone){
+      isr._threatDone = true;
+      for (const x in Aisr.threaten){ bumpActor(g, x, Aisr.threaten[x]); R(`Crítica pública de ${Aisr.name}: relações com ${actorDef(g, x) ? actorDef(g, x).name : x} sofrem.`, "bad"); }
+    }
+    if (isr && isr.opinion > -20) isr._threatDone = false;
+  }
+  const wmal = warEnemySupportMalus(g);
+  if (wmal && ph.war) R(`Potências apoiam o inimigo: custos de guerra +${Math.round(wmal * 100)}%.`, "bad");
+  g.warEnemyMalus = wmal;
+  if (isolationTick(g, R)){ g.report = rep; finishLog(g, rep); return true; }
   // 5. Fim por colapso / estado da campanha
   for (const k in S.collapse) if (g.stats[k] <= 0){ g.report = rep; finishLog(g, rep); enterStory(g, collapseTo(g, k)); g.ended.why = `${S.stats[k].label} chegou a zero.`; return true; }
   for (const chk of (C.checks || [])) if (cond(g, chk.if)){ g.report = rep; finishLog(g, rep); endCampaign(g, chk.to, chk.why, chk.cause); return true; }

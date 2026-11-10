@@ -47,6 +47,16 @@ function advisorTips(g, ctx){
     const best = advisorBestAction(g, a => a.fx && a.fx.s && a.fx.s[low] > 0);
     if (best) tips.push({ id: "low_" + low, pri: 80, head: scOf(g).story.stats[low].label, text: `Está baixo (${Math.round(g.stats[low])}). Se cair demais, a campanha pode acabar. Esta ação ajuda:`, sub: best.a.name, act: { k: "action", id: best.a.id } });
   }
+  // Diplomacia v1.20
+  {
+    const iso = isolationStatus(g);
+    if (iso.warn || iso.months >= 1)
+      tips.push({ id: "iso", pri: 93, head: "Isolamento diplomático", text: `Você está ${iso.months} de ${iso.need} meses sob pressão. Atenda pedidos ou peça reconhecimento na aba Diplomacia antes do Isolamento total.`, act: { k: "tab", tab: "diplomacia" }, btn: "Abrir Diplomacia" });
+    else if ((g.pd || 0) >= 2 && pendingDemands(g) >= 3)
+      tips.push({ id: "dip_ped", pri: 58, head: "Pedidos diplomáticos", text: `Há ${pendingDemands(g)} pedidos pendentes e você tem ${g.pd} PD. Atender alguns melhora opinião e reconhecimento.`, act: { k: "tab", tab: "diplomacia" }, btn: "Ver pedidos" });
+    else if ((g.pd || 0) >= 2 && recognizedCount(g) < 2 && majorActors(g).some(A => favorAvailable(g, A.id, "reconhecimento") && (g.actors[A.id].opinion || 0) >= 20))
+      tips.push({ id: "dip_rec", pri: 55, head: "Reconhecimento", text: "Poucos reconhecem você. Com PD e opinião suficiente, peça reconhecimento a uma potência na aba Diplomacia.", act: { k: "tab", tab: "diplomacia" }, btn: "Diplomacia" });
+  }
   // Tensão no Sul
   if (southOn(g) && g.south.state === "calmo" && g.south.t >= 55){
     const best = advisorBestAction(g, a => a.cat === "sul");

@@ -184,7 +184,9 @@ function tpMods(g, side, fac){
     m += add("comando", 1 + clamp(((g.stats[KK.mil] ?? 50) - 50) / 200 + (natLoyalty(g) - 50) / 300, -0.3, 0.3));
     m += add("apoio", 1 + clamp(((g.stats[KK.pop] ?? 50) - 50) / 150, -0.2, 0.2));
     m += add("armas", 1 + armsAid(g));
+    if (typeof majorActors === "function" && majorActors(g).some(A => g.actors[A.id] && g.actors[A.id].recognized && (A.gives.armas || 0) > 0.4)) m += add("ancora", 1.09);
     m += add("impeto", 1 + T.impeto.passo * tpMomentum(g));
+    const wmal = g.warEnemyMalus || warEnemySupportMalus(g); if (wmal) m += add("apoio_inimigo", 1 - wmal);
   } else {
     m += add("dificuldade", 1 + ((C.enemyPower ?? 1) - 1) * 0.3);
     if (fac === (phaseOf(g).enemyMain || fac)) m += add("estrangeiro", 1 + 0.12 * foreignFoes(g) + 0.05 * (g.enemyBoost || 0));
