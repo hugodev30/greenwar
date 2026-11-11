@@ -3429,7 +3429,15 @@ const I18N_ZH = {
   "Opinião Vaticano": "梵蒂冈好感",
   "Âncora diplomática": "外交锚点",
   "Aparece quando a guerra passa de 6 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "战争超过6个月且出现调停者时出现。开放3个月，使用后8个月可再次出现。",
-  "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "战争超过12个月且出现调停者时出现。开放3个月，使用后8个月可再次出现。"
+  "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "战争超过12个月且出现调停者时出现。开放3个月，使用后8个月可再次出现。",
+  "IA inimiga mais esperta na guerra": "战争中更精明的敌方人工智能",
+  "Assim que a guerra começa, a Resistência concentra forças para consolidar o Norte (Norte e Nordeste) antes de partir para uma ofensiva em direção ao Sul.": "战争一开始，抵抗力量便集中兵力巩固北部（北部和东北部），然后再向南部发动攻势。",
+  "O inimigo junta exércitos antes de atacar, compara forças, reforça estados ameaçados e recua tropas muito feridas. No Fácil o plano é mais cauteloso; no Difícil, mais agudo.": "敌人会在进攻前集结军队、比较兵力、增援受威胁的州，并撤退重创部队。简单模式计划更谨慎，困难模式则更凌厉。",
+  "O plano aparece no mapa (setas vermelhas) e no painel: “consolidar o Norte” ou “ofensiva em direção ao Sul”.": "计划会显示在地图上（红箭头）和面板中：“巩固北部”或“向南部进攻”。",
+  "Plano: consolidar o Norte": "计划：巩固北部",
+  "Plano: ofensiva em direção ao Sul": "计划：向南部进攻",
+  "Inteligência: a Resistência concentra tropas para consolidar o Norte.": "情报：抵抗力量正在集结部队以巩固北部。",
+  "Inteligência: a Resistência inicia uma ofensiva em direção ao Sul.": "情报：抵抗力量开始向南部发动攻势。"
 
  },
  "tpl": {

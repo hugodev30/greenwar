@@ -312,12 +312,14 @@ function tpLineDist(g, side, fac){
   return d;
 }
 // opt: { thr: chance mínima para atacar, attack: pode atacar?, thrFor(t, thr): limite por alvo, bonus(t): valor extra do alvo,
-//        base: estado onde a retaguarda se concentra (IA do inimigo, js/core/ia-inimiga.js) }
+//        base: estado onde a retaguarda se concentra (IA do inimigo, js/core/ia-inimiga.js),
+//        hold: Set de exércitos que devem ficar (defesa),
+//        allow(t): se false, o estado não entra como alvo de ataque neste mês }
 // Ordem de prioridade: 1) capital (fica / volta para defender), 2) estados ameaçados, 3) ataques, 4) retaguarda até a linha
 function tpAI(g, list, opt){
   if (!list.length) return 0;
   const side = list[0].side, fac = list[0].fac, foe = side === "player" ? "enemy" : "player";
-  const free = new Set(list.filter(a => !a.order)); let n = 0;
+  const free = new Set(list.filter(a => !a.order && !(opt.hold && opt.hold.has(a)))); let n = 0;
   const give = (a, to) => { const t = tpTargets(g, a).find(x => x.to === to); if (!t) return false; tpGive(g, a, t); free.delete(a); n++; return true; };
   const reachers = to => [...free].filter(a => a.uf !== to && tpTargets(g, a).some(t => t.to === to && t.type !== "atacar")).sort((x, y) => y.str - x.str);
   const foes = tpArmies(g, foe), ph = phaseOf(g), own = uf => side === "player" ? sideOf(g, g.control[uf], ph) === "player" : g.control[uf] === fac;
@@ -326,9 +328,10 @@ function tpAI(g, list, opt){
   if (home && own(home)){
     const Dh = ufDist(home), near = Math.min(99, ...foes.map(e => Dh[e.uf] ?? 99));
     const at = tpAt(g, side, home);
-    if (at && near <= (side === "player" ? 1 : 2)) for (const x of tpAllAt(g, side, home)) free.delete(x);
+    const recallNear = opt.recallNear != null ? opt.recallNear : (side === "player" ? 1 : 2);
+    if (at && near <= recallNear) for (const x of tpAllAt(g, side, home)) free.delete(x);
     if (!at && near <= 1){ const c = reachers(home)[0]; if (c) give(c, home); }
-    if (side === "enemy" && near <= 2) recall = Dh;
+    if (side === "enemy" && near <= recallNear) recall = Dh;
   }
   // 2) estados ameaçados: o jogador vê o plano inimigo (setas vermelhas); quem está no estado ameaçado fica, e um vizinho vem ajudar
   if (side === "player"){
@@ -350,6 +353,7 @@ function tpAI(g, list, opt){
       let best = null; const cand = new Set();
       for (const a of free) for (const t of ADJ[a.uf]) if (tpHostile(g, a, t)) cand.add(t);
       for (const t of cand){
+        if (opt.allow && !opt.allow(t)) continue;
         const already = list.filter(a => a.order && a.order.type === "atacar" && a.order.to === t);
         const near = [...free].filter(a => ADJ[a.uf].includes(t) && tpHostile(g, a, t) && !(recall && (recall[t] ?? 99) > 2 && (recall[a.uf] ?? 99) <= 3)).sort((x, y) => y.str - x.str);
         const goal = side === "player" ? tpHome(g, "enemy", g.control[t]) : tpCap(g), thr0 = t === goal ? Math.min(opt.thr, tpK(g).alvoChance) : opt.thr, thr = opt.thrFor ? opt.thrFor(t, thr0) : thr0;

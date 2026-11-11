@@ -709,6 +709,23 @@ for (const sc of SCENARIOS) {
           const P = Object.values(g.war.eplan || {});
           if (RY.iaLevel(g) >= 1 && !P.length) err("fase 16: a IA do inimigo não montou plano (eplan)");
           if (P.some(p => !p.alvo || !p.base || g.control[p.base] === undefined)) err("fase 16: plano do inimigo inválido"); t16++; }
+        // v1.21: com buracos no Norte, a Resistência escolhe um alvo no bloco Norte/Nordeste
+        { const g = base(); g.diff = "normal"; RY.tpEnemyPlan(g);
+          const F = g.war.efase && g.war.efase.resistencia, P = g.war.eplan && g.war.eplan.resistencia;
+          const REG = { AC:"N",AM:"N",AP:"N",PA:"N",RO:"N",RR:"N",TO:"N",AL:"NE",BA:"NE",CE:"NE",MA:"NE",PB:"NE",PE:"NE",PI:"NE",RN:"NE",SE:"NE" };
+          const holes = Object.keys(g.control).filter(uf => REG[uf] && g.control[uf] !== "resistencia");
+          if (holes.length){
+            if (!F || F.fase !== "norte") err("v1.21: com estados do Norte/Nordeste em aberto, a fase deveria ser consolidar o Norte");
+            if (P && P.alvo && !REG[P.alvo]) err("v1.21: o alvo da fase Norte deveria estar no Norte ou no Nordeste");
+          }
+          // sem buracos no bloco: passa à ofensiva sul (alvo mais perto de Brasília)
+          for (const uf of Object.keys(REG)) if (g.control[uf] !== "resistencia") g.control[uf] = "resistencia";
+          delete g.war.efase; delete g.war.eplan;
+          RY.tpEnemyPlan(g);
+          const F2 = g.war.efase && g.war.efase.resistencia, P2 = g.war.eplan && g.war.eplan.resistencia;
+          if (!F2 || F2.fase !== "sul") err("v1.21: com o Norte consolidado, a fase deveria ser ofensiva em direção ao Sul");
+          if (P2 && P2.alvo && REG[P2.alvo]) err("v1.21: com o Norte fechado, o alvo da ofensiva não deveria ser no bloco Norte/Nordeste");
+          t16++; }
         // soldo: cofres no vermelho por K.soldo.meses meses = motim (fim_restauracao, cause motim)
         { const g = base(), S = RY.frontCfg(g).soldo, R = () => {};
           if (S){ let end = false; for (let i = 0; i < S.meses && !end; i++){ g.money = S.limite - 5; end = RY.frontSoldo(g, R); }
@@ -864,8 +881,10 @@ for (const sc of SCENARIOS) {
           if (!hadRacha && g.visited.includes("racha_militar") && ev.flips.some(f => f.side === "player")) rachaHit++;
           for (const b of ev.battles) if (b.took && b.side === "player"){ caps++;
             const mine = W.tpSide(g, b.uf) === "player", army = W.tpArmies(g, "player").some(a => a.uf === b.uf);
+            // cerco no mesmo mês: o exército que tomou o estado pode render-se (relatório registra); não é o bug do revert silencioso
+            const sieged = (ev.sieges || []).some(s => s.surrender && s.uf === b.uf && s.side === "player");
             const FS = W.frontFlipSummary(g, ev);
-            if (!mine || !army || !FS.won.includes(b.uf) || FS.lost.includes(b.uf)){ bad++; if (bad < 4) err(`Fase 18.2: seed ${seed} mês ${g.month}: ${b.uf} tomado mas dono=${W.tpSide(g, b.uf)} exército=${army}`); }
+            if (!mine || (!army && !sieged) || !FS.won.includes(b.uf) || FS.lost.includes(b.uf)){ bad++; if (bad < 4) err(`Fase 18.2: seed ${seed} mês ${g.month}: ${b.uf} tomado mas dono=${W.tpSide(g, b.uf)} exército=${army}`); }
           }
         }
       }

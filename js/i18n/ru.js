@@ -3429,7 +3429,15 @@ const I18N_RU = {
   "Opinião Vaticano": "Мнение Ватикана",
   "Âncora diplomática": "Дипломатический якорь",
   "Aparece quando a guerra passa de 6 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Появляется, когда война длится более 6 месяцев и появляются посредники. Открыта 3 мес. и может вернуться через 8 мес. после использования.",
-  "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Появляется, когда война длится более 12 месяцев и появляются посредники. Открыта 3 мес. и может вернуться через 8 мес. после использования."
+  "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Появляется, когда война длится более 12 месяцев и появляются посредники. Открыта 3 мес. и может вернуться через 8 мес. после использования.",
+  "IA inimiga mais esperta na guerra": "Более умный ИИ противника на войне",
+  "Assim que a guerra começa, a Resistência concentra forças para consolidar o Norte (Norte e Nordeste) antes de partir para uma ofensiva em direção ao Sul.": "Как только начинается война, Сопротивление сосредотачивает силы, чтобы закрепить Север (Север и Северо-Восток), а затем переходит в наступление на Юг.",
+  "O inimigo junta exércitos antes de atacar, compara forças, reforça estados ameaçados e recua tropas muito feridas. No Fácil o plano é mais cauteloso; no Difícil, mais agudo.": "Противник собирает армии перед атакой, сравнивает силы, усиливает угрожаемые штаты и отводит сильно потрёпанные войска. В лёгком режиме план осторожнее, в сложном — жёстче.",
+  "O plano aparece no mapa (setas vermelhas) e no painel: “consolidar o Norte” ou “ofensiva em direção ao Sul”.": "План виден на карте (красные стрелки) и на панели: «закрепить Север» или «наступление на Юг».",
+  "Plano: consolidar o Norte": "План: закрепить Север",
+  "Plano: ofensiva em direção ao Sul": "План: наступление на Юг",
+  "Inteligência: a Resistência concentra tropas para consolidar o Norte.": "Разведка: Сопротивление стягивает войска, чтобы закрепить Север.",
+  "Inteligência: a Resistência inicia uma ofensiva em direção ao Sul.": "Разведка: Сопротивление начинает наступление на Юг."
 
  },
  "tpl": {

@@ -107,7 +107,10 @@ function tpThreatsHTML(){
   for (const e of list){ const to = e.order.to; if (seen.has(to)) continue; seen.add(to);
     const c = Math.round(tpChance(G, e, to).chance * 100);
     rows.push(`<li class="${c >= 50 ? "bad" : ""}"><button class="linkbtn" data-tpfocus="${to}">⚠ ${esc(gfmt(tF("ameaca"), tpName(G, e), ufName(to), c))}</button></li>`); }
-  return `<div class="ordhead"><b>${esc(tF("ameacas"))}</b></div>${rows.length ? `<ul class="tpthreat">${rows.join("")}</ul>` : `<p class="muted">${esc(tF("semAmeaca"))}</p>`}`;
+  const main = (G.war.fronts || []).find(f => f.id === "resistencia") || (G.war.fronts || [])[0];
+  const fase = main && G.war.efase && G.war.efase[main.id] && G.war.efase[main.id].fase;
+  const plan = fase === "sul" ? tF("iaSul") : fase === "norte" ? tF("iaNorte") : "";
+  return `<div class="ordhead"><b>${esc(tF("ameacas"))}</b>${plan ? ` <small class="muted tpiaplan">${esc(plan)}</small>` : ""}</div>${rows.length ? `<ul class="tpthreat">${rows.join("")}</ul>` : `<p class="muted">${esc(tF("semAmeaca"))}</p>`}`;
 }
 function frontRecruitHTML(){
   const ph = phaseOf(G), war = ph.war && G.war.fronts.length, K = fCfg().recruta;

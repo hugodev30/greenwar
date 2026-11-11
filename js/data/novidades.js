@@ -3,6 +3,11 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.21", data: "2026-11-11", titulo: "IA inimiga mais esperta na guerra", itens: [
+    "Assim que a guerra começa, a Resistência concentra forças para consolidar o Norte (Norte e Nordeste) antes de partir para uma ofensiva em direção ao Sul.",
+    "O inimigo junta exércitos antes de atacar, compara forças, reforça estados ameaçados e recua tropas muito feridas. No Fácil o plano é mais cauteloso; no Difícil, mais agudo.",
+    "O plano aparece no mapa (setas vermelhas) e no painel: “consolidar o Norte” ou “ofensiva em direção ao Sul”."
+  ] },
   { v: "1.20", data: "2026-11-09", titulo: "Diplomacia redesenhada", itens: [
     "Nova moeda diplomática: Pontos de Diplomacia (PD). Pedidos, favores e missões gastam PD, não ações.",
     "Mais países na mesa (Israel, Venezuela, Mercosul, Portugal, Índia, Golfo, Vaticano) com pedidos e ofertas distintos.",

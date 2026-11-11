@@ -147,7 +147,27 @@ function frontNewSpot(g){
 function frontSpawnUF(g, side, fac){
   const L = tpLineDist(g, side, fac), K = tpLinked(g, side, fac), own = uf => side === "player" ? tpSide(g, uf) === "player" : g.control[uf] === fac;
   const all = TP_UFS.filter(uf => own(uf) && (!K || K.has(uf))), free = all.filter(uf => !tpAt(g, side, uf)), pool = free.length ? free : all;
-  return pool.sort((a, b) => (L[a] ?? 50) - (L[b] ?? 50) || (UF_WEIGHT[b] || 1) - (UF_WEIGHT[a] || 1) || (a < b ? -1 : 1))[0] || null;
+  const P = side === "enemy" && g.war && g.war.eplan && g.war.eplan[fac];
+  const home = side === "enemy" ? tpHome(g, side, fac) : null;
+  const homeStr = home && own(home) ? tpAllAt(g, side, home).reduce((s, a) => s + a.str, 0) : 99;
+  const preferHome = !!(home && homeStr < 40 && own(home));
+  let goal = preferHome ? home : (P && P.base && own(P.base) ? P.base : (P && P.alvo));
+  // Na fase Norte, se Recife já está coberto, prefere nascer na linha do Sul quando ela está fraca.
+  if (!preferHome && side === "enemy" && typeof iaSouthEdge === "function"){
+    const F = g.war && g.war.efase && g.war.efase[fac];
+    if (F && F.fase === "norte"){
+      const edge = iaSouthEdge(g, fac);
+      const edgeStr = edge.reduce((s, uf) => s + tpAllAt(g, side, uf).reduce((x, a) => x + a.str, 0), 0);
+      const bar = (typeof iaLevel === "function" && iaLevel(g) >= 2) ? 50 : 36;
+      if (edge.length && edgeStr < bar){
+        const DC = ufDist(tpCap(g));
+        const pick = edge.filter(own).sort((a, b) => (DC[a] ?? 40) - (DC[b] ?? 40) || (tpAt(g, side, a) ? 1 : 0) - (tpAt(g, side, b) ? 1 : 0))[0];
+        if (pick) goal = pick;
+      }
+    }
+  }
+  const GD = goal ? ufDist(goal) : null;
+  return pool.sort((a, b) => (GD ? (GD[a] ?? 50) - (GD[b] ?? 50) : 0) || (L[a] ?? 50) - (L[b] ?? 50) || (UF_WEIGHT[b] || 1) - (UF_WEIGHT[a] || 1) || (a < b ? -1 : 1))[0] || null;
 }
 /* ---------- Comando automático e plano inimigo ---------- */
 function frontPlan(g){ if (frontMode(g) && g.war.armies) tpEnemyPlan(g); }

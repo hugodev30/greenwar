@@ -3435,7 +3435,15 @@ const I18N_EN = {
   "Opinião Vaticano": "Vatican opinion",
   "Âncora diplomática": "Diplomatic anchor",
   "Aparece quando a guerra passa de 6 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Appears when the war lasts more than 6 months and mediators appear. Stays open 3 months and can return 8 months after use.",
-  "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Appears when the war lasts more than 12 months and mediators appear. Stays open 3 months and can return 8 months after use."
+  "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Appears when the war lasts more than 12 months and mediators appear. Stays open 3 months and can return 8 months after use.",
+  "IA inimiga mais esperta na guerra": "Smarter enemy AI in the war",
+  "Assim que a guerra começa, a Resistência concentra forças para consolidar o Norte (Norte e Nordeste) antes de partir para uma ofensiva em direção ao Sul.": "As soon as the war starts, the Resistance concentrates its forces to consolidate the North (North and Northeast) before launching an offensive toward the South.",
+  "O inimigo junta exércitos antes de atacar, compara forças, reforça estados ameaçados e recua tropas muito feridas. No Fácil o plano é mais cauteloso; no Difícil, mais agudo.": "The enemy groups armies before attacking, compares strength, reinforces threatened states and pulls back badly battered troops. On Easy the plan is more cautious; on Hard, sharper.",
+  "O plano aparece no mapa (setas vermelhas) e no painel: “consolidar o Norte” ou “ofensiva em direção ao Sul”.": "The plan appears on the map (red arrows) and in the panel: “consolidate the North” or “offensive toward the South”.",
+  "Plano: consolidar o Norte": "Plan: consolidate the North",
+  "Plano: ofensiva em direção ao Sul": "Plan: offensive toward the South",
+  "Inteligência: a Resistência concentra tropas para consolidar o Norte.": "Intelligence: the Resistance is concentrating troops to consolidate the North.",
+  "Inteligência: a Resistência inicia uma ofensiva em direção ao Sul.": "Intelligence: the Resistance is launching an offensive toward the South."
 
  },
  "tpl": {
