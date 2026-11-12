@@ -54,8 +54,8 @@ const EVENTOS_2022 = [
       { text: "Buscar canais alternativos.", fx: { money: -3, act: { china: 4, russia: 4 } } },
       { text: "Absorver o golpe.", fx: { money: -6 } } ], { if: { phase: "regime" } }),
     ev("r_corredor", "Pedido de corredor humanitário", "Organismos internacionais pedem passagem segura para civis em áreas de combate.", [
-      { text: "Autorizar o corredor.", fx: { s: { internacional: 8, militar: -3 }, act: { onu: 10 } } },
-      { text: "Recusar.", fx: { s: { internacional: -8 }, act: { onu: -10 } } } ], { if: { phase: "regime" }, weight: 1.5 }),
+      { text: "Autorizar o corredor.", fx: { s: { internacional: 8, militar: -3 }, act: { ue: 10 } } },
+      { text: "Recusar.", fx: { s: { internacional: -8 }, act: { ue: -10 } } } ], { if: { phase: "regime" }, weight: 1.5 }),
     // ======== Eventos ampliados (2022) ========
     // Fios condutores: economia, redes, instituições, igrejas, quartéis, governadores, mundo, Amazônia, desastres, guerra.
     // Opções: { if, weight, once, cooldown, chained } · chained = só chega como desdobramento (fx.chain) de outra escolha.
@@ -98,7 +98,7 @@ const EVENTOS_2022 = [
       { text: "Defender fiscalização dura contra o desmatamento.", fx: { s: { internacional: 5 }, fac: { agro: -5 }, act: { ue: 8, eua: 4 } } },
       { text: "Defender o produtor rural e criticar ONGs estrangeiras.", fx: { s: { internacional: -5, apoio: 1 }, fac: { agro: 8 }, act: { ue: -10 } } } ], { cooldown: 12 }),
     ev("n_seca", "Seca histórica nos rios amazônicos", "Rios secam a níveis nunca vistos; comunidades ribeirinhas ficam isoladas e cidades racionam água.", [
-      { text: "Organizar ajuda e cobrar ação coordenada.", fx: { money: -3, s: { apoio: 2, internacional: 3 }, act: { onu: 5 }, unrestUF: { AM: -8, PA: -5 } } },
+      { text: "Organizar ajuda e cobrar ação coordenada.", fx: { money: -3, s: { apoio: 2, internacional: 3 }, act: { ue: 5 }, unrestUF: { AM: -8, PA: -5 } } },
       { text: "Minimizar: é um fenômeno natural.", fx: { s: { apoio: -2, internacional: -3 }, act: { ue: -5 }, unrestUF: { AM: 6 } } } ], { if: { from: "2023-06" }, once: true }),
     ev("n_enchentes", "Enchentes devastam o Rio Grande do Sul", ["Chuvas sem precedentes alagam cidades inteiras; centenas de milhares estão desalojados.", "Voluntários de todo o país seguem para o Sul."], [
       { text: "Mobilizar doações e voluntários do seu movimento.", fx: { money: -4, s: { apoio: 4 }, unrestUF: { RS: -10 } } },
@@ -109,8 +109,8 @@ const EVENTOS_2022 = [
       { text: "Buscar novos mercados com os EUA.", fx: { money: -2, fac: { agro: -3 }, act: { eua: 6, china: -4 } } },
       { text: "Acusar a China de chantagem.", fx: { s: { apoio: 2 }, fac: { agro: -10 }, act: { china: -15 } } } ], { cooldown: 12 }),
     ev("n_mercosul", "Cúpula do Mercosul", "Presidentes da região se reúnem em Montevidéu; a pauta inclui o acordo com a União Europeia e a situação brasileira.", [
-      { text: "Comparecer e defender o bloco.", fx: { s: { internacional: 3 }, act: { argentina: 8, mercosul: 8, venezuela: 4, ue: 3 } } },
-      { text: "Boicotar a cúpula.", fx: { s: { apoio: 1, internacional: -2 }, act: { mercosul: -8, venezuela: -8, argentina: -5 } } } ], { if: { notPhase: "governo" }, cooldown: 12 }),
+      { text: "Comparecer e defender o bloco.", fx: { s: { internacional: 3 }, act: { argentina: 8, ue: 3 } } },
+      { text: "Boicotar a cúpula.", fx: { s: { apoio: 1, internacional: -2 }, act: { argentina: -5 } } } ], { if: { notPhase: "governo" }, cooldown: 12 }),
     ev("n_influenciador", "Influenciador rompe com você", "Um dos maiores influenciadores da direita grava um vídeo dizendo que se sentiu traído.", [
       { text: "Responder ao vivo, sem filtro.", fx: { s: { apoio: 2, base: -2 } } },
       { text: "Chamá-lo para uma conversa reservada.", fx: { money: -2, s: { apoio: 3 } } },
@@ -182,12 +182,12 @@ const EVENTOS_2022 = [
       { text: "Aceitar e pagar.", fx: { money: -6, front: 20, fac: { centrao: 4 } } },
       { text: "Exigir rendição incondicional.", fx: { s: { militar: 2 }, front: -5 } } ], { if: { phase: "regime" }, cooldown: 6 }),
     ev("n_mercenarios", "Oferta de empresa militar privada", "Uma empresa estrangeira de segurança oferece veteranos, drones e instrutores — pagamento adiantado.", [
-      { text: "Contratar.", fx: { money: -8, reserve: 2, s: { internacional: -6 }, act: { onu: -8 } } },
+      { text: "Contratar.", fx: { money: -8, reserve: 2, s: { internacional: -6 }, act: { ue: -8 } } },
       { text: "Recusar.", fx: { s: { internacional: 1 } } } ], { if: { phase: "regime" }, once: true }),
     ev("n_onu_votacao", "Votação na Assembleia Geral da ONU", "Uma resolução pede cessar-fogo imediato no Brasil e eleições supervisionadas.", [
-      { text: "Mandar uma delegação e aceitar uma trégua.", fx: { ceasefire: 1, s: { internacional: 5, militar: -3 }, act: { onu: 10 } } },
-      { text: "Ignorar a votação.", fx: { s: { internacional: -6 }, act: { onu: -10 } } },
-      { text: "Pedir à China que trave a resolução.", req: { actor: { china: { min: 20 } } }, fx: { act: { china: -5, onu: -5, eua: -6 }, s: { militar: 2 } } } ], { if: { phase: "regime" }, once: true, weight: 1.5 }),
+      { text: "Mandar uma delegação e aceitar uma trégua.", fx: { ceasefire: 1, s: { internacional: 5, militar: -3 }, act: { ue: 10 } } },
+      { text: "Ignorar a votação.", fx: { s: { internacional: -6 }, act: { ue: -10 } } },
+      { text: "Pedir à China que trave a resolução.", req: { actor: { china: { min: 20 } } }, fx: { act: { china: -5, ue: -5, eua: -6 }, s: { militar: 2 } } } ], { if: { phase: "regime" }, once: true, weight: 1.5 }),
     ev("n_tregua_igrejas", "Igrejas propõem trégua", "Lideranças católicas e evangélicas pedem um mês sem combates para enterrar os mortos.", [
       { text: "Aceitar a trégua.", fx: { ceasefire: 1, s: { apoio: 3, militar: -2 }, fac: { evangelicos: 8 } } },
       { text: "Recusar: a guerra não espera.", fx: { s: { militar: 2, apoio: -2 }, fac: { evangelicos: -8 } } } ], { if: { phase: "regime" }, once: true }),
@@ -201,11 +201,11 @@ const EVENTOS_2022 = [
       { text: "Cortar a internet nas capitais.", fx: { unrest: -6, s: { internacional: -8, apoio: -4 }, act: { ue: -6 } } },
       { text: "Contratar especialistas e aguentar o prejuízo.", fx: { money: -4, org: -2 } } ], { if: { phase: "regime" }, cooldown: 8 }),
     ev("n_drones", "Ataque de drones a uma base aérea", "A resistência atinge aviões e depósitos de munição numa base aérea do regime.", [
-      { text: "Retaliar com bombardeios.", fx: { front: 10, s: { internacional: -8, apoio: -2 }, act: { onu: -10 } } },
+      { text: "Retaliar com bombardeios.", fx: { front: 10, s: { internacional: -8, apoio: -2 }, act: { ue: -10 } } },
       { text: "Reforçar a defesa antiaérea.", fx: { money: -5, org: 3 } } ], { if: { phase: "regime", sideCount: { enemy: { min: 6 } } }, cooldown: 6 }),
     ev("n_refugiados", "Refugiados nas fronteiras", "Dezenas de milhares de brasileiros cruzam para o Paraguai, a Bolívia e o Uruguai.", [
-      { text: "Abrir corredores e pedir ajuda humanitária.", fx: { s: { internacional: 5, militar: -2 }, act: { venezuela: 6, mercosul: 6, onu: 5 } } },
-      { text: "Fechar as fronteiras.", fx: { s: { internacional: -4, militar: 2 }, act: { venezuela: -8, mercosul: -6 } } } ], { if: { phase: "regime" }, once: true }),
+      { text: "Abrir corredores e pedir ajuda humanitária.", fx: { s: { internacional: 5, militar: -2 }, act: { argentina: 6, ue: 5 } } },
+      { text: "Fechar as fronteiras.", fx: { s: { internacional: -4, militar: 2 }, act: { argentina: -6 } } } ], { if: { phase: "regime" }, once: true }),
     ev("n_trigo", "Falta trigo e diesel", "Com bancos e portos sob sanções, o país fica sem trigo e diesel suficientes.", [
       { text: "Racionamento nacional.", fx: { s: { apoio: -4 }, unrestAll: 4 } },
       { text: "Comprar de Moscou com desconto.", fx: { money: -4, act: { russia: 8, eua: -6, ue: -6 } } },
@@ -269,7 +269,7 @@ const EVENTOS_2022 = [
       { text: "Ignorar o Carnaval e trabalhar no Congresso.", fx: { s: { base: 1 } } } ], { if: { from: "2023-02", until: "2023-02", half: 1 }, once: true, weight: 10 }),
 
     ev("u_oea", "Missão da OEA divulga relatório", "Os observadores internacionais dizem que a eleição foi limpa, mas recomendam ampliar a auditoria pública das urnas.", [
-      { text: "Contestar o relatório.", fx: { urna: { prog: 3, cred: -6 }, act: { onu: -10 } } },
+      { text: "Contestar o relatório.", fx: { urna: { prog: 3, cred: -6 }, act: { ue: -10 } } },
       { text: "Abraçar as recomendações de auditoria.", fx: { urna: { prog: 4, cred: 6 }, s: { internacional: 3 } } } ], { if: { urna: { on: true } }, once: true, weight: 3 }),
 
     // ======== Telegramas diplomáticos (v1.20): pedidos, convites e ameaças — cadeias curtas ====
@@ -292,23 +292,23 @@ const EVENTOS_2022 = [
       { text: "Negociar só commodities, sem obras.", fx: { money: 2, act: { china: 4 } } },
       { text: "Recusar para não irritar Washington.", fx: { act: { china: -8, eua: 5 } } } ], { cooldown: 14, weight: 1.2 }),
     ev("t_ue_amazonia", "Bruxelas cobra a Amazônia", "A Comissão Europeia liga o diálogo político a metas ambientais e ao acordo Mercosul–UE.", [
-      { text: "Anunciar compromisso ambiental.", fx: { act: { ue: 12, mercosul: 4 }, fac: { agro: -4 }, s: { internacional: 3 } } },
+      { text: "Anunciar compromisso ambiental.", fx: { act: { ue: 12, argentina: 4 }, fac: { agro: -4 }, s: { internacional: 3 } } },
       { text: "Prometer estudo técnico sem prazo.", fx: { act: { ue: 3 } } },
       { text: "Acusar protecionismo europeu.", fx: { act: { ue: -10 }, fac: { agro: 3 }, s: { internacional: -2 } } } ], { cooldown: 12, weight: 1.2 }),
     ev("t_onu_mediacao", "Oferta de mediação da ONU", "A ONU/OEA oferece bons ofícios para baixar a temperatura política ou militar.", [
-      { text: "Aceitar mediação pública.", fx: { act: { onu: 12, ue: 4 }, s: { internacional: 3 }, south: -6 } },
-      { text: "Aceitar só canais reservados.", fx: { act: { onu: 5 }, s: { internacional: 1 } } },
-      { text: "Recusar: assunto interno.", fx: { act: { onu: -8 }, s: { internacional: -2 } } } ], { if: { notPhase: "governo" }, cooldown: 10, weight: 1.3 }),
+      { text: "Aceitar mediação pública.", fx: { act: { ue: 12 }, s: { internacional: 3 }, south: -6 } },
+      { text: "Aceitar só canais reservados.", fx: { act: { ue: 5 }, s: { internacional: 1 } } },
+      { text: "Recusar: assunto interno.", fx: { act: { ue: -8 }, s: { internacional: -2 } } } ], { if: { notPhase: "governo" }, cooldown: 10, weight: 1.3 }),
     ev("t_vaticano", "Mensagem do Vaticano", "O núncio transmite apelo por paz e gestos humanitários.", [
-      { text: "Acolher o apelo em público.", fx: { act: { vaticano: 12, portugal: 3 }, s: { internacional: 2 }, south: -4 } },
-      { text: "Agradecer em privado.", fx: { act: { vaticano: 5 } } },
-      { text: "Dizer que a prioridade é a soberania.", fx: { act: { vaticano: -6 }, fac: { evangelicos: 2 } } } ], { cooldown: 14, weight: 1.0 }),
+      { text: "Acolher o apelo em público.", fx: { act: { ue: 12 }, s: { internacional: 2 }, south: -4 } },
+      { text: "Agradecer em privado.", fx: { act: { ue: 5 } } },
+      { text: "Dizer que a prioridade é a soberania.", fx: { act: { ue: -6 }, fac: { evangelicos: 2 } } } ], { cooldown: 14, weight: 1.0 }),
     ev("t_golfo_fundo", "Fundo soberano do Golfo", "Enviados do Golfo oferecem investimento em energia e portos.", [
-      { text: "Abrir a porta ao capital.", fx: { money: 5, act: { golfo: 12, china: 2 } } },
-      { text: "Limitar a setores não estratégicos.", fx: { money: 2, act: { golfo: 5 } } },
-      { text: "Recusar por agora.", fx: { act: { golfo: -5 } } } ], { cooldown: 16, weight: 1.0 }),
+      { text: "Abrir a porta ao capital.", fx: { money: 5, act: { china: 8 } } },
+      { text: "Limitar a setores não estratégicos.", fx: { money: 2, act: { china: 5 } } },
+      { text: "Recusar por agora.", fx: { act: { china: -5 } } } ], { cooldown: 16, weight: 1.0 }),
     ev("t_mercosul_cupula", "Convite à cúpula do Mercosul", "Paraguai e Uruguai pedem presença e um gesto de unidade do bloco.", [
-      { text: "Ir e reforçar o bloco.", fx: { act: { mercosul: 12, argentina: 6 }, s: { internacional: 2 } } },
-      { text: "Enviar chanceler.", fx: { act: { mercosul: 4, argentina: 2 } } },
-      { text: "Boicotar.", fx: { act: { mercosul: -10, argentina: -4 }, s: { internacional: -1 } } } ], { cooldown: 12, weight: 1.1 }),
+      { text: "Ir e reforçar o bloco.", fx: { act: { argentina: 6 }, s: { internacional: 2 } } },
+      { text: "Enviar chanceler.", fx: { act: { argentina: 2 } } },
+      { text: "Boicotar.", fx: { act: { argentina: -4 }, s: { internacional: -1 } } } ], { cooldown: 12, weight: 1.1 }),
 ];

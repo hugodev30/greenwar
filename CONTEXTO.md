@@ -371,6 +371,6 @@ Dados em `CAMPAIGN_2022.focus = { ap, cell, grants, branches, nodes }`. São 58 
 5. Depois: ranking ou compartilhamento de finais, novos cenários, e talvez escolhas votadas por amigos.
 
 
-## Diplomacia (v1.20)
+## Diplomacia (v1.20, enxugada na v1.22)
 
-A aba Diplomacia usa **Pontos de Diplomacia (PD)** (renda base por turno + bônus de Relações Internacionais; quinzenas recebem metade). Cada país mostra opinião, pedido ativo e o que pode oferecer; botões **Atender pedido**, **Pedir favor** e **Missão** (sem montar acordo livre). Há 13 atores (incl. Israel). Isolamento prolongado sem reconhecimento e sob sanções/hostilidade leva ao final **Isolamento total**.
+A aba Diplomacia usa **Pontos de Diplomacia (PD)** (renda base por turno + bônus de Relações Internacionais; quinzenas recebem metade). Cada país mostra opinião, pedido ativo e o que pode oferecer; botões **Atender pedido**, **Pedir favor** e **Missão** (sem montar acordo livre). Desde a v1.22 há só 6 atores: EUA, China, Rússia, UE, Argentina e Israel (potências = EUA, China, Rússia, UE e Israel; a UE também fala pelos organismos multilaterais). Venezuela, Mercosul, Portugal, Índia, Golfo, Vaticano e ONU/OEA saíram; eventos que os citavam passaram a mexer com UE, Argentina ou China. O isolamento conta potências hostis/sob sanção com o limiar `ceil(potências × 0,5)` (3 de 5). Save v17 (`migrateV17`) descarta o estado dos atores removidos. No Difícil, −1 PD por mês (`DIFICULDADES.dificil.pd`). Isolamento prolongado sem reconhecimento e sob sanções/hostilidade leva ao final **Isolamento total**.

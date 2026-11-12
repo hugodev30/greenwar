@@ -1,4 +1,4 @@
-// js/core/saves.js — Núcleo: migração de saves antigos (v2 → v16). Ao mudar o formato do save, suba SAVE_VERSION (core/base.js) e migre aqui.
+// js/core/saves.js — Núcleo: migração de saves antigos (v2 → v17). Ao mudar o formato do save, suba SAVE_VERSION (core/base.js) e migre aqui.
 function migrateSave(g){
   if (!g || g.v === SAVE_VERSION) return g;
   if (!(g.v >= 2 && g.v < SAVE_VERSION) || !scOf(g)) return null;
@@ -13,10 +13,23 @@ function migrateSave(g){
   if (g.v === 13){ g.urna = urnaNew(g); g.half = 0; g.halfDone = true; g.notice = null; g.v = 14; } // 2022: contestação das urnas (g.urna) e abertura em quinzenas (partidas antigas seguem mês a mês)
   if (g.v === 14){ delete g.quick; migrateV15(g); g.v = 15; } // fase 16: só a campanha completa; exércitos com tipo, experiência e sem fusão automática
   if (g.v === 15){ migrateV16(g); g.v = 16; } // v1.20: PD, novos atores, demandas; drop deals antigos
+  if (g.v === 16){ migrateV17(g); g.v = 17; } // v1.22: só os 6 atores principais; estado dos removidos some
   return g.v === SAVE_VERSION ? g : null;
 }
 // v14 → v15: a partida rápida acabou (vira campanha completa; os finais por prazo já não existem). Exércitos ganham kind ("ex") e xp
 // (veteranos de partidas antigas começam com um pouco, pela moral); o soldo atrasado (g.unpaid) começa em 0.
+// v16 → v17: a diplomacia fica só com os atores do cenário (EUA, China, Rússia, UE, Argentina, Israel no 2022).
+// Opinião, reconhecimento, sanções, dívidas e drenos de atores que saíram são descartados.
+function migrateV17(g){
+  const C = scOf(g).campaign, keep = new Set((C.actors || []).map(a => a.id));
+  for (const id of Object.keys(g.actors || {})) if (!keep.has(id)) delete g.actors[id];
+  for (const a of (C.actors || [])) if (!g.actors[a.id]) g.actors[a.id] = { opinion: a.opinion, recognized: false, dependence: 0, deals: 0, aligned: false, sanctioning: false, supportsEnemy: false, demand: null, demandAge: 0, favorUsed: {} };
+  g.debts = (g.debts || []).filter(d => g.actors[d.aid]);
+  g.drains = (g.drains || []).filter(d => !d.aid || g.actors[d.aid]);
+  if (g.dealtWith) for (const id of Object.keys(g.dealtWith)) if (!keep.has(id)) delete g.dealtWith[id];
+  if (g.focus && g.focus.dipBonus) for (const id of Object.keys(g.focus.dipBonus)) if (!keep.has(id)) delete g.focus.dipBonus[id];
+  if (g.used) for (const k of Object.keys(g.used)) if (k.startsWith("mis_") && !keep.has(k.slice(4))) delete g.used[k];
+}
 function migrateV16(g){
   const C = scOf(g).campaign;
   if (g.pd == null) g.pd = Math.min((C.diplo && C.diplo.cap) || 8, 2);

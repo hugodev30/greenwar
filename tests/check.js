@@ -546,7 +546,16 @@ for (const sc of SCENARIOS) {
       // migração v9 → v13: estados "disputa" viram um lado
       const v9 = JSON.parse(JSON.stringify(gt)); v9.v = 9; v9.control.MG = "disputa"; v9.control.BA = "disputa";
       const m = RX.migrateSave(v9);
-      if (!m || m.v !== RX.SAVE_VERSION || m.v !== 16 || m.halfDone !== true || !m.urna || m.pd == null || !m.actors.israel) err("2022: migração v9→v16 falhou");
+      // v1.22: save v16 com os atores removidos carrega sem eles (e sem dívidas/drenos/missões deles)
+      { const s16 = JSON.parse(JSON.stringify(gt)); s16.v = 16;
+        for (const id of ["venezuela", "mercosul", "portugal", "india", "golfo", "vaticano", "onu"]) s16.actors[id] = { opinion: -60, recognized: true, dependence: 0, deals: 1, aligned: false, sanctioning: true, supportsEnemy: false, demand: "gesto", demandAge: 0, favorUsed: {} };
+        s16.debts = [{ aid: "golfo", amount: 9, due: s16.month + 3 }, { aid: "china", amount: 5, due: s16.month + 3 }]; s16.drains = [{ aid: "india", amount: 1, until: s16.month + 2 }]; s16.used = Object.assign({}, s16.used, { mis_onu: true });
+        const m17 = RX.migrateSave(s16), six = ["eua", "china", "russia", "ue", "argentina", "israel"];
+        if (!m17 || m17.v !== 17) err("v1.22: migração v16→v17 falhou");
+        else { if (Object.keys(m17.actors).sort().join() !== six.slice().sort().join()) err("v1.22: atores após migração v16→v17: " + Object.keys(m17.actors).join(","));
+          if (m17.debts.length !== 1 || m17.drains.length || m17.used.mis_onu) err("v1.22: migração v16→v17 deixou dívida/dreno/missão de ator removido");
+          if (!RX.endTurn(m17) && !m17.queue.length && !m17.ended) err("v1.22: save v16 migrado não avança"); } }
+      if (!m || m.v !== RX.SAVE_VERSION || m.v !== 17 || m.halfDone !== true || !m.urna || m.pd == null || !m.actors.israel || m.actors.venezuela || m.actors.onu) err("2022: migração v9→v17 falhou");
       else {
         if (Object.values(m.control).includes("disputa")) err("2022: migração v9→v13 deixou estado em disputa");
         if ("reg" in m) err("2022: migração v9→v13 criou regiões");

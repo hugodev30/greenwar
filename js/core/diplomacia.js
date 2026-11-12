@@ -16,7 +16,7 @@ function pdIncome(g, half){
   if (intl >= (D.intlHigh ?? 70)) bonus += D.bonusHigh ?? 2;
   else if (intl >= (D.intlMid ?? 50)) bonus += D.bonusMid ?? 1;
   if (g.focus && g.focus.pdBonus) bonus += g.focus.pdBonus;
-  const total = base + bonus;
+  const total = Math.max(1, base + bonus + (diffOf(g).pd || 0)); // Difícil: −1 PD por mês (v1.22)
   return half ? Math.max(1, Math.round(total / 2)) : total;
 }
 function grantPD(g, n, R){
@@ -115,7 +115,7 @@ function applyDemand(g, aid, dem){
   else if (dem === "seguranca"){ applyStats(g, { [K.mil]: 1, [K.legit]: 1 }); out.push("parceria de segurança"); }
   else if (dem === "votos"){ bumpActor(g, aid, 4); out.push("apoio em fóruns"); }
   else if (dem === "fe"){ bumpFac(g, "evangelicos", 4); bumpFac(g, "movimentos", -2); out.push("agenda de valores"); }
-  else if (dem === "mercosul"){ bumpActor(g, "argentina", 4); bumpActor(g, "mercosul", 4); out.push("gesto ao Mercosul"); }
+  else if (dem === "mercosul"){ bumpActor(g, "argentina", 6); out.push("gesto ao Mercosul"); }
   else if (dem === "credito"){ g.money += 4; out.push("+4 Recursos (linha de crédito simbólica)"); }
   else { applyStats(g, { [K.legit]: 1 }); out.push("demanda atendida"); }
   if (A.reactions) for (const f in A.reactions) bumpFac(g, f, Math.round(A.reactions[f] * 0.5));
@@ -153,7 +153,7 @@ function isolationStatus(g){
   const sanc = majors.filter(a => g.actors[a.id].sanctioning).length;
   const intl = g.stats[(scOf(g).campaign.keys || {}).legit || "internacional"] ?? 50;
   // Isolado: quase sem reconhecimento entre potências, relações baixas, e (sanções ou várias potências hostis)
-  const isolated = rec <= (D.isoMaxRec != null ? D.isoMaxRec : 0) && intl <= (D.isoIntl || 35) && (sanc >= (D.isoMinSanc || 1) || host >= Math.max(2, Math.ceil(majors.length * 0.4)));
+  const isolated = rec <= (D.isoMaxRec != null ? D.isoMaxRec : 0) && intl <= (D.isoIntl || 35) && (sanc >= (D.isoMinSanc || 1) || host >= Math.max(2, Math.ceil(majors.length * 0.5)));
   return { iso: isolated, months: g.isoMonths || 0, need, warn: (g.isoMonths || 0) >= Math.max(1, need - 2) && (g.isoMonths || 0) < need, rec, host, sanc, majors: majors.length };
 }
 function isolationTick(g, R){

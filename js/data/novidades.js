@@ -3,6 +3,12 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.22", data: "2026-11-12", titulo: "Diplomacia mais enxuta", itens: [
+    "A mesa de diplomacia agora tem só os 6 atores que mais pesam: EUA, China, Rússia, União Europeia, Argentina e Israel.",
+    "Venezuela, Mercosul, Portugal, Índia, Golfo, Vaticano e ONU/OEA saíram; eventos que falavam deles agora mexem com a UE, a Argentina ou a China.",
+    "PD, Atender pedido, Pedir favor, Missão e o Isolamento total continuam iguais. Saves antigos carregam normalmente.",
+    "No Difícil, a diplomacia rende 1 PD a menos por mês."
+  ] },
   { v: "1.21", data: "2026-11-11", titulo: "IA inimiga mais esperta na guerra", itens: [
     "Assim que a guerra começa, a Resistência concentra forças para consolidar o Norte (Norte e Nordeste) antes de partir para uma ofensiva em direção ao Sul.",
     "O inimigo junta exércitos antes de atacar, compara forças, reforça estados ameaçados e recua tropas muito feridas. No Fácil o plano é mais cauteloso; no Difícil, mais agudo.",

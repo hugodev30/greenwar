@@ -56,7 +56,7 @@ const RETRATOS_2022 = {
     mercenario: { silhueta: true, nome: "Representante da empresa",   cargo: "Empresa militar privada" }
   },
   faccoes: { militares: "gen_becker", centrao: "lider_centrao", agro: "lider_agro", evangelicos: "pastor", movimentos: "sindicalista", stf: "ministra_stf" },
-  atores: { eua: "emb_eua", china: "emb_china", russia: "emb_russia", ue: "com_ue", argentina: "chanc_argentina", venezuela: "emb_venezuela", mercosul: "chanc_mercosul", israel: "emb_israel", portugal: "emb_portugal", india: "emb_india", golfo: "emb_golfo", vaticano: "nuncio_vaticano", onu: "enviado_onu" },
+  atores: { eua: "emb_eua", china: "emb_china", russia: "emb_russia", ue: "com_ue", argentina: "chanc_argentina", israel: "emb_israel" },
   generais: {
     "Gen. Augusto Valadares": "gen_valadares", "Gen. Ronaldo Pessanha": "gen_pessanha", "Brig. Márcio Tavares": "brig_tavares",
     "Gen. Heloísa Barreto": "gen_barreto", "Gen. Joaquim Arruda": "gen_arruda", "Cel. Iara Nogueira": "cel_nogueira",
