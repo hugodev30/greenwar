@@ -174,6 +174,7 @@ node tests/sim.js 300 brasil2022 --dif=facil      # dificuldade Fácil (também:
 node tests/sim.js 300 brasil2022 --conselheira    # acrescenta as IAs "iniciante" e "conselheira" (que só segue as dicas)
 node tests/sim.js 300 brasil2022 --golpe [--dif=dificil]  # acrescenta a IA "golpista_conselheira" e a linha "golpe:" (sucesso do golpe)
 node tests/sim.js 300 --notas                     # mostra a distribuição da nota final e das conquistas por IA (automático com --dif)
+node tests/nuvem.js                               # nuvem (Supabase falso): save de versão mais nova na nuvem nunca é sobrescrito
 node tests/navegacao-tela.js                      # teste opcional de navegador: menu, cenário 1964 bloqueado e início de campanha
 ```
 Com `--dif` o sim imprime também a linha **resultado** (vitória / intermediário / derrota, pelo campo `outcome` dos finais) e, no Fácil, roda a IA **iniciante** (aleatória que lê os avisos de derrota do modo simples). O `tests/check.js` roda esses modos com 80 partidas e falha se o Fácil não vencer bem mais que o Difícil.

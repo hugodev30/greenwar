@@ -20,6 +20,8 @@ const AVATARS = {
 const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
 const DB_MISSING_MSG = "O servidor de contas ainda não foi configurado (falta rodar o SQL no Supabase). " +
   "Seu login funciona, mas perfis e saves na nuvem ficam indisponíveis — seus saves continuam neste aparelho.";
+const NEWER_MSG = "Seu save na nuvem é de uma versão mais nova do jogo. Recarregue a página (Ctrl+F5) para atualizar; " +
+  "até lá, este aparelho não envia esse save para não apagar o mais novo.";
 
 const Game = window.GWGame;
 const btn = document.getElementById("btnAcct");
@@ -324,6 +326,11 @@ async function uploadSave(scId) {
   const sc = scenById(scId); if (!sc) return;
   const data = readJSON(sc.saveKey);
   if (!data || data.scen !== scId) return;
+  // Nunca sobrescreve um save da nuvem feito por uma versão mais nova do jogo (ex.: outro aparelho já atualizado
+  // e este com a página antiga em cache). O save mais novo fica intacto até esta página ser recarregada.
+  const cur = await st.sb.from("saves").select("save_version").eq("user_id", st.user.id).eq("scenario_id", scId).eq("slot", SLOT).maybeSingle();
+  if (cur.error) { if (isMissingTable(cur.error)) st.dbReady = false; throw cur.error; }
+  if (cur.data && cur.data.save_version > Game.saveVersion) throw { message: NEWER_MSG, newer: true };
   const { error } = await st.sb.from("saves").upsert({ user_id: st.user.id, scenario_id: scId, slot: SLOT, data, save_version: data.v || Game.saveVersion },
     { onConflict: "user_id,scenario_id,slot" });
   if (error) { if (isMissingTable(error)) st.dbReady = false; throw error; }
@@ -424,9 +431,11 @@ async function mergeOnLogin({ interactive = false } = {}) {
     const { data: rows, error } = await st.sb.from("saves").select("scenario_id,data,save_version,updated_at").eq("user_id", st.user.id).eq("slot", SLOT);
     if (error) throw error;
     const changed = new Set(), uploads = [], conflicts = [];
-    let skipped = 0;
+    let skipped = 0, newer = 0;
     for (const sc of scenarios()) {
       const row = (rows || []).find(r => r.scenario_id === sc.id);
+      // Save da nuvem de uma versão mais nova do jogo: não baixa (esta página não sabe abrir) nem envia o local por cima.
+      if (row && row.save_version > Game.saveVersion) { newer++; continue; }
       const local = readJSON(sc.saveKey);
       const hasLocal = local && local.scen === sc.id;
       const cloudOk = row && row.data && row.save_version >= (Game.minSaveVersion || Game.saveVersion) && row.save_version <= Game.saveVersion && row.data.scen === sc.id; // v2 é migrado pelo jogo ao abrir
@@ -448,9 +457,9 @@ async function mergeOnLogin({ interactive = false } = {}) {
     for (const id of await mergeEndings()) changed.add(id);
     await mergeAchievements(rows || []);
     await pushFinished();
-    st.lastSync = Date.now(); st.lastError = null;
+    st.lastSync = Date.now(); st.lastError = newer ? NEWER_MSG : null;
     if (changed.size) Game.refresh([...changed]);
-    if (interactive) return { uploads: uploads.length, downloaded: changed.size, conflicts: conflicts.length, skipped };
+    if (interactive) return { uploads: uploads.length, downloaded: changed.size, conflicts: conflicts.length, skipped, newer };
   } catch (e) {
     st.lastError = ptError(e); console.warn("nuvem (mesclagem):", e);
     if (interactive) throw e;
@@ -539,7 +548,7 @@ function openProfile(tab = "perfil") {
       const r = await mergeOnLogin({ interactive: true });
       openProfile(tab);
       const info = document.getElementById("gwc-syncinfo");
-      if (info && r) info.textContent = `Sincronizado: ${r.uploads} enviado(s), ${r.downloaded} atualizado(s) neste aparelho${r.conflicts ? `, ${r.conflicts} conflito(s) resolvido(s)` : ""}${r.skipped ? `, ${r.skipped} save(s) de versão antiga ignorado(s)` : ""}.`;
+      if (info && r) info.textContent = `Sincronizado: ${r.uploads} enviado(s), ${r.downloaded} atualizado(s) neste aparelho${r.conflicts ? `, ${r.conflicts} conflito(s) resolvido(s)` : ""}${r.skipped ? `, ${r.skipped} save(s) de versão antiga ignorado(s)` : ""}.${r.newer ? " " + NEWER_MSG : ""}`;
     } catch (err) { const info = document.getElementById("gwc-syncinfo"); if (info) info.textContent = ptError(err); }
   });
   if (st.dbReady !== true || !p) return;
