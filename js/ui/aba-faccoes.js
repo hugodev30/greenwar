@@ -46,7 +46,7 @@ function tabFaccoes(el){
   }).join("");
   const help = `<details class="fhelp"><summary aria-label="Como funcionam as facções" title="Como funcionam as facções">?</summary><div class="fhpop"><ul>
       <li><b>Lealdade</b> — <span>Leal ≥ 65 · Neutra 35–64 · Insatisfeita até o limite de crise · Em crise abaixo dele (15; nas facções que começam leais, 25 ou 30 — veja a marca na barra).</span> <span>A linha destacada (▸) em cada cartão é o efeito de agora.</span></li>
-      <li><b>Crise</b> — <span>lealdade abaixo de 15 com influência 25 ou mais; no máximo uma a cada 4 meses.</span></li>
+      <li><b>Crise</b> — <span>lealdade abaixo do limite da facção (15; 25 para militares e agro; 30 para evangélicos) com influência 25 ou mais; no máximo uma a cada 4 meses.</span></li>
       <li><b>Agradar</b> <span>(${esc(facCostTxt(F0, "agradar"))})</span> — <span>lealdade +14, rivais −5.</span></li>
       <li><b>Enfraquecer</b> <span>(${esc(facCostTxt(F0, "pressionar"))})</span> — <span>influência −10, lealdade −12.</span></li>
       <li>${C.facMoney ? `<span>Pagos só com Recursos, sem gastar ações.</span> ` : ""}<span>Cada botão uma vez por facção, por turno.</span></li>

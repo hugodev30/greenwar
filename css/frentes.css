@@ -117,8 +117,8 @@
   /* Fase 17: cartão do exército compacto (ordem atual + Defender, ataques em destaque, movimentos recolhidos, recrutar aqui) */
   .tpnow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:8px 0 6px}
   .tpnow .tpnowo{font-weight:600}
-  .tpdef{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;border:1px solid #5b8fc7;background:#1a2230;color:#cfe3f5;font:inherit;font-size:.82rem;cursor:pointer}
-  .tpdef:hover:not(:disabled){background:#22304a}.tpdef.on{background:#25476e;border-color:#9cc3ea;color:#fff;cursor:default}
+  button.tpdef{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;border:1px solid #5b8fc7;background:#1a2230;color:#cfe3f5;font:inherit;font-size:.82rem;cursor:pointer}
+  button.tpdef:hover:not(:disabled){background:#22304a}button.tpdef.on{background:#25476e;border-color:#9cc3ea;color:#fff;cursor:default}
   .tpnow small{flex-basis:100%;font-size:.72rem}
   .tpsec{margin:6px 0;border-radius:7px}
   .tpsech{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#f0a493;font-weight:700;margin:4px 0 2px}

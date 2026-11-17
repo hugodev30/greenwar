@@ -76,7 +76,7 @@ const FA_CENAS = {
     svg: () => FA_PART.sky("fa-s16", "#0d1630", "#050812") + Array.from({ length: 22 }, (_, i) => `<circle cx="${(i * 71) % FA_W}" cy="${(i * 37) % 140}" r="${i % 3 ? 1 : 1.6}" fill="#fff" opacity=".7"/>`).join("") + FA_PART.ground("#0a0d18") +
       Array.from({ length: 8 }, (_, i) => `<circle cx="${30 + i * 48}" cy="206" r="2.5" fill="#ffd166"/>`).join("") +
       `<g class="fa-aviao"><path d="M0,0l40,-4l14,-10h6l-6,12l18,-2l6,-6h4l-3,8l3,8h-4l-6,-6l-18,-2l6,12h-6l-14,-10l-40,-4z" fill="#dfe6f0" transform="translate(60,190) rotate(-14)"/></g>` },
-  isolamento: { tone: "der", sub: "O mundo fecha as portas: sem reconhecimento, o governo asfixixa.",
+  isolamento: { tone: "der", sub: "O mundo fecha as portas: sem reconhecimento, o governo asfixia.",
     svg: () => FA_PART.sky("fa-s17", "#1a2030", "#07090f") + FA_PART.ground("#12151c") + FA_PART.planalto("#1c222c") +
       `<g opacity=".55">${Array.from({ length: 6 }, (_, i) => `<rect x="${40 + i * 55}" y="70" width="36" height="50" rx="3" fill="#2a3140" stroke="#6a7388"/><path d="M${48 + i * 55},95h20M${58 + i * 55},85v20" stroke="#c0392b" stroke-width="3"/>`).join("")}</g>` +
       FA_PART.person(200, "#111", 1.05) + `<circle class="fa-glow" cx="200" cy="120" r="70" fill="#4a5568" opacity=".15"/>`, stamp: "ISOLADO" }

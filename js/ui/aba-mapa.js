@@ -70,7 +70,7 @@ function tabMapa(el){
   if ($("#btnLayerInfo")) $("#btnLayerInfo").onclick = () => { UI.layerInfo = !infoOpen; renderGame(); };
   if ($("#btnLayerMore")) $("#btnLayerMore").onclick = () => { UI.layerInfo = true; renderGame(); };
   el.querySelectorAll(".mapacts .act").forEach(b => b.onclick = () => afterAct(doMapAction(G, uf, b.dataset.k)));
-  el.querySelectorAll("[data-army]").forEach(b => b.onclick = () => { const a = armyById(G, b.dataset.army); UI.ordMode = null; UI.pend = null; UI.selArmy = a.id; UI.selUF = a.uf; renderGame(); window.scrollTo({ top: Math.max(0, ($("#mapMain").getBoundingClientRect().top + window.scrollY) - 70), behavior: "smooth" }); });
+  el.querySelectorAll("[data-army]").forEach(b => b.onclick = () => { const a = armyById(G, b.dataset.army); if (!a) return; UI.ordMode = null; UI.pend = null; UI.selArmy = a.id; UI.selUF = a.uf; renderGame(); window.scrollTo({ top: Math.max(0, ($("#mapMain").getBoundingClientRect().top + window.scrollY) - 70), behavior: "smooth" }); });
   el.querySelectorAll("[data-desel]").forEach(b => b.onclick = () => { UI.selArmy = null; UI.selUF = null; UI.ordMode = null; UI.pend = null; renderGame(); });
   const toMap = () => window.scrollTo({ top: Math.max(0, ($("#mapMain").getBoundingClientRect().top + window.scrollY) - 70), behavior: "smooth" });
   // botões grandes: ⚔ propõe o melhor alvo (2º clique ou ✔ confirma) · ➜ destaca destinos · 🛡/＋ aplicam na hora
