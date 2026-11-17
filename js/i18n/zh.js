@@ -3118,7 +3118,7 @@ const I18N_ZH = {
   "Fique meses sem reconhecimento das potências e sob sanções ou hostilidade da maioria delas.": "连续数月得不到大国承认，并遭受多数大国的制裁或敌对。",
   "Embaixadas fecham uma após a outra. Linhas de crédito externas somem, o dólar some das reservas e até aliados discretos preferem o silêncio. Sem reconhecimento e sob pressão prolongada, o governo fica sem oxigênio político.": "使馆接连关闭。外部信贷额度消失，美元流出储备，连低调盟友也选择沉默。没有承认并长期承压，政府失去政治氧气。",
   "Você ainda ocupa o Planalto — mas o mundo já tratou o Brasil como um parêntese. O Isolamento total encerra a aventura antes que a guerra ou as urnas o façam.": "你仍占据着高原宫——但世界已把巴西当作括号。全面孤立在战争或选票之前结束这场冒险。",
-  "O mundo fecha as portas: sem reconhecimento, o governo asfixixa.": "世界关上大门：没有承认，政府窒息。",
+  "O mundo fecha as portas: sem reconhecimento, o governo asfixia.": "世界关上大门：没有承认，政府窒息。",
   "Isolamento total: quase sem reconhecimento e sob sanções/hostilidade prolongada.": "全面孤立：几乎没有承认，并长期处于制裁/敌对之下。",
   "meses sob pressão. Busque reconhecimento ou acalme potências antes do Isolamento total.": "个月承压。在全面孤立之前争取承认或安抚大国。",
   "Use Pontos de Diplomacia (PD) — não ações — para Atender pedido, Pedir favor ou enviar uma missão.": "使用外交点数（PD）——而不是行动点——来满足请求、请求帮助或派出使团。",
