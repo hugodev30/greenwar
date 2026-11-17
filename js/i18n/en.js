@@ -2,6 +2,7 @@
 // Para traduzir um texto novo, acrescente uma linha "texto em português": "English text".
 const I18N_EN = {
  "exact": {
+  "Leal ≥ 65 · Neutra 35–64 · Insatisfeita até o limite de crise · Em crise abaixo dele (15; nas facções que começam leais, 25 ou 30 — veja a marca na barra).": "Loyal ≥ 65 · Neutral 35–64 · Unhappy down to the crisis line · In crisis below it (15; for factions that start loyal, 25 or 30 — see the mark on the bar).",
   "Pular para o conteúdo": "Skip to content",
   "Crônicas da Separação": "Chronicles of the Split",
   "☰ Cenários": "☰ Scenarios",
@@ -3438,6 +3439,11 @@ const I18N_EN = {
   "Aparece quando a guerra passa de 6 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Appears when the war lasts more than 6 months and mediators appear. Stays open 3 months and can return 8 months after use.",
   "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Appears when the war lasts more than 12 months and mediators appear. Stays open 3 months and can return 8 months after use.",
   "Mediação, reconhecimento e sanções; pressão ambiental. Também fala pelos organismos multilaterais (ONU/OEA).": "Mediation, recognition and sanctions; environmental pressure. Also speaks for the multilateral bodies (UN/OAS).",
+  "Eleições mais disputadas": "Closer elections",
+  "A eleição de 2026 deixou de ser automática: o resultado soma Apoio Popular e Base Política com a sorte da campanha, e pode virar dos dois lados.": "The 2026 election is no longer automatic: the result combines Popular Support and Political Base with campaign luck, and can swing either way.",
+  "Atributos altos sobem mais devagar: acima de 60, cada ponto ganho vale 60%; acima de 75, 30%. No Normal, Apoio e Base acima de 72 também se desgastam 1 ponto por mês.": "High attributes rise more slowly: above 60 each point gained counts 60%; above 75, 30%. On Normal, Support and Base above 72 also wear down 1 point per month.",
+  "A contestação no TSE avança um pouco mais devagar: ainda dá para vencer sem guerra, mas não é mais garantido.": "The TSE challenge advances a bit more slowly: you can still win without war, but it is no longer guaranteed.",
+  "Militares, agro e evangélicos entram em crise antes (abaixo de 25 ou 30 de lealdade): ignorar essas bases agora tem preço.": "The military, agribusiness and evangelicals now enter crisis sooner (below 25 or 30 loyalty): neglecting these bases now has a price.",
   "Ajustes de equilíbrio e textos": "Balance and text tweaks",
   "Os atributos não grudam mais em 100: acima de 80, cada ponto ganho vale metade.": "Attributes no longer get stuck at 100: above 80, each point gained counts half.",
   "O tutorial agora explica que os turnos do começo são quinzenas e que só os eventos mostram os efeitos antes da escolha.": "The tutorial now explains that early turns are fortnights and that only events show their effects before you choose.",

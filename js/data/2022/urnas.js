@@ -11,9 +11,10 @@ const URNAS_2022 = {
   flag: "contesta_urna",
   cred0: 50, esc0: 25,
   warnEsc: 70, warnCred: 20,
+  ganho: 0.9,              // v1.24: todo ganho de progresso vale 90% (o caminho legal vencia quase sempre)
   julgamento: 43,          // progresso mínimo no julgamento do TSE (janeiro) — a dificuldade dá folga
   // por quinzena (um turno de mês vale o dobro)
-  passivo: { base: 0.5, apoio: 0.06, baseStat: 0.08, centrao: 0.05 }, // progresso: 1 + (Apoio−50)·0,06 + (Base−50)·0,08 + (Centrão−45)·0,05
+  passivo: { base: 0.3, apoio: 0.06, baseStat: 0.08, centrao: 0.05 }, // progresso: 1 + (Apoio−50)·0,06 + (Base−50)·0,08 + (Centrão−45)·0,05
   esfria: 4,               // a escalada cai sozinha
   // a contestação acaba (sem vitória) quando a história segue outro rumo
   fecha: { visitedAny: ["transicao", "crise_janeiro", "sondagem", "contestacao_derrotada", "oposicao", "golpe_inicial"] },

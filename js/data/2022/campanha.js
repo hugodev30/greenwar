@@ -98,10 +98,10 @@ const CAMPAIGN_2022 = {
       rel: { eua: 0.7, russia: -0.4 }, reactions: { evangelicos: 3, movimentos: -2 } }
   ],
   factions: [
-    { id: "militares", name: "Forças Armadas", short: "Militares", desc: "Os comandos se dividem entre a legalidade e a pressão política.", loyalty: 50, influence: 60, links: { militar: 1 }, boost: { militar: 1 }, rivals: ["stf"] },
+    { id: "militares", name: "Forças Armadas", short: "Militares", desc: "Os comandos se dividem entre a legalidade e a pressão política.", loyalty: 50, influence: 60, links: { militar: 1 }, boost: { militar: 1 }, rivals: ["stf"], crise: 25 },
     { id: "centrao", name: "Centrão / Congresso", short: "Centrão", desc: "Partidos pragmáticos: acompanham quem tem cargos, verbas e votos.", loyalty: 45, influence: 55, links: { base: 1 }, boost: { base: 1 } },
-    { id: "agro", name: "Agronegócio e empresários", short: "Agro/empresas", desc: "Base econômica importante; temem instabilidade e sanções.", loyalty: 60, influence: 50, links: { internacional: 0.5, base: 0.3 }, boostMoney: 2 },
-    { id: "evangelicos", name: "Lideranças evangélicas", short: "Evangélicos", desc: "Parte expressiva da sua base eleitoral.", loyalty: 65, influence: 40, links: { apoio: 0.7 }, boost: { apoio: 1 } },
+    { id: "agro", name: "Agronegócio e empresários", short: "Agro/empresas", desc: "Base econômica importante; temem instabilidade e sanções.", loyalty: 60, influence: 50, links: { internacional: 0.5, base: 0.3 }, boostMoney: 2, crise: 25 },
+    { id: "evangelicos", name: "Lideranças evangélicas", short: "Evangélicos", desc: "Parte expressiva da sua base eleitoral.", loyalty: 65, influence: 40, links: { apoio: 0.7 }, boost: { apoio: 1 }, crise: 30 },
     { id: "movimentos", name: "Movimentos sociais e sindicatos", short: "Movimentos", desc: "Em geral opositores; sua mobilização pesa nas ruas.", loyalty: 20, influence: 35, links: { internacional: 0.3, apoio: -0.2 } },
     { id: "stf", name: "STF / Judiciário", short: "Judiciário", desc: "Tribunais superiores. A barra mede a disposição, não obediência: o Judiciário é independente.", loyalty: 30, influence: 65, links: { internacional: 0.5, militar: -0.3 }, rivals: ["militares"] }
   ],

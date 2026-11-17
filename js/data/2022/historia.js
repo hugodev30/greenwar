@@ -236,9 +236,9 @@ const STORY_2022 = {
       ],
       choices: [
         { text: "Campanha centrada na economia e em alianças com o centro.",
-          next: [ { if: { min: { apoio: 50, base: 60 } }, to: "fim_retorno" }, { to: "derrota_urnas" } ] },
+          next: [ { if: { vote: { alvo: 72, peso: { apoio: 0.6, base: 0.4 } } }, to: "fim_retorno" }, { to: "derrota_urnas" } ] },
         { text: "Campanha de mobilização máxima da base.", effects: { apoio: 5 },
-          next: [ { if: { min: { apoio: 65 } }, to: "fim_retorno" }, { to: "derrota_urnas" } ] }
+          next: [ { if: { vote: { alvo: 75, peso: { apoio: 1 } } }, to: "fim_retorno" }, { to: "derrota_urnas" } ] }
       ]
     },
 
@@ -279,9 +279,9 @@ const STORY_2022 = {
       ],
       choices: [
         { text: "Campanha pela economia e alianças com o centro.",
-          next: [ { if: { flags: ["herdeiro"], min: { apoio: 56, base: 62 } }, to: "fim_herdeiro" }, { if: { min: { apoio: 58, base: 62 } }, to: "fim_retorno" }, { if: { diff: ["dificil"] }, to: "fim_oposicao" }, { to: "derrota_urnas" } ] },
+          next: [ { if: { flags: ["herdeiro"], vote: { alvo: 71, peso: { apoio: 0.6, base: 0.4 } } }, to: "fim_herdeiro" }, { if: { vote: { alvo: 73, peso: { apoio: 0.6, base: 0.4 } } }, to: "fim_retorno" }, { if: { diff: ["dificil"] }, to: "fim_oposicao" }, { to: "derrota_urnas" } ] },
         { text: "Campanha de mobilização máxima da base.", effects: { apoio: 4 },
-          next: [ { if: { flags: ["herdeiro"], min: { apoio: 66 } }, to: "fim_herdeiro" }, { if: { min: { apoio: 69 } }, to: "fim_retorno" }, { if: { diff: ["dificil"] }, to: "fim_oposicao" }, { to: "derrota_urnas" } ] }
+          next: [ { if: { flags: ["herdeiro"], vote: { alvo: 74, peso: { apoio: 1 } } }, to: "fim_herdeiro" }, { if: { vote: { alvo: 76, peso: { apoio: 1 } } }, to: "fim_retorno" }, { if: { diff: ["dificil"] }, to: "fim_oposicao" }, { to: "derrota_urnas" } ] }
       ]
     },
 

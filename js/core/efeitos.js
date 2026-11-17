@@ -1,19 +1,28 @@
 // js/core/efeitos.js — Núcleo: aplica efeitos (fx) nos indicadores, facções, atores e no mapa.
 /* ---------- Efeitos ---------- */
-// Retorno decrescente: acima de STAT_SOFT, cada ponto ganho vale metade (os atributos não grudam em 100 só de acumular
-// ganhos pequenos; quedas valem inteiras). Ex.: em 78, +6 → 80 + 4/2 = 82.
-const STAT_SOFT = 80;
-function statGain(before, d){
-  if (d <= 0 || before + d <= STAT_SOFT) return d;
-  const full = Math.max(0, STAT_SOFT - before);
-  return full + (d - full) / 2;
+// Retorno decrescente (v1.24): quanto mais alto o atributo, menos cada ponto ganho vale (quedas valem inteiras).
+// Até 60 vale inteiro; de 60 a 75, 60%; acima de 75, 30%. O Apoio Militar só desacelera acima de 80 (metade),
+// para não mexer no ritmo do golpe e da guerra. Ex.: Apoio em 70 com +10 → 75,5 (8,3 brutos levam a 75; o resto vale 30%).
+const STAT_TIERS = [[60, 0.6], [75, 0.3]], STAT_TIERS_MIL = [[80, 0.5]];
+function statGain(before, d, tiers){
+  if (d <= 0) return d;
+  let x = before, left = d;
+  const T = tiers || STAT_TIERS;
+  // anda o ganho por faixas: em cada faixa, um ponto "bruto" vale o multiplicador da faixa
+  for (let i = -1; i < T.length && left > 0; i++){
+    const mult = i < 0 ? 1 : T[i][1], top = i + 1 < T.length ? T[i + 1][0] : 1e9, floor = i < 0 ? -1e9 : T[i][0];
+    if (x >= top) continue;
+    const startX = Math.max(x, floor), room = (top - startX) / mult, use = Math.min(left, room);
+    x = startX + use * mult; left -= use;
+  }
+  return x - before;
 }
 function applyStats(g, eff, viaStory){
   const sc = scOf(g), C = sc.campaign;
   for (const k in (eff||{})){
     if (!(k in g.stats)) continue;
     const before = g.stats[k];
-    g.stats[k] = clamp(before + statGain(before, eff[k]), 0, 100);
+    g.stats[k] = clamp(before + statGain(before, eff[k], k === C.keys.mil ? STAT_TIERS_MIL : STAT_TIERS), 0, 100);
     const d = g.stats[k] - before;
     g.lastDelta[k] = (g.lastDelta[k]||0) + d;
     if (!d) continue;

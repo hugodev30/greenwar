@@ -3,6 +3,7 @@
 // Texto que faltar aqui cai no inglês (I18N_EN) e depois no português.
 const I18N_ZH = {
  "exact": {
+  "Leal ≥ 65 · Neutra 35–64 · Insatisfeita até o limite de crise · Em crise abaixo dele (15; nas facções que começam leais, 25 ou 30 — veja a marca na barra).": "忠诚 ≥ 65 · 中立 35–64 · 不满：直到危机线 · 危机：低于危机线（15；开局忠诚的派系为 25 或 30——见进度条上的标记）。",
   "Chefe do novo governo militar (papel genérico)": "新军政府首脑（通用角色）",
   "Não foi possível salvar o progresso neste navegador. Ele pode ser perdido se você fechar ou recarregar a página. Verifique o espaço disponível e as permissões de armazenamento.": "无法在此浏览器中保存进度。如果关闭或重新加载页面，进度可能会丢失。请检查可用空间和浏览器存储权限。",
   "Reduto bolsonarista": "博索纳罗派据点",
@@ -3432,6 +3433,11 @@ const I18N_ZH = {
   "Aparece quando a guerra passa de 6 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "战争超过6个月且出现调停者时出现。开放3个月，使用后8个月可再次出现。",
   "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "战争超过12个月且出现调停者时出现。开放3个月，使用后8个月可再次出现。",
   "Mediação, reconhecimento e sanções; pressão ambiental. Também fala pelos organismos multilaterais (ONU/OEA).": "调解、承认与制裁；环保压力。也代表多边机构（联合国/美洲国家组织）发声。",
+  "Eleições mais disputadas": "更胶着的选举",
+  "A eleição de 2026 deixou de ser automática: o resultado soma Apoio Popular e Base Política com a sorte da campanha, e pode virar dos dois lados.": "2026 年选举不再是稳操胜券：结果由民众支持、政治基础和竞选运气共同决定，可能倒向任何一方。",
+  "Atributos altos sobem mais devagar: acima de 60, cada ponto ganho vale 60%; acima de 75, 30%. No Normal, Apoio e Base acima de 72 também se desgastam 1 ponto por mês.": "高属性增长更慢：超过 60 后每点只算 60%，超过 75 后只算 30%。普通难度下，民众支持和政治基础超过 72 时每月也会下降 1 点。",
+  "A contestação no TSE avança um pouco mais devagar: ainda dá para vencer sem guerra, mas não é mais garantido.": "在高等选举法院的抗争推进得稍慢一些：仍然可以不打仗就获胜，但不再稳赢。",
+  "Militares, agro e evangélicos entram em crise antes (abaixo de 25 ou 30 de lealdade): ignorar essas bases agora tem preço.": "军方、农业综合企业和福音派现在会更早陷入危机（忠诚度低于 25 或 30）：忽视这些基本盘如今要付出代价。",
   "Ajustes de equilíbrio e textos": "平衡与文字调整",
   "Os atributos não grudam mais em 100: acima de 80, cada ponto ganho vale metade.": "属性不再轻易卡在 100：超过 80 后，每获得 1 点只算一半。",
   "O tutorial agora explica que os turnos do começo são quinzenas e que só os eventos mostram os efeitos antes da escolha.": "教程现在会说明开局的回合是半个月，并且只有事件会在选择前显示效果。",

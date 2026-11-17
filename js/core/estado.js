@@ -14,11 +14,19 @@ function sideCounts(g){
   for (const uf in g.control){ const s = sideOf(g, g.control[uf], ph); r[s]++; if (s==="player") r.wPlayer += UF_WEIGHT[uf]; if (s==="enemy") r.wEnemy += UF_WEIGHT[uf]; if (s==="contested") r.wContested += UF_WEIGHT[uf]; }
   return r;
 }
+// Eleição (v1.24): nota do voto = soma dos atributos pelos pesos + a "sorte da campanha" (−8 a +8), sorteada uma vez
+// por partida e guardada em g.voteLuck (o mesmo resultado em qualquer releitura). Ex.: { vote: { alvo: 72, peso: { apoio: 0.6, base: 0.4 } } }
+function voteLuck(g){ if (g.voteLuck == null) g.voteLuck = Math.round((rnd(g) * 16 - 8) * 10) / 10; return g.voteLuck; }
+function voteScore(g, v){
+  let sc = 0; for (const k in (v.peso || {})) sc += (g.stats[k] ?? 0) * v.peso[k];
+  return sc + voteLuck(g);
+}
 function cond(g, c, slack){ // slack: folga da dificuldade nos mínimos (só nos testes de rumo da história)
   if (!c) return true;
   const S = g.stats;
   if (c.min) for (const k in c.min) if ((S[k] ?? 0) + (slack || 0) < c.min[k]) return false;
   if (c.max) for (const k in c.max) if ((S[k] ?? 0) > c.max[k]) return false;
+  if (c.vote && voteScore(g, c.vote) + (slack || 0) < c.vote.alvo) return false;
   if (c.flags) for (const f of c.flags) if (!g.flags.includes(f)) return false;
   if (c.noFlags) for (const f of c.noFlags) if (g.flags.includes(f)) return false;
   if (c.visited) for (const n of c.visited) if (!g.visited.includes(n)) return false;

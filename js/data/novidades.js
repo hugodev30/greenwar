@@ -3,6 +3,12 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.24", data: "2026-11-17", titulo: "Eleições mais disputadas", itens: [
+    "A eleição de 2026 deixou de ser automática: o resultado soma Apoio Popular e Base Política com a sorte da campanha, e pode virar dos dois lados.",
+    "Atributos altos sobem mais devagar: acima de 60, cada ponto ganho vale 60%; acima de 75, 30%. No Normal, Apoio e Base acima de 72 também se desgastam 1 ponto por mês.",
+    "A contestação no TSE avança um pouco mais devagar: ainda dá para vencer sem guerra, mas não é mais garantido.",
+    "Militares, agro e evangélicos entram em crise antes (abaixo de 25 ou 30 de lealdade): ignorar essas bases agora tem preço."
+  ] },
   { v: "1.23", data: "2026-11-17", titulo: "Ajustes de equilíbrio e textos", itens: [
     "Os atributos não grudam mais em 100: acima de 80, cada ponto ganho vale metade.",
     "O tutorial agora explica que os turnos do começo são quinzenas e que só os eventos mostram os efeitos antes da escolha.",
