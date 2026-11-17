@@ -1,0 +1,44 @@
+/* css/celular.css — Ajustes finais para celular: cabeçalho compacto, abas em grade, botão "Encerrar" fixo no rodapé e popups dentro da tela. (carregado por último) */
+  .recruit{margin-bottom:12px}
+  .recruit > small.muted{display:block;margin-top:4px}
+
+  @media (max-width:600px){
+    /* cabeçalho: título numa linha e botões logo abaixo (quebram só em telas bem estreitas) */
+    header{flex-wrap:wrap;gap:6px;padding-bottom:8px;margin-bottom:10px}
+    header h1{width:100%;font-size:.86rem;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    header>div{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:4px}
+    header .btn-sm{flex:1 1 auto;padding:7px 4px;font-size:.74rem;white-space:nowrap;min-height:36px}
+    header .btn-sm[hidden]{display:none}
+    #btnSnd,#btnSet{flex:0 0 40px;min-width:40px}
+
+    /* cartões com menos margem interna */
+    .card{padding:18px 14px}
+    .card h2{font-size:1.35rem}
+    .card p{font-size:1rem}
+    .choice{padding:12px 13px;min-height:48px}
+    .title-screen{padding:24px 12px}
+    .title-screen h2{font-size:1.7rem}
+    .modal{padding:8px}
+    .modal-card{padding:16px 14px;max-height:94vh}
+
+    /* abas: todas visíveis, em grade, sem rolagem escondida */
+    .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;border-bottom:none;gap:5px}
+    .tab{min-width:0;border:1px solid var(--line);border-radius:6px;padding:9px 3px;text-align:center;min-height:42px;white-space:normal;line-height:1.2}
+    .tab.on{border-color:var(--gold)}
+
+    /* "Encerrar" sempre ao alcance do polegar */
+    .wrap:has(#btnEnd){padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+    #btnEnd.endbtn{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:15;margin:0;padding:14px;font-size:1rem;box-shadow:0 -6px 24px #000c,0 0 0 1px #0008}
+    #btnEnd.endbtn:disabled{opacity:1;background:#4a2a24;color:#cdbcae}
+    body.noscroll #btnEnd.endbtn{display:none}
+    .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+
+  }
+  @media (max-width:360px){
+    .tab{font-size:.78rem}
+    .tab .badge{margin-left:2px}
+  }
+  @media (max-width:600px){
+    /* ajuda das facções abre no fluxo, sem sair da tela */
+    .fhelp .fhpop{position:static;width:auto;margin-top:6px}
+  }
