@@ -1,7 +1,7 @@
 // js/ui/aba-faccoes.js — Interface: aba Facções.
 // Cada cartão diz, em linhas curtas, o que a facção faz em cada nível de lealdade (a linha atual fica destacada).
 // As regras gerais ficam num "?" discreto no topo (sem quadro fixo poluindo a tela).
-function facLevel(L){ return L >= 65 ? "leal" : L >= 35 ? "neutra" : L >= 15 ? "insat" : "crise"; }
+function facLevel(L, cr){ return L >= 65 ? "leal" : L >= 35 ? "neutra" : L >= (cr || 15) ? "insat" : "crise"; }
 // linhas por nível: [nível, rótulo, texto]
 function facRows(F, f){
   const C = SCEN.campaign, M = esc(C.money.short), up = [], down = [];
@@ -28,7 +28,7 @@ function facCostTxt(F, kind){ const c = facCost(G, F, kind), M = SCEN.campaign.m
 function tabFaccoes(el){
   const C = SCEN.campaign, busy = G.queue.length > 0, F0 = C.factions[0];
   const cards = C.factions.map(F => {
-    const f = G.fac[F.id], stt = facStatus(f), cls = { "Leal": "good", "Neutra": "", "Insatisfeita": "mid", "Em crise": "bad" }[stt], lv = facLevel(f.loyalty);
+    const f = G.fac[F.id], stt = facStatus(f, F), cr = facCrise(F), cls = { "Leal": "good", "Neutra": "", "Insatisfeita": "mid", "Em crise": "bad" }[stt], lv = facLevel(f.loyalty, cr);
     const used1 = G.used["fac_agradar_" + F.id], used2 = G.used["fac_pressionar_" + F.id];
     const c1 = facCost(G, F, "agradar"), c2 = facCost(G, F, "pressionar");
     const bad1 = used1 || busy || G.ap < c1.ap || G.money < c1.money, bad2 = used2 || busy || G.ap < c2.ap || G.money < c2.money;
@@ -38,14 +38,14 @@ function tabFaccoes(el){
     const rows = facRows(F, f).map(([k, l, t]) => `<div class="frow lv-${k}${k === lv ? " cur" : ""}"><em>${l}</em><div>${t}</div></div>`).join("");
     const extra = [C.nationalFac === F.id ? `<span>${esc(`Moral máxima das tropas: ${maxOrg(G, "player")}`)}</span>` : "", facLinks(F)].filter(Boolean).join(" ");
     return `<div class="fac ${cls}"><div class="fh"><strong>${esc(F.name)}</strong><em class="chip ${cls}">${stt}</em></div>${(fp => fp ? `<div class="fwho">${portraitImg(fp, 36)}<span>Porta-voz: <b>${esc(fp.nome)}</b></span></div>` : "")(portraitOf("faccoes", F.id))}<p>${esc(F.desc)}</p>
-      <div class="fbar"><span>Lealdade</span><div class="bar" title="Linhas: 15 crise · 35 neutra · 65 leal"><i style="width:${f.loyalty}%;background:${f.loyalty < 15 ? "#c2563f" : f.loyalty < 35 ? "#d0902a" : "#6fae6a"}"></i><u style="left:15%"></u><u class="t35" style="left:35%"></u><u class="t65" style="left:65%"></u></div><b>${Math.round(f.loyalty)}</b></div>
+      <div class="fbar"><span>Lealdade</span><div class="bar" title="Linhas: ${cr} crise · 35 neutra · 65 leal"><i style="width:${f.loyalty}%;background:${f.loyalty < cr ? "#c2563f" : f.loyalty < 35 ? "#d0902a" : "#6fae6a"}"></i><u style="left:${cr}%"></u><u class="t35" style="left:35%"></u><u class="t65" style="left:65%"></u></div><b>${Math.round(f.loyalty)}</b></div>
       <div class="fbar"><span>Influência</span><div class="bar"><i style="width:${f.influence}%;background:#7d8fb3"></i></div><b>${Math.round(f.influence)}</b></div>
       <div class="frows">${rows}</div>${extra ? `<div class="flinks">${extra}</div>` : ""}
       <div class="fbtns"><button class="secondary sm" data-f="${F.id}" data-k="agradar" ${bad1 ? "disabled" : ""}>Agradar (${esc(facCostTxt(F, "agradar"))})<small>${why1}</small></button>
       <button class="secondary sm" data-f="${F.id}" data-k="pressionar" ${bad2 ? "disabled" : ""}>Enfraquecer (${esc(facCostTxt(F, "pressionar"))})<small>${why2}</small></button></div></div>`;
   }).join("");
   const help = `<details class="fhelp"><summary aria-label="Como funcionam as facções" title="Como funcionam as facções">?</summary><div class="fhpop"><ul>
-      <li><b>Lealdade</b> — <span>Leal ≥ 65 · Neutra 35–64 · Insatisfeita 15–34 · Em crise &lt; 15.</span> <span>A linha destacada (▸) em cada cartão é o efeito de agora.</span></li>
+      <li><b>Lealdade</b> — <span>Leal ≥ 65 · Neutra 35–64 · Insatisfeita até o limite de crise · Em crise abaixo dele (15; nas facções que começam leais, 25 ou 30 — veja a marca na barra).</span> <span>A linha destacada (▸) em cada cartão é o efeito de agora.</span></li>
       <li><b>Crise</b> — <span>lealdade abaixo de 15 com influência 25 ou mais; no máximo uma a cada 4 meses.</span></li>
       <li><b>Agradar</b> <span>(${esc(facCostTxt(F0, "agradar"))})</span> — <span>lealdade +14, rivais −5.</span></li>
       <li><b>Enfraquecer</b> <span>(${esc(facCostTxt(F0, "pressionar"))})</span> — <span>influência −10, lealdade −12.</span></li>

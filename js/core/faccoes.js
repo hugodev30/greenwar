@@ -19,4 +19,6 @@ function factionAction(g, id, kind){
   if (F.pressFx) applyFx(g, F.pressFx);
   return { ok: true, msg: `${F.name}: influência −10, lealdade −12.` };
 }
-function facStatus(f){ return f.loyalty >= 65 ? "Leal" : f.loyalty >= 35 ? "Neutra" : f.loyalty >= 15 ? "Insatisfeita" : "Em crise"; }
+// limite de crise da facção (v1.24): 15, ou F.crise para facções que começam leais (entram em crise antes)
+function facCrise(F){ return (F && F.crise) || 15; }
+function facStatus(f, F){ return f.loyalty >= 65 ? "Leal" : f.loyalty >= 35 ? "Neutra" : f.loyalty >= facCrise(F) ? "Insatisfeita" : "Em crise"; }

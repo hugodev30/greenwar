@@ -38,7 +38,7 @@ function advisorTips(g, ctx){
   // facção perto da crise
   for (const F of C.factions){
     const f = g.fac[F.id], fc = facCost(g, F, "agradar");
-    if (f.loyalty < 25 && !g.used["fac_agradar_" + F.id] && g.money >= fc.money && g.ap >= fc.ap)
+    if (f.loyalty < facCrise(F) + 10 && !g.used["fac_agradar_" + F.id] && g.money >= fc.money && g.ap >= fc.ap)
       tips.push({ id: "fac_" + F.id, pri: 90 - f.loyalty, head: F.name, text: fc.money ? `Este grupo está quase em crise com você (lealdade ${Math.round(f.loyalty)}). Agradar custa ${fc.money} Recursos e evita problemas maiores.` : `Este grupo está quase em crise com você (lealdade ${Math.round(f.loyalty)}). Vale agradar antes que ele cause problemas.`, act: { k: "fac", id: F.id } });
   }
   // atributo perigosamente baixo

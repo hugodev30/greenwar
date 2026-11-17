@@ -13,7 +13,7 @@ function urnaMult(g){ return 0.6 + g.urna.cred / 125; }
 function urnaAdd(g, d){
   if (!d || !urnaOn(g)) return;
   const U = g.urna;
-  if (d.prog) U.prog = clamp(Math.round(U.prog + (d.prog > 0 ? d.prog * urnaMult(g) : d.prog)), 0, 100);
+  if (d.prog) U.prog = clamp(Math.round(U.prog + (d.prog > 0 ? d.prog * urnaMult(g) * (urnaCfg(g).ganho ?? 1) : d.prog)), 0, 100);
   if (d.cred) U.cred = clamp(Math.round(U.cred + d.cred), 0, 100);
   if (d.esc){ U.esc = clamp(Math.round(U.esc + d.esc), 0, 100); U.peak = Math.max(U.peak || 0, U.esc); }
 }

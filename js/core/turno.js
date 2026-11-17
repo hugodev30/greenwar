@@ -44,9 +44,10 @@ function endTurn(g){
   g.debts = g.debts.filter(d => d.due > g.month);
   if (g.money < 0){ applyStats(g, Object.assign({ [K.pop]: -2 }, C.keys.money ? { [C.keys.money]: -2 } : {})); R("Cofres no vermelho: salários atrasam e a confiança cai.", "bad"); }
   else if (C.keys.money){ if (g.money < 3) applyStats(g, { [C.keys.money]: -1 }); else if (g.money >= (C.money.comfort ?? 20)) applyStats(g, { [C.keys.money]: g.money > (C.money.comfort ?? 20) + 15 ? 2 : 1 }); }
-  // 1a. Desgaste (Difícil): Apoio Popular e Base Política acima do limite caem 1 ponto por mês
+  // 1a. Desgaste (Normal e Difícil): Apoio Popular e Base Política acima do limite caem 1 ponto por mês
   const dz = diffOf(g).desgaste;
-  if (dz) for (const k of ["apoio", "base"]) if (g.stats[k] > dz) g.stats[k] -= 1;
+  // (um turno de 3 meses cai 3, sem passar abaixo do limite; na abertura em quinzenas este trecho roda 1 vez por mês)
+  if (dz) for (const k of ["apoio", "base"]) if (g.stats[k] > dz) g.stats[k] = Math.max(dz, g.stats[k] - pace);
   // 1b. Foco nacional (árvore de decisões)
   if (C.focus) focusTick(g, qz ? (halfCfg(g).foco ?? 1) : pace, R);
   // 1c. Contestação das urnas (js/core/urnas.js): um turno de mês vale duas quinzenas
@@ -149,7 +150,7 @@ function endTurn(g){
   let crisis = null;
   for (const F of C.factions){
     const f = g.fac[F.id];
-    if (f.loyalty < 15 && f.influence >= 25 && g.month - f.lastCrisis >= 4){
+    if (f.loyalty < facCrise(F) && f.influence >= 25 && g.month - f.lastCrisis >= 4){
       const ev = (C.events || []).find(e => e.crisisOf === F.id && cond(g, e.if));
       if (ev){ crisis = ev; f.lastCrisis = g.month; break; }
     }

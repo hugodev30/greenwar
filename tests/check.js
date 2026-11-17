@@ -1228,6 +1228,12 @@ for (const sc of SCENARIOS) {
 }
 console.log(errors ? `\nFALHOU (${errors} problemas)` : "\nOK: todos os cenários íntegros, todos os nós e finais alcançáveis.");
 if (errors) process.exit(1);
+// a meta do julgamento do TSE mostrada na tela (campaign.urna.julgamento) tem que ser a mesma da história (urna.min na cena julgamento_tse)
+for (const sc of Object.values(SCENARIOS)){
+  const U = sc.campaign && sc.campaign.urna, n = sc.story && sc.story.nodes && sc.story.nodes.julgamento_tse; if (!U || !n) continue;
+  const mins = [...JSON.stringify(n.choices).matchAll(/"urna":\{"min":(\d+)\}/g)].map(m => +m[1]);
+  if (!mins.length || mins.some(m => m !== U.julgamento)) err(`${sc.id}: julgamento do TSE na história (${mins.join(", ") || "nenhum"}) ≠ campaign.urna.julgamento (${U.julgamento})`);
+}
 console.log("\n=== Simulação de campanhas (sim.js) ===");
 const r = require("child_process").spawnSync(process.execPath, [__dirname + "/sim.js", process.argv[2] || "150"], { stdio: "inherit" });
 // Cenários bloqueados: teste curto de integridade (só exceções/invariantes; a cobertura de finais não é exigida)

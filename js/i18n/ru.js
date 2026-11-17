@@ -3,6 +3,7 @@
 // Texto que faltar aqui cai no inglês (I18N_EN) e depois no português.
 const I18N_RU = {
  "exact": {
+  "Leal ≥ 65 · Neutra 35–64 · Insatisfeita até o limite de crise · Em crise abaixo dele (15; nas facções que começam leais, 25 ou 30 — veja a marca na barra).": "Лояльна ≥ 65 · Нейтральна 35–64 · Недовольна до порога кризиса · В кризисе ниже него (15; у фракций, которые начинают лояльными, 25 или 30 — см. отметку на шкале).",
   "Chefe do novo governo militar (papel genérico)": "Глава нового военного правительства (обобщённая роль)",
   "Não foi possível salvar o progresso neste navegador. Ele pode ser perdido se você fechar ou recarregar a página. Verifique o espaço disponível e as permissões de armazenamento.": "Не удалось сохранить прогресс в этом браузере. Он может быть потерян, если закрыть или перезагрузить страницу. Проверьте свободное место и разрешения браузера на хранение данных.",
   "Reduto bolsonarista": "Оплот болсонаристов",
@@ -3432,6 +3433,11 @@ const I18N_RU = {
   "Aparece quando a guerra passa de 6 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Появляется, когда война длится более 6 месяцев и появляются посредники. Открыта 3 мес. и может вернуться через 8 мес. после использования.",
   "Aparece quando a guerra passa de 12 meses e os mediadores aparecem. Fica aberta 3 meses e pode voltar 8 meses depois de usada.": "Появляется, когда война длится более 12 месяцев и появляются посредники. Открыта 3 мес. и может вернуться через 8 мес. после использования.",
   "Mediação, reconhecimento e sanções; pressão ambiental. Também fala pelos organismos multilaterais (ONU/OEA).": "Посредничество, признание и санкции; экологическое давление. Также говорит от имени многосторонних организаций (ООН/ОАГ).",
+  "Eleições mais disputadas": "Более напряжённые выборы",
+  "A eleição de 2026 deixou de ser automática: o resultado soma Apoio Popular e Base Política com a sorte da campanha, e pode virar dos dois lados.": "Выборы 2026 года больше не выигрываются автоматически: результат складывается из народной поддержки, политической базы и удачи кампании и может качнуться в любую сторону.",
+  "Atributos altos sobem mais devagar: acima de 60, cada ponto ganho vale 60%; acima de 75, 30%. No Normal, Apoio e Base acima de 72 também se desgastam 1 ponto por mês.": "Высокие показатели растут медленнее: выше 60 каждое очко считается на 60%, выше 75 — на 30%. На «Нормальном» поддержка и база выше 72 также теряют 1 очко в месяц.",
+  "A contestação no TSE avança um pouco mais devagar: ainda dá para vencer sem guerra, mas não é mais garantido.": "Оспаривание в Высшем избирательном суде продвигается чуть медленнее: победить без войны всё ещё можно, но уже не гарантированно.",
+  "Militares, agro e evangélicos entram em crise antes (abaixo de 25 ou 30 de lealdade): ignorar essas bases agora tem preço.": "Военные, агробизнес и евангелисты теперь впадают в кризис раньше (лояльность ниже 25 или 30): пренебрегать этими опорами теперь дорого.",
   "Ajustes de equilíbrio e textos": "Правки баланса и текстов",
   "Os atributos não grudam mais em 100: acima de 80, cada ponto ganho vale metade.": "Показатели больше не застревают на 100: выше 80 каждое полученное очко считается за половину.",
   "O tutorial agora explica que os turnos do começo são quinzenas e que só os eventos mostram os efeitos antes da escolha.": "Обучение теперь объясняет, что первые ходы длятся полмесяца и что только события показывают эффекты до выбора.",
