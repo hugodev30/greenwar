@@ -7,7 +7,7 @@ Jogo de estratégia e história interativa sobre o Brasil, inspirado em Hearts o
 ## Cenários
 | Ano | Cenário | Situação | Resumo |
 |---|---|---|---|
-| 2022 | **A Faixa Presidencial** | ✅ jogável | Depois da eleição de 2022: aceitar o resultado, contestar ou tentar uma ruptura. Tem a **árvore de decisões nacionais** (58 focos, 9 deles oportunidades que aparecem e expiram). |
+| 2022 | **A Faixa Presidencial** | ✅ jogável | Depois da eleição de 2022: aceitar o resultado, contestar ou tentar uma ruptura. Tem a **árvore de decisões nacionais** (60 focos, 9 deles oportunidades que aparecem e expiram). |
 | 1964 | **Os Anos Decisivos** | 🔒 em breve | A crise política de 1964 e suas alternativas. Os dados continuam no código, mas o cenário aparece no menu como "Em breve" e não pode ser aberto. |
 
 O foco atual é o cenário de **2022**. O cenário de 1964 não pode ser jogado no momento. (O antigo cenário fictício de 1924, "Aurora do Sul", foi removido; continua no histórico do git.)
@@ -146,6 +146,7 @@ O login é **opcional**. Sem conta, offline ou se o Supabase estiver fora do ar,
 - `js/nuvem/config.js`: URL do projeto e a *publishable key* (pública por design; quem protege os dados é o RLS);
 - `js/nuvem/cloud.js`: módulo carregado pelo `index.html`;
 - `supabase/migrations/001_init.sql`: tabelas, RLS e gatilhos.
+- `supabase/migrations/002_ranking.sql`: protege o ranking (o gatilho limpa `endings` e conta só finais distintos e válidos). Rode depois do 001, do mesmo jeito.
 
 ### Configurar o projeto Supabase (uma vez)
 1. **Rodar o SQL:** no painel do Supabase, abra **SQL Editor → New query**, cole todo o [`supabase/migrations/001_init.sql`](supabase/migrations/001_init.sql) e clique em **Run**. Pode rodar de novo sem problema (o script é idempotente). Ele cria `profiles` e `saves`, as políticas RLS, o gatilho que cria o perfil no cadastro e o perfil das contas que já existirem.
@@ -248,6 +249,8 @@ act("e_feira_agro", "eco", "Visitar a feira do agro", "Fotos com produtores; mer
 `x`/`y` são a posição na árvore, `req` são os pré-requisitos e `excl` os focos exclusivos. Ao concluir, o foco liga a flag `fo_<id>`, que pode liberar ações ou eventos (`show: { flags: ["fo_s_feira"] }`).
 
 **Nova versão no quadro 🆕 Novidades** (tela inicial): a cada atualização publicada, acrescente um item **no começo** da lista `NOVIDADES` em `js/data/novidades.js` (o mais novo primeiro), com textos curtos para quem joga:
+
+Depois, rode `node tests/versao.js`: ele carimba a versão nova (`?v=1.23`) em todos os arquivos do `index.html`, para o navegador baixar os arquivos novos em vez de usar os do cache. O `node tests/check.js` falha se esquecer.
 ```js
 { v: "1.17", data: "2026-11-15", titulo: "Nome curto da versão", itens: [
   "O que mudou, em uma frase.",

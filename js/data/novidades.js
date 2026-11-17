@@ -3,6 +3,11 @@
    As frases são traduzidas pelos dicionários em js/i18n/{en,zh,ru}.js (seção "exact"), como o resto do jogo.
    Ao lançar uma fase nova: acrescente uma versão no topo (ver README → "Como atualizar o jogo"). */
 const NOVIDADES = [
+  { v: "1.23", data: "2026-11-17", titulo: "Ajustes de equilíbrio e textos", itens: [
+    "Os atributos não grudam mais em 100: acima de 80, cada ponto ganho vale metade.",
+    "O tutorial agora explica que os turnos do começo são quinzenas e que só os eventos mostram os efeitos antes da escolha.",
+    "A cada versão nova o navegador baixa os arquivos novos, sem misturar com os antigos guardados no cache."
+  ] },
   { v: "1.22", data: "2026-11-12", titulo: "Diplomacia mais enxuta", itens: [
     "A mesa de diplomacia agora tem só os 6 atores que mais pesam: EUA, China, Rússia, União Europeia, Argentina e Israel.",
     "Venezuela, Mercosul, Portugal, Índia, Golfo, Vaticano e ONU/OEA saíram; eventos que falavam deles agora mexem com a UE, a Argentina ou a China.",
