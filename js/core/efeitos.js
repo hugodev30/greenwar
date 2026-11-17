@@ -1,11 +1,19 @@
 // js/core/efeitos.js — Núcleo: aplica efeitos (fx) nos indicadores, facções, atores e no mapa.
 /* ---------- Efeitos ---------- */
+// Retorno decrescente: acima de STAT_SOFT, cada ponto ganho vale metade (os atributos não grudam em 100 só de acumular
+// ganhos pequenos; quedas valem inteiras). Ex.: em 78, +6 → 80 + 4/2 = 82.
+const STAT_SOFT = 80;
+function statGain(before, d){
+  if (d <= 0 || before + d <= STAT_SOFT) return d;
+  const full = Math.max(0, STAT_SOFT - before);
+  return full + (d - full) / 2;
+}
 function applyStats(g, eff, viaStory){
   const sc = scOf(g), C = sc.campaign;
   for (const k in (eff||{})){
     if (!(k in g.stats)) continue;
     const before = g.stats[k];
-    g.stats[k] = clamp(before + eff[k], 0, 100);
+    g.stats[k] = clamp(before + statGain(before, eff[k]), 0, 100);
     const d = g.stats[k] - before;
     g.lastDelta[k] = (g.lastDelta[k]||0) + d;
     if (!d) continue;

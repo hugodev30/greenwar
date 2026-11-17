@@ -1152,7 +1152,10 @@ for (const sc of SCENARIOS) {
 {
   const path = require("path"), html = fs.readFileSync(path.join(JOGO.RAIZ, "index.html"), "utf8");
   const walk = d => fs.readdirSync(path.join(JOGO.RAIZ, d), { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(d + "/" + e.name) : [d + "/" + e.name]);
-  const css = [...html.matchAll(/<link rel="stylesheet" href="([^"]+)">/g)].map(m => m[1]);
+  const css = [...html.matchAll(/<link rel="stylesheet" href="([^"?]+)(?:\?v=[^"]*)?">/g)].map(m => m[1]);
+  // versão nos arquivos (evita cache velho): todo js/ e css/ local com ?v= igual à versão mais nova das Novidades
+  { const V = require("./versao.js"), v = V.versaoAtual();
+    if (V.carimbar(html, v) !== html) err(`index.html: arquivos sem ?v=${v} (cache velho no navegador). Rode: node tests/versao.js`); }
   const listed = [...JOGO.scripts, ...css, "js/nuvem/cloud.js", "js/nuvem/config.js"];
   for (const f of listed){ if (!fs.existsSync(path.join(JOGO.RAIZ, f))) err("index.html aponta para arquivo que não existe: " + f); if (listed.indexOf(f) !== listed.lastIndexOf(f)) err("arquivo listado duas vezes no index.html: " + f); }
   for (const f of [...walk("js"), ...walk("css")]){

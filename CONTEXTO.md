@@ -139,7 +139,7 @@ O `index.html` tem só a marcação e a lista de `<link>`/`<script>`. **Os scrip
 - **Sem tabelas:** se o SQL ainda não foi rodado, a API devolve `PGRST205`. Nesse caso `cloud.js` mantém o login, avisa no perfil que o servidor não foi configurado e não tenta sincronizar.
 
 ## 5. Árvore de decisões nacionais (2022)
-Dados em `CAMPAIGN_2022.focus = { ap, cell, grants, branches, nodes }`. São 58 focos em 8 ramos (49 normais + 9 oportunidades no ramo `opor`), com 12 pares exclusivos. Duração 1 ou 2 meses (fase 8).
+Dados em `CAMPAIGN_2022.focus = { ap, cell, grants, branches, nodes }`. São 60 focos em 8 ramos (51 normais + 9 oportunidades no ramo `opor`), com 12 pares exclusivos. Duração 1 ou 2 meses (fase 8).
 
 - **Campos de um nó:** `id`, `name`, `branch`, `x`, `y` (posição na grade), `months`, `cost` (Recursos), `req` (todos), `reqAny` (pelo menos um), `excl` (mutuamente exclusivos, sempre simétricos), `avail` (condição para iniciar) e `availText`, `lockIf` (condição de história que bloqueia), `desc`, `fx`, `risk {p, msg, fx}`, `dipBonus`, `dipOff`, `dipReq`, `unlocks` e, nas oportunidades, `oport { if, text, dura, cooldown, chance?, repeat? }` (sem `req`/`excl`).
 - **Regras:**

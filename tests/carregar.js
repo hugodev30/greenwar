@@ -4,7 +4,7 @@
 const fs = require("fs"), path = require("path");
 const RAIZ = path.join(__dirname, "..");
 const html = fs.readFileSync(path.join(RAIZ, "index.html"), "utf8");
-const scripts = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map(m => m[1]);
+const scripts = [...html.matchAll(/<script src="([^"?]+)(?:\?v=[^"]*)?"><\/script>/g)].map(m => m[1]);
 const ler = f => fs.readFileSync(path.join(RAIZ, f), "utf8");
 const de = pasta => scripts.filter(f => f.startsWith(pasta)).map(ler).join("\n");
 module.exports = {
